@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Meshes">
+      <UniqueIdentifier>{bd18aae5-7815-411f-b3fd-05b317ccd3d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Meshes\Characters">
+      <UniqueIdentifier>{cd853203-815b-48ec-b303-14497480fab3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Meshes\Weapons">
+      <UniqueIdentifier>{48190296-7f73-4452-bcb8-cbd16e42c4b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Meshes">
+      <UniqueIdentifier>{d2e7b644-5aba-4ade-bc0a-97451af38076}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Meshes\Characters">
+      <UniqueIdentifier>{8053e3c1-a9c5-4dcd-9ab2-02cfcb876247}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Meshes\NPC">
+      <UniqueIdentifier>{275f14e9-3cc6-482c-b9bd-97df1ae0a617}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Meshes\Weapons">
+      <UniqueIdentifier>{e4b3e7d8-49c6-4687-becf-3deba95c55fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Entities">
+      <UniqueIdentifier>{5e7c6e3c-8c16-4106-9ff1-215b30c29a97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Entities">
+      <UniqueIdentifier>{a57f0e3d-4a4f-4255-8d04-df369890cdbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Controllers">
+      <UniqueIdentifier>{648a96a2-168a-4fbb-9336-3a19eeeea6fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Controllers">
+      <UniqueIdentifier>{8fbbe113-1f2e-4818-a1af-805fd68e8874}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="LadyArcherMesh.cpp">
+      <Filter>Source Files\Meshes\Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Source Files\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseMesh.cpp">
+      <Filter>Source Files\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterMesh.cpp">
+      <Filter>Source Files\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="NPCMesh.cpp">
+      <Filter>Source Files\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerCharacterMesh.cpp">
+      <Filter>Source Files\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerCharacterController.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="LadyArcherController.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Meshes\Weapons\ArrowMesh.cpp">
+      <Filter>Source Files\Meshes\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerCharacter.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Caracter.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="NPCEntity.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="LadyArcherMesh.h">
+      <Filter>Header Files\Meshes\Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Header Files\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseMesh.h">
+      <Filter>Header Files\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterMesh.h">
+      <Filter>Header Files\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="NPCMesh.h">
+      <Filter>Header Files\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerCharacterMesh.h">
+      <Filter>Header Files\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerCaracter.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerCharacterController.h">
+      <Filter>Header Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="LadyArcherController.h">
+      <Filter>Header Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="LadyArcher.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\Weapons\ArrowMesh.h">
+      <Filter>Header Files\Meshes\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="Character.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="NPCEntity.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

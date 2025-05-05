@@ -22,3 +22,12 @@ Vector2f BaseMesh::GetCenter() const {
         bounds.top + bounds.height / 2.f
     };
 }
+
+
+Vector2f BaseMesh::MoveToPoint(Vector2f point) {
+    float length = std::sqrt(point.x * point.x + point.y * point.y);
+    if (length != 0)
+        return point / length;
+    else
+        return sf::Vector2f(0.f, 0.f);
+}

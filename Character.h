@@ -41,6 +41,11 @@ public:
 
 	virtual EnergyType GetEnergyType() const;
 
+	virtual float GetHealthPoints() const 
+	{
+		return this->health;
+	}
+
 	~Character() = default;
 };
 

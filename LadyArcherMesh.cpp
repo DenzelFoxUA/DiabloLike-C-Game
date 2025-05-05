@@ -45,15 +45,15 @@ void LadyArcherMesh::Update(float deltaTime, const sf::RenderWindow& window)
         attackTimer += deltaTime;
 
         if (attackTimer >= attackDelay) {
-            if (pendingNormalShot) {
+            if (pendingNormalAttack) {
                 std::cout << "NORMAL SHOT FIRED\n";
                 Shoot(arrowTexture, pendingDirection);
-                pendingNormalShot = false;
+                pendingNormalAttack = false;
             }
-            else if (pendingChargedShot) {
+            else if (pendingChargedAttack) {
                 std::cout << "CHARGED SHOT FIRED\n";
                 ShootCharged(arrowTexture, pendingDirection, pendingChargeTime);
-                pendingChargedShot = false;
+                pendingChargedAttack = false;
             }
 
             isAttacking = false;
@@ -105,51 +105,51 @@ Texture& LadyArcherMesh::ArrowTex()
     return this->arrowTexture;
 }
 
-bool& LadyArcherMesh::IsCharged()
-{
-    return this->shotAlreadyCharged;
-}
-
-bool& LadyArcherMesh::IsChargingAttack()
-{
-    return this->chargingShot;
-}
-
-float& LadyArcherMesh::ChargeTime()
-{
-    return this->chargeTime;
-}
-
-float& LadyArcherMesh::AttackTimer()
-{
-    return this->attackTimer;
-}
-
-bool& LadyArcherMesh::PendingNormalAttack()
-{
-    return this->pendingNormalShot;
-}
-bool& LadyArcherMesh::PendingChargedAttack()
-{
-    return this->pendingChargedShot;
-}
-
-Vector2f& LadyArcherMesh::PendingDirection()
-{
-    return this->pendingDirection;
-}
-
-float& LadyArcherMesh::PendingChargeTime()
-{
-    return this->pendingChargeTime;
-}
-
-const float LadyArcherMesh::AttackDelay()
-{
-    return this->attackDelay;
-}
-
-const float LadyArcherMesh::MaxChargeTime()
-{
-    return this->maxChargeTime;
-}
+//bool& LadyArcherMesh::IsCharged()
+//{
+//    return this->shotAlreadyCharged;
+//}
+//
+//bool& LadyArcherMesh::IsChargingAttack()
+//{
+//    return this->chargingShot;
+//}
+//
+//float& LadyArcherMesh::ChargeTime()
+//{
+//    return this->chargeTime;
+//}
+//
+//float& LadyArcherMesh::AttackTimer()
+//{
+//    return this->attackTimer;
+//}
+//
+//bool& LadyArcherMesh::PendingNormalAttack()
+//{
+//    return this->pendingNormalShot;
+//}
+//bool& LadyArcherMesh::PendingChargedAttack()
+//{
+//    return this->pendingChargedShot;
+//}
+//
+//Vector2f& LadyArcherMesh::PendingDirection()
+//{
+//    return this->pendingDirection;
+//}
+//
+//float& LadyArcherMesh::PendingChargeTime()
+//{
+//    return this->pendingChargeTime;
+//}
+//
+//const float LadyArcherMesh::AttackDelay()
+//{
+//    return this->attackDelay;
+//}
+//
+//const float LadyArcherMesh::MaxChargeTime()
+//{
+//    return this->maxChargeTime;
+//}

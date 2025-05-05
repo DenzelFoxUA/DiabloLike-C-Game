@@ -5,7 +5,7 @@
 class NPCMesh : public CharacterMesh
 {
 public:
-	NPCMesh(vector<TextureMeta> texturePathList) :CharacterMesh(texturePathList) {
+	NPCMesh(vector<TextureMeta> texturePathList, SpawnPoint spawnP) :CharacterMesh(texturePathList, spawnP) {
 
 	};
 	Vector2f GetCenter() const override;

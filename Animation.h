@@ -15,7 +15,7 @@ private:
     int totalFrames = 0;
     int currentFrame = 0;
     float frameTimer = 0.f;
-    float frameDuration = 0.05f;
+    float frameDuration = 0.1f;
 
     bool isFinished = false,
         mustBeLooped = true;
@@ -29,5 +29,9 @@ public:
     void Update(float deltaTime);
     void Reset();
     bool IsFinished() const;
+    void SetFrameDuration(float newValue)
+    {
+        this->frameDuration = newValue;
+    }
 };
 

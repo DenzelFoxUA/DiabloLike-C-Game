@@ -5,6 +5,9 @@
 #include "LadyArcherMesh.h"
 #include "LadyArcher.h"
 #include "LadyArcherController.h"
+#include "Skeleton.h"
+#include "SkeletonMesh.h"
+#include "SkeletonController.h"
 #include <iostream>
 
 using namespace std;
@@ -64,12 +67,55 @@ int main()
     ladyArcherMove.numberOfColumns = 5;
     ladyArcherMove.numberOfFrames = 20;
 
-    vector<TextureMeta> ladyArcherTextures = { ladyArcherIdle,ladyArcherAttack,ladyArcherMove };
+    TextureMeta ladyArcherDead;
+    ladyArcherDead.category = TextureCategory::Death;
+    ladyArcherDead.fileName = "Death_Bow_Body";
+    ladyArcherDead.folderPath = "textures/Characters/ArcherLady/Death_Bow/";
+    ladyArcherDead.frameHeight = 180;
+    ladyArcherDead.frameWidth = 180;
+    ladyArcherDead.numberOfColumns = 6;
+    ladyArcherDead.numberOfFrames = 30;
+
+    vector<TextureMeta> ladyArcherTextures = { ladyArcherIdle,ladyArcherAttack,ladyArcherMove,ladyArcherDead };
     string name = "Eva";
-    LadyArcherMesh * heroModel = new LadyArcherMesh(ladyArcherTextures, arrows, arrowTexture);
+    LadyArcherMesh* heroModel = new LadyArcherMesh(ladyArcherTextures, arrows, arrowTexture, SpawnPoint{1000,400});
     LadyArcher * hero = new LadyArcher(name,1600.f,1000.f);
     LadyArcherController* heroControl = new LadyArcherController(heroModel, hero);
     
+
+    TextureMeta idle_skeleton1;
+    idle_skeleton1.category = TextureCategory::Idle;
+    idle_skeleton1.fileName = "DarkEyes_Idle_Simple_Body";
+    idle_skeleton1.folderPath = "textures/Characters/SceletonBasic/Idle_Simple/";
+    idle_skeleton1.frameHeight = 180;
+    idle_skeleton1.frameWidth = 180;
+    idle_skeleton1.numberOfColumns = 4;
+    idle_skeleton1.numberOfFrames = 8;
+
+    TextureMeta move_skeleton1;
+    move_skeleton1.category = TextureCategory::Move;
+    move_skeleton1.fileName = "DarkEyes_Run_Forward_Body";
+    move_skeleton1.folderPath = "textures/Characters/SceletonBasic/Run_Forward/";
+    move_skeleton1.frameHeight = 180;
+    move_skeleton1.frameWidth = 180;
+    move_skeleton1.numberOfColumns = 4;
+    move_skeleton1.numberOfFrames = 8;
+
+    TextureMeta attack_skeleton1;
+    attack_skeleton1.category = TextureCategory::Attack;
+    attack_skeleton1.fileName = "DarkEyes_Attack_Slash_01_Body";
+    attack_skeleton1.folderPath = "textures/Characters/SceletonBasic/Attack_Slash_01/";
+    attack_skeleton1.frameHeight = 180;
+    attack_skeleton1.frameWidth = 180;
+    attack_skeleton1.numberOfColumns = 4;
+    attack_skeleton1.numberOfFrames = 8;
+
+    vector<TextureMeta> skeleton1Textures = { idle_skeleton1, move_skeleton1,attack_skeleton1 };
+    SkeletonMesh* skeleton1Mesh = new SkeletonMesh(skeleton1Textures, SpawnPoint{ 300,100 });
+    skeleton1Mesh->GetSpeed() = 80;
+    skeleton1Mesh->SetAnimationDuration(0.2f);
+    Skeleton * skeleton1 = new Skeleton(600.f,500.f);
+    SkeletonController* skeleton1Conrol = new SkeletonController(skeleton1Mesh, skeleton1, 2.f);
 
     sf::Clock clock;
 
@@ -89,6 +135,9 @@ int main()
         heroControl->HandleInput(dt);
         heroModel->Update(dt,window);
 
+        skeleton1Conrol->HandleBehavior(heroModel->GetPosition(), *hero, dt);
+        skeleton1Conrol->Update(dt, window);
+
         window.clear();
 
         for (int y = 0; y < windowHeight; y += tileHeight) {
@@ -99,6 +148,7 @@ int main()
         }
 
         heroModel->Draw(window);
+        skeleton1Mesh->Draw(window);
 
         auto& arrowList = heroModel->Arrows();
         for (auto it = arrowList.begin(); it != arrowList.end(); )

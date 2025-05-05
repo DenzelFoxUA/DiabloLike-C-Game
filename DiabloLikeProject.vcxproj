@@ -144,9 +144,13 @@
     <ClCompile Include="Meshes\Weapons\ArrowMesh.cpp" />
     <ClCompile Include="NPCEntity.cpp" />
     <ClCompile Include="NPCMesh.cpp" />
+    <ClCompile Include="NPC_Controller.cpp" />
     <ClCompile Include="PlayerCharacter.cpp" />
     <ClCompile Include="PlayerCharacterController.cpp" />
     <ClCompile Include="PlayerCharacterMesh.cpp" />
+    <ClCompile Include="Skeleton.cpp" />
+    <ClCompile Include="SkeletonController.cpp" />
+    <ClCompile Include="SkeletonMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -159,9 +163,13 @@
     <ClInclude Include="Meshes\Weapons\ArrowMesh.h" />
     <ClInclude Include="NPCEntity.h" />
     <ClInclude Include="NPCMesh.h" />
+    <ClInclude Include="NPC_Controller.h" />
     <ClInclude Include="PlayerCaracter.h" />
     <ClInclude Include="PlayerCharacterController.h" />
     <ClInclude Include="PlayerCharacterMesh.h" />
+    <ClInclude Include="Skeleton.h" />
+    <ClInclude Include="SkeletonController.h" />
+    <ClInclude Include="SkeletonMesh.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

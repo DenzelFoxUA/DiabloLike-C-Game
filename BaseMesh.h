@@ -5,11 +5,17 @@
 using namespace std;
 using namespace sf;
 
+struct SpawnPoint
+{
+    int x, y;
+};
+
 enum TextureCategory
 {
     Idle,
     Move,
-    Attack
+    Attack,
+    Death
 };
 
 struct TextureMeta
@@ -37,7 +43,7 @@ public:
 
     BaseMesh() = delete;
 
-    BaseMesh(vector<TextureMeta> texturePathList) :animation(sprite) 
+    BaseMesh(vector<TextureMeta> texturePathList, SpawnPoint spawnPoint) :animation(sprite) 
     {
 
     }
@@ -46,5 +52,9 @@ public:
     virtual Vector2f GetPosition() const;
     virtual Vector2f GetCenter() const;
     virtual void Update(float deltaTime, const sf::RenderWindow& window);
-
+    virtual Vector2f MoveToPoint(Vector2f point);
+    virtual void SetAnimationDuration(float newVal)
+    {
+        this->animation.SetFrameDuration(newVal);
+    }
 };

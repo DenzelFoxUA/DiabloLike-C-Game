@@ -6,18 +6,6 @@
 class LadyArcherController : public PlayerController<LadyArcherMesh,LadyArcher>
 {
 protected:
-    //bool chargingShot = false;
-    //float chargeTime = 0.f;
-    //const float maxChargeTime = 2.f;
-    //bool shotAlreadyCharged = false;
-
-    //bool pendingNormalShot = false;
-    //bool pendingChargedShot = false;
-    //float pendingChargeTime = 0.f;
-    //sf::Vector2f pendingDirection = { 0.f, 0.f };
-
-    //float attackTimer = 0.f;
-    //const float attackDelay = 0.7f;
 
 public:
 	LadyArcherController(LadyArcherMesh *_mesh, LadyArcher *_entity) : PlayerController(_mesh, _entity)

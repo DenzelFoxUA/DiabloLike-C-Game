@@ -46,6 +46,24 @@
     <Filter Include="Header Files\Controllers">
       <UniqueIdentifier>{8fbbe113-1f2e-4818-a1af-805fd68e8874}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Entities\NPC">
+      <UniqueIdentifier>{1512e45b-e219-450b-8a52-533177504f50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Entities\NPC\Skeletons">
+      <UniqueIdentifier>{cfe64218-8738-4b12-83a5-4f70d858abf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Meshes\NPC">
+      <UniqueIdentifier>{20b8c28b-021d-4722-8f5b-388d9e6288ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Entities\NPC">
+      <UniqueIdentifier>{600ade7f-46b7-4671-b858-825d0b23b17d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Controllers\AI_NPC">
+      <UniqueIdentifier>{19b2bcc4-deae-4bd1-abdf-8585aa053cb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Controllers\AI_Controller">
+      <UniqueIdentifier>{8a155879-51e0-4c8e-8a24-30908e421a87}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LadyArcherMesh.cpp">
@@ -87,6 +105,18 @@
     <ClCompile Include="NPCEntity.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
+    <ClCompile Include="Skeleton.cpp">
+      <Filter>Source Files\Entities\NPC\Skeletons</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonMesh.cpp">
+      <Filter>Source Files\Meshes\NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonController.cpp">
+      <Filter>Source Files\Controllers\AI_Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="NPC_Controller.cpp">
+      <Filter>Source Files\Controllers\AI_Controller</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LadyArcherMesh.h">
@@ -127,6 +157,18 @@
     </ClInclude>
     <ClInclude Include="NPCEntity.h">
       <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Skeleton.h">
+      <Filter>Header Files\Entities\NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonMesh.h">
+      <Filter>Header Files\Meshes\NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="NPC_Controller.h">
+      <Filter>Header Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonController.h">
+      <Filter>Header Files\Controllers\AI_NPC</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

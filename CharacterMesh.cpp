@@ -78,6 +78,11 @@ map<Direction, sf::Texture>& CharacterMesh::AttackTextures()
     return this->attackTextures;
 }
 
+map<Direction, sf::Texture>& CharacterMesh::DeathTextures()
+{
+    return this->deathTextures;
+}
+
 Animation& CharacterMesh::Animation()
 {
     return this->animation;
@@ -86,4 +91,58 @@ Animation& CharacterMesh::Animation()
 TextureMeta& CharacterMesh::TextureData(TextureCategory category)
 {
     return texturesData[category];
+}
+
+bool& CharacterMesh::IsCharged()
+{
+    return this->attackAlreadyCharged;
+}
+
+bool& CharacterMesh::IsMoving()
+{
+    return this->isMoving;
+}
+
+bool& CharacterMesh::IsChargingAttack()
+{
+    return this->chargingAttack;
+}
+
+float& CharacterMesh::ChargeTime()
+{
+    return this->chargeTime;
+}
+
+float& CharacterMesh::AttackTimer()
+{
+    return this->attackTimer;
+}
+
+bool& CharacterMesh::PendingNormalAttack()
+{
+    return this->pendingNormalAttack;
+}
+bool& CharacterMesh::PendingChargedAttack()
+{
+    return this->pendingChargedAttack;
+}
+
+Vector2f& CharacterMesh::PendingDirection()
+{
+    return this->pendingDirection;
+}
+
+float& CharacterMesh::PendingChargeTime()
+{
+    return this->pendingChargeTime;
+}
+
+const float CharacterMesh::AttackDelay()
+{
+    return this->attackDelay;
+}
+
+const float CharacterMesh::MaxChargeTime()
+{
+    return this->maxChargeTime;
 }

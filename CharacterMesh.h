@@ -16,7 +16,8 @@ enum class CharacterState
     Run,
     Attack,
     Cast,
-    Hurt
+    Hurt,
+    Dead
 };
 
 enum AttackType
@@ -32,13 +33,13 @@ protected:
 
     Texture* activeTexture = nullptr;
 
-    bool chargingShot = false;
+    bool chargingAttack = false;
     float chargeTime = 0.f;
     const float maxChargeTime = 2.f;
-    bool shotAlreadyCharged = false;
+    bool attackAlreadyCharged = false;
 
-    bool pendingNormalShot = false;
-    bool pendingChargedShot = false;
+    bool pendingNormalAttack = false;
+    bool pendingChargedAttack = false;
     float pendingChargeTime = 0.f;
     sf::Vector2f pendingDirection = { 0.f, 0.f };
 
@@ -49,6 +50,7 @@ protected:
     map<Direction, sf::Texture> idleTextures;
     map<Direction, sf::Texture> movementTextures;
     map<Direction, sf::Texture> attackTextures;
+    map<Direction, sf::Texture> deathTextures;
 
     Direction currentDir = Direction::Right;
     Direction lastDir = Direction::Right;
@@ -57,6 +59,8 @@ protected:
     CharacterState previousState = CharacterState::Idle;
 
     bool isAttacking = false;
+    bool isMoving = false;
+    bool isDead = false;
     float moveSpeed = 250.f;
     std::vector<ArrowMesh> arrows;
     
@@ -64,7 +68,7 @@ protected:
 
 public:
     CharacterMesh() = delete;
-    CharacterMesh(vector<TextureMeta> texturePathList) : BaseMesh(texturePathList)
+    CharacterMesh(vector<TextureMeta> texturePathList, SpawnPoint spawnP) : BaseMesh(texturePathList, spawnP)
     {
         for (const auto& texture : texturePathList)
         {
@@ -72,6 +76,7 @@ public:
 
             auto& target = (texture.category == TextureCategory::Idle) ? this->idleTextures :
                 (texture.category == TextureCategory::Move) ? this->movementTextures :
+                (texture.category == TextureCategory::Death) ? this->deathTextures :
                 this->attackTextures;
 
             LoadTextures(target, texture.folderPath, texture.fileName);
@@ -82,9 +87,10 @@ public:
         int columns = texturesData[TextureCategory::Idle].numberOfColumns;
         int frames = texturesData[TextureCategory::Idle].numberOfFrames;
 
-        sprite.setPosition(1600, 800);
+        sprite.setPosition(spawnP.x, spawnP.y);
         animation.SetSheet(&idleTextures[currentDir], width, height, columns, frames);
     }
+
     
     virtual float& GetSpeed();
 
@@ -100,6 +106,7 @@ public:
     virtual map<Direction, sf::Texture>& IdleTextures();
     virtual map<Direction, sf::Texture>& MoveTextures();
     virtual map<Direction, sf::Texture>& AttackTextures();
+    virtual map<Direction, sf::Texture>& DeathTextures();
 
     virtual Animation& Animation();
     virtual TextureMeta& TextureData(TextureCategory category);
@@ -107,18 +114,23 @@ public:
     void Update(float deltaTime, const sf::RenderWindow& window) override;
     void Draw(sf::RenderWindow& window) override;
 
-    virtual bool& IsCharged() = 0;
-    virtual bool& IsChargingAttack() = 0;
-    virtual bool& PendingNormalAttack() = 0;
-    virtual bool& PendingChargedAttack() = 0;
+    virtual bool& IsCharged();
+    virtual bool& IsMoving();
+    virtual bool& IsDead()
+    {
+        return this->isDead;
+    }
+    virtual bool& IsChargingAttack();
+    virtual bool& PendingNormalAttack();
+    virtual bool& PendingChargedAttack();
 
-    virtual float& ChargeTime() = 0;
-    virtual float& AttackTimer() = 0;
+    virtual float& ChargeTime();
+    virtual float& AttackTimer();
 
-    virtual Vector2f& PendingDirection() = 0;
-    virtual float& PendingChargeTime() = 0;
-    virtual const float AttackDelay() = 0;
-    virtual const float MaxChargeTime() = 0;
+    virtual Vector2f& PendingDirection();
+    virtual float& PendingChargeTime();
+    virtual const float AttackDelay();
+    virtual const float MaxChargeTime();
 
     ~CharacterMesh()
     {

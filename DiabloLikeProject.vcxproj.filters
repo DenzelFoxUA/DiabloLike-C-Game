@@ -64,6 +64,15 @@
     <Filter Include="Source Files\Controllers\AI_Controller">
       <UniqueIdentifier>{8a155879-51e0-4c8e-8a24-30908e421a87}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Entities\Projectiles">
+      <UniqueIdentifier>{f446457a-70ca-42a4-ba74-2261b5808d84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Entities\Projectiles">
+      <UniqueIdentifier>{d2a2dbc9-565e-4c78-9718-0824443cf63b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Controllers\Projectile">
+      <UniqueIdentifier>{e42835aa-d327-4b60-a9b6-a1a637ce0a42}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LadyArcherMesh.cpp">
@@ -117,6 +126,12 @@
     <ClCompile Include="NPC_Controller.cpp">
       <Filter>Source Files\Controllers\AI_Controller</Filter>
     </ClCompile>
+    <ClCompile Include="Projectile.cpp">
+      <Filter>Source Files\Entities\Projectiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Meshes\Weapons\ProjectileMesh.cpp">
+      <Filter>Source Files\Meshes\Weapons</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LadyArcherMesh.h">
@@ -169,6 +184,15 @@
     </ClInclude>
     <ClInclude Include="SkeletonController.h">
       <Filter>Header Files\Controllers\AI_NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="Projectile.h">
+      <Filter>Header Files\Entities\Projectiles</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\Weapons\ProjectileMesh.h">
+      <Filter>Header Files\Meshes\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectileController.h">
+      <Filter>Header Files\Controllers\Projectile</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

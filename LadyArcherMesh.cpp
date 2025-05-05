@@ -9,7 +9,7 @@ void LadyArcherMesh::Shoot(sf::Texture& arrowTexture, sf::Vector2f direction)
         direction.x = 1.f;
         std::cout << "WARNING: direction was zero! Defaulted to (1,0)\n";
     }
-    ArrowMesh arrow(arrowTexture, GetCenter(), direction);
+    ArrowMesh arrow(arrowTexture, GetCenter(), direction,250.f,6.f);
     
     arrows.push_back(arrow);
     std::cout << "Shooting arrow from (" << center.x << ", " << center.y << ") in direction: ("
@@ -27,7 +27,7 @@ void LadyArcherMesh::ShootCharged(sf::Texture& texture, sf::Vector2f direction, 
     }
 
     float normalizedCharge = std::clamp(charge / maxChargeTime, 0.1f, 1.0f);
-    ArrowMesh arrow(texture, center, direction);
+    ArrowMesh arrow(texture, center, direction,250.f, 6.f);
     float finalSpeed = 400.f + 600.f * normalizedCharge;
     arrow.SetSpeed(finalSpeed);
     arrows.push_back(arrow);

@@ -1,27 +1,43 @@
 ﻿#pragma once
 #include <SFML/Graphics.hpp>
+#include "ProjectileMesh.h"
 
-class ArrowMesh {
-private:
-    sf::Sprite sprite;
-    sf::Vector2f velocity;
-    sf::Vector2f direction;
-    float speed = 250.f;
-    float lifeTime = 6.f;
+class ArrowMesh : public ProjectileMesh
+{
+protected:
 
 public:
-    ArrowMesh(sf::Texture& texture, sf::Vector2f startPos, sf::Vector2f direction);
+    ArrowMesh(Texture& texture, Vector2f startPos, Vector2f direction, float speed, float lifetime) :
+        ProjectileMesh(texture, startPos, direction, speed, lifetime){}
 
-    ArrowMesh(const ArrowMesh& other);
-    ArrowMesh& operator=(const ArrowMesh& other);
+    ArrowMesh(const ArrowMesh& other) :ProjectileMesh(other) 
+    {
+        this->sprite = other.sprite;
+        this->direction = other.direction;
+        this->velocity = other.velocity;
+        this->speed = other.speed;
+        this->lifeTime = other.lifeTime;
+    };
+    ArrowMesh& operator=(const ArrowMesh& other)
+    {
+        if (this != &other)
+        {
+            this->sprite = other.sprite;
+            this->direction = other.direction;
+            this->velocity = other.velocity;
+            speed = other.speed;
+            lifeTime = other.lifeTime;
+        }
+        return *this;
+    }
 
-    void Update(float deltaTime);
-    void Draw(sf::RenderWindow& window);
-    bool IsOffScreen(sf::RenderWindow& window) const;
-    sf::FloatRect GetBounds() const;
-    const sf::Texture* GetTexturePtr() const;
-    sf::Vector2f GetPosition() const;
-    bool IsDead() const;
-    void SetSpeed(float newSpeed);
-    void UpdateVelocity();
+    //void Update(float deltaTime);
+    //void Draw(sf::RenderWindow& window);
+    //bool IsOffScreen(sf::RenderWindow& window) const;
+    //sf::FloatRect GetBounds() const;
+    //const sf::Texture* GetTexturePtr() const;
+    //sf::Vector2f GetPosition() const;
+    //bool IsDead() const;
+    //void SetSpeed(float newSpeed);
+    //void UpdateVelocity();
 };

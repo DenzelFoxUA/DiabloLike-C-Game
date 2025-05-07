@@ -4,8 +4,10 @@
 
 void ProjectileMesh::Update(float deltaTime)
 {
+    
     sprite.move(velocity * deltaTime);
     lifeTime -= deltaTime;
+    //std::cout << "Updating arrow. Remaining time: " << lifeTime << "s\n";
 }
 
 void ProjectileMesh::Draw(sf::RenderWindow& window)
@@ -71,5 +73,11 @@ void ProjectileMesh::UpdateVelocity()
         velocity = (direction / length) * speed;
     else
         velocity = { 0.f, 0.f };
+}
+
+void ProjectileMesh::EndLifeTime() {
+
+    lifeTime = 0.f;
+
 }
 

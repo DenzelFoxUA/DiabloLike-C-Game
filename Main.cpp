@@ -9,8 +9,23 @@
 #include "SkeletonMesh.h"
 #include "SkeletonController.h"
 #include <iostream>
+#include "PathsConfig.h"
+#include "TexturesMetaConfig.h"
+#include "LadyArcherUnit.h"
+#include "UnitBuilder.h"
+#include "SkeletonUnit.h"
+
 
 using namespace std;
+using namespace ArcherLadyCharacterPaths;
+using namespace Arrows;
+using namespace SkeletonCharacterPaths;
+
+//LadyArcherMesh BuildLadyArcherMesh(SpawnPoint);
+//SkeletonMesh BuildSkeletonMesh(SpawnPoint, float, float);
+//
+//template <typename CharMesh>
+//CharMesh BuildCharacterMesh(const vector<TextureMeta>&, Texture, SpawnPoint);
 
 int main()
 {
@@ -28,94 +43,52 @@ int main()
         std::cout << "Не вдалося завантажити фон!\n";
     }
 
+    Texture arrowTexture;
+    if (!arrowTexture.loadFromFile(ARROW_TEXTURES_SIMPLE_PATH + ARROW_TEXTURES_SIMPLE_FILE))
+    {
+        std::cout << "Error loading arrow texture!\n";
+    }
+
     sf::Sprite grassSprite;
     grassSprite.setTexture(grassTile);
 
-    sf::Texture arrowTexture;
-    if (!arrowTexture.loadFromFile("textures/Weapons/arrow.png"))
-    {
-        std::cout << "Error loading arrow texture!\n";
-        return -1;
-    }
-
-    std::vector<ArrowMesh> arrows;
-
-    TextureMeta ladyArcherIdle;
-    ladyArcherIdle.category = TextureCategory::Idle;
-    ladyArcherIdle.fileName = "Idle_Bow_Body";
-    ladyArcherIdle.folderPath = "textures/Characters/ArcherLady/Idle_Bow/";
-    ladyArcherIdle.frameHeight = 180;
-    ladyArcherIdle.frameWidth = 180;
-    ladyArcherIdle.numberOfColumns = 4;
-    ladyArcherIdle.numberOfFrames = 16;
-
-    TextureMeta ladyArcherAttack;
-    ladyArcherAttack.category = TextureCategory::Attack;
-    ladyArcherAttack.fileName = "Attack_Bow_Body";
-    ladyArcherAttack.folderPath = "textures/Characters/ArcherLady/Attack_Bow/";
-    ladyArcherAttack.frameHeight = 180;
-    ladyArcherAttack.frameWidth = 180;
-    ladyArcherAttack.numberOfColumns = 6;
-    ladyArcherAttack.numberOfFrames = 24;
-
-    TextureMeta ladyArcherMove;
-    ladyArcherMove.category = TextureCategory::Move;
-    ladyArcherMove.fileName = "Run_Bow_Body";
-    ladyArcherMove.folderPath = "textures/Characters/ArcherLady/Run_Bow/";
-    ladyArcherMove.frameHeight = 180;
-    ladyArcherMove.frameWidth = 180;
-    ladyArcherMove.numberOfColumns = 5;
-    ladyArcherMove.numberOfFrames = 20;
-
-    TextureMeta ladyArcherDead;
-    ladyArcherDead.category = TextureCategory::Death;
-    ladyArcherDead.fileName = "Death_Bow_Body";
-    ladyArcherDead.folderPath = "textures/Characters/ArcherLady/Death_Bow/";
-    ladyArcherDead.frameHeight = 180;
-    ladyArcherDead.frameWidth = 180;
-    ladyArcherDead.numberOfColumns = 6;
-    ladyArcherDead.numberOfFrames = 30;
-
-    vector<TextureMeta> ladyArcherTextures = { ladyArcherIdle,ladyArcherAttack,ladyArcherMove,ladyArcherDead };
     string name = "Eva";
-    LadyArcherMesh* heroModel = new LadyArcherMesh(ladyArcherTextures, arrows, arrowTexture, SpawnPoint{1000,400});
-    LadyArcher * hero = new LadyArcher(name,1600.f,1000.f);
-    LadyArcherController* heroControl = new LadyArcherController(heroModel, hero);
+    Arrow arrowSimple = Arrow(52, false);
+
+    /*LadyArcherMesh heroModel = (BuildLadyArcherMesh(SpawnPoint{ 1000,400 }));
+    LadyArcher hero = LadyArcher(name,1600.f,1000.f);
+    LadyArcherController heroControl = LadyArcherController(heroModel, hero, arrowSimple);*/
+
+   /* LadyArcherUnit archerEva = LadyArcherUnit(1, LadyArcherMeta(), arrowTexture, SpawnPoint{ 1000,400 }, 
+        LadyArcher(name, 1600.f, 1000.f),arrowSimple);*/
+
+    UnitBuilder<LadyArcherUnit, LadyArcherMesh, LadyArcher> ladyArcherBuilder;
+    UnitBuilder<SkeletonUnit, SkeletonMesh, Skeleton> skeletonBuilder;
+
+    auto archerEva = ladyArcherBuilder.SetId(1)
+        .SetTextures(LadyArcherMeta())
+        .SetProjectileTexture(arrowTexture)
+        .SetSpawnPoint(SpawnPoint{ 1000,400 })
+        .SetArrow(arrowSimple)
+        .SetEntity(LadyArcher(name, 1600.f, 1000.f))
+        .SetCooldown(0.f)
+        .Build();
+
+    auto skeleton1 = skeletonBuilder.SetId(1)
+        .SetTextures(SkeletonTexturesMeta())
+        .SetSpawnPoint(SpawnPoint{ 300,100 })
+        .SetProjectileTexture(arrowTexture)
+        .SetArrow(arrowSimple)
+        .SetEntity(Skeleton(600.f, 500.f))
+        .SetCooldown(2.f)
+        .Build();
+
+    skeleton1->SetAnimationDuration(0.4f);
+    skeleton1->SetSpeed(80.f);
     
-
-    TextureMeta idle_skeleton1;
-    idle_skeleton1.category = TextureCategory::Idle;
-    idle_skeleton1.fileName = "DarkEyes_Idle_Simple_Body";
-    idle_skeleton1.folderPath = "textures/Characters/SceletonBasic/Idle_Simple/";
-    idle_skeleton1.frameHeight = 180;
-    idle_skeleton1.frameWidth = 180;
-    idle_skeleton1.numberOfColumns = 4;
-    idle_skeleton1.numberOfFrames = 8;
-
-    TextureMeta move_skeleton1;
-    move_skeleton1.category = TextureCategory::Move;
-    move_skeleton1.fileName = "DarkEyes_Run_Forward_Body";
-    move_skeleton1.folderPath = "textures/Characters/SceletonBasic/Run_Forward/";
-    move_skeleton1.frameHeight = 180;
-    move_skeleton1.frameWidth = 180;
-    move_skeleton1.numberOfColumns = 4;
-    move_skeleton1.numberOfFrames = 8;
-
-    TextureMeta attack_skeleton1;
-    attack_skeleton1.category = TextureCategory::Attack;
-    attack_skeleton1.fileName = "DarkEyes_Attack_Slash_01_Body";
-    attack_skeleton1.folderPath = "textures/Characters/SceletonBasic/Attack_Slash_01/";
-    attack_skeleton1.frameHeight = 180;
-    attack_skeleton1.frameWidth = 180;
-    attack_skeleton1.numberOfColumns = 4;
-    attack_skeleton1.numberOfFrames = 8;
-
-    vector<TextureMeta> skeleton1Textures = { idle_skeleton1, move_skeleton1,attack_skeleton1 };
-    SkeletonMesh* skeleton1Mesh = new SkeletonMesh(skeleton1Textures, SpawnPoint{ 300,100 });
-    skeleton1Mesh->GetSpeed() = 80;
-    skeleton1Mesh->SetAnimationDuration(0.2f);
-    Skeleton * skeleton1 = new Skeleton(600.f,500.f);
-    SkeletonController* skeleton1Conrol = new SkeletonController(skeleton1Mesh, skeleton1, 2.f);
+    //SkeletonMesh skeleton1Mesh = BuildSkeletonMesh(SpawnPoint{ 300,100 },80.f,0.4f);
+    //Skeleton * skeleton1 = new Skeleton(600.f,500.f);
+    //SkeletonController* skeleton1Conrol = new SkeletonController(&skeleton1Mesh, skeleton1, 1.f);
 
     sf::Clock clock;
 
@@ -128,15 +101,20 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
+            
+            //heroControl.HandleEvent(event, window);
 
-            heroControl->HandleEvent(event, window);
+            archerEva->HandleEvent(event, window);
         }
 
-        heroControl->HandleInput(dt);
-        heroModel->Update(dt,window);
+        
+        //heroControl.HandleInput(dt);
+        archerEva->HandleInput(dt);
+        //heroControl.Update(dt, window, skeleton1Mesh, *skeleton1);
+        archerEva->Update(dt, window, skeleton1->GetMesh(), skeleton1->GetEntity());
 
-        skeleton1Conrol->HandleBehavior(heroModel->GetPosition(), *hero, dt);
-        skeleton1Conrol->Update(dt, window);
+        skeleton1->HandleBehavior(archerEva->GetPosition(), archerEva->GetEntity(), dt);
+        skeleton1->Update(dt, window, archerEva->GetMesh(), archerEva->GetEntity());
 
         window.clear();
 
@@ -147,23 +125,44 @@ int main()
             }
         }
 
-        heroModel->Draw(window);
-        skeleton1Mesh->Draw(window);
+        skeleton1->Draw(window);
 
-        auto& arrowList = heroModel->Arrows();
-        for (auto it = arrowList.begin(); it != arrowList.end(); )
-        {
-            it->Update(dt);
-            if (it->IsDead()) {
-                it = arrowList.erase(it);
-            }
-            else {
-                ++it;
-            }
-        }
+        //heroControl.Draw(window);
+
+        archerEva->Draw(window);
 
         window.display();
     }
 
     return 0;
 }
+
+//unique_ptr<LadyArcherUnit> BuildLadyArcher(int id, 
+//    string name, const vector<TextureMeta>& textures, Texture projectile, SpawnPoint sp, Arrow arrow)
+//{
+//    UnitBuilder<LadyArcherUnit, LadyArcherMesh, LadyArcher> builder;
+//
+//    return builder.SetId(id)
+//        .SetTextures(textures)
+//        .SetProjectileTexture(projectile)
+//        .SetSpawnPoint(SpawnPoint{ 1000,400 })
+//        .SetArrow(arrow)
+//        .SetEntity(LadyArcher(name, 1600.f, 1000.f))
+//        .Build();
+//}
+
+
+//SkeletonMesh BuildSkeletonMesh(SpawnPoint sp, float speed, float animationSpeed)
+//{
+//    vector<TextureMeta> skeletonTextures = SkeletonTexturesMeta();
+//    auto skeletonMesh = BuildCharacterMesh<SkeletonMesh>(skeletonTextures, Texture(), sp);
+//    skeletonMesh.SetSpeed(speed);
+//    skeletonMesh.SetAnimationDuration(animationSpeed);
+//    return skeletonMesh;
+//}
+//
+//template <typename CharMesh>
+//CharMesh BuildCharacterMesh(const vector<TextureMeta>& listOfTextures, Texture projectile, SpawnPoint sp)
+//{ 
+//    return CharMesh(listOfTextures, sp ,projectile);
+//}

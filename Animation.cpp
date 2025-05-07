@@ -26,7 +26,7 @@ void Animation::SetSheet(sf::Texture* tex, int frameW, int frameH, int cols, int
 
 void Animation::Update(float deltaTime) {
 
-    if (isFinished || !texture) return;
+    if (isFinished || !texture || paused) return;
 
     frameTimer += deltaTime;
     if (frameTimer >= frameDuration)

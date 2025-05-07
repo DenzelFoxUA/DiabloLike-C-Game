@@ -3,14 +3,15 @@
 #include <iostream>
 
 void CharacterMesh::LoadTextures(map<Direction, Texture>& target, string folderPath, string fileName) {
-    std::map<Direction, std::string> paths = {
+    map<Direction, string> paths = {
         {Direction::Right, folderPath + fileName + "_" + to_string((int)Direction::Right) + ".png"},
         {Direction::Up,    folderPath + fileName + "_" + to_string((int)Direction::Up) + ".png"},
         {Direction::Left,  folderPath + fileName + "_" + to_string((int)Direction::Left) + ".png"},
         {Direction::Down,  folderPath + fileName + "_" + to_string((int)Direction::Down) + ".png"},
     };
+
     for (const auto& [dir, path] : paths) {
-        sf::Texture tex;
+        Texture tex;
         if (!tex.loadFromFile(path)) {
             std::cout << "Failed to load: " << path << "\n";
         }
@@ -22,127 +23,77 @@ void CharacterMesh::LoadTextures(map<Direction, Texture>& target, string folderP
 void CharacterMesh::Update(float deltaTime, const sf::RenderWindow& window)
 {
     animation.Update(deltaTime);
+    if (chargingAttack) {
+        chargeTime += deltaTime;
+
+        if (chargeTime >= 5.0f) {
+            this->animation.FreezeOnMidFrame();
+        }
+    }
 }
 
 void CharacterMesh::Draw(sf::RenderWindow& window) {
-    window.draw(sprite);
+    window.draw(sprite);  
 }
 
-float& CharacterMesh::GetSpeed()
-{
-    return this->moveSpeed;
+void CharacterMesh::SetSpeed(float value) {
+    if (value > 700.f)
+    {
+        return;
+    }
+    
+    this->moveSpeed = value;
 }
 
-Direction& CharacterMesh::CurrentDir()
-{
-    return this->currentDir;
-}
+const float& CharacterMesh::GetSpeed() { return this->moveSpeed; }
 
-Direction& CharacterMesh::LastDir()
-{
-    return this->lastDir;
-}
+Direction& CharacterMesh::CurrentDir() { return this->currentDir; }
 
-bool& CharacterMesh::IsAttacking()
-{
-    return this->isAttacking;
-}
+Direction& CharacterMesh::LastDir() { return this->lastDir; }
 
-Sprite& CharacterMesh::Sprite()
-{
-    return this->sprite;
-}
+bool& CharacterMesh::IsAttacking() { return this->isAttacking; }
 
-CharacterState& CharacterMesh::CurrentState()
-{
-    return this->currentState;
-}
+Sprite& CharacterMesh::Sprite() { return this->sprite; }
 
-CharacterState& CharacterMesh::PreviousState()
-{
-    return this->previousState;
-}
+CharacterState& CharacterMesh::CurrentState() { return this->currentState; }
 
-map<Direction, sf::Texture>& CharacterMesh::IdleTextures()
-{
-    return this->idleTextures;
-}
+CharacterState& CharacterMesh::PreviousState() { return this->previousState; }
 
-map<Direction, sf::Texture>& CharacterMesh::MoveTextures()
-{
-    return this->movementTextures;
-}
+map<Direction, Texture>& CharacterMesh::IdleTextures() { return this->idleTextures; }
 
-map<Direction, sf::Texture>& CharacterMesh::AttackTextures()
-{
-    return this->attackTextures;
-}
+map<Direction, Texture>& CharacterMesh::MoveTextures() { return this->movementTextures; }
 
-map<Direction, sf::Texture>& CharacterMesh::DeathTextures()
-{
-    return this->deathTextures;
-}
+map<Direction, Texture>& CharacterMesh::AttackTextures() { return this->attackTextures; }
 
-Animation& CharacterMesh::Animation()
-{
-    return this->animation;
-}
+map<Direction, Texture>& CharacterMesh::DeathTextures() { return this->deathTextures; }
 
-TextureMeta& CharacterMesh::TextureData(TextureCategory category)
-{
-    return texturesData[category];
-}
+Animation& CharacterMesh::Animation() { return this->animation; }
 
-bool& CharacterMesh::IsCharged()
-{
-    return this->attackAlreadyCharged;
-}
+TextureMeta& CharacterMesh::TextureData(TextureCategory category) { return texturesData[category]; }
 
-bool& CharacterMesh::IsMoving()
-{
-    return this->isMoving;
-}
+bool& CharacterMesh::IsCharged() { return this->attackAlreadyCharged; }
 
-bool& CharacterMesh::IsChargingAttack()
-{
-    return this->chargingAttack;
-}
+bool& CharacterMesh::IsMoving() { return this->isMoving; }
 
-float& CharacterMesh::ChargeTime()
-{
-    return this->chargeTime;
-}
+bool& CharacterMesh::IsChargingAttack() { return this->chargingAttack; }
 
-float& CharacterMesh::AttackTimer()
-{
-    return this->attackTimer;
-}
+float& CharacterMesh::ChargeTime() { return this->chargeTime; }
 
-bool& CharacterMesh::PendingNormalAttack()
-{
-    return this->pendingNormalAttack;
-}
-bool& CharacterMesh::PendingChargedAttack()
-{
-    return this->pendingChargedAttack;
-}
+float& CharacterMesh::AttackTimer() { return this->attackTimer; }
 
-Vector2f& CharacterMesh::PendingDirection()
-{
-    return this->pendingDirection;
-}
+bool& CharacterMesh::PendingNormalAttack() { return this->pendingNormalAttack; }
 
-float& CharacterMesh::PendingChargeTime()
-{
-    return this->pendingChargeTime;
-}
+bool& CharacterMesh::PendingChargedAttack() { return this->pendingChargedAttack; }
 
-const float CharacterMesh::AttackDelay()
-{
-    return this->attackDelay;
-}
+Vector2f& CharacterMesh::PendingDirection() { return this->pendingDirection; }
 
-const float CharacterMesh::MaxChargeTime()
+float& CharacterMesh::PendingChargeTime() { return this->pendingChargeTime; }
+
+const float CharacterMesh::AttackDelay() { return this->attackDelay; }
+
+const float CharacterMesh::MaxChargeTime() { return this->maxChargeTime; }
+
+bool& CharacterMesh::IsDead()
 {
-    return this->maxChargeTime;
+    return this->isDead;
 }

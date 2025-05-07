@@ -14,9 +14,14 @@ void SkeletonController::HandleBehavior(Vector2f target, Character& enemy, float
 }
 
 
-void SkeletonController::Update(float deltaTime, const sf::RenderWindow& window)
+void SkeletonController::Update(float deltaTime, const sf::RenderWindow& window, CharacterMesh& targetMesh, Character& target)
 {
 
-    this->npcMesh->Update(deltaTime, window);
+    this->npcMesh.Update(deltaTime, window);
 
+}
+
+void SkeletonController::Draw(sf::RenderWindow& window)
+{
+    npcMesh.Draw(window);
 }

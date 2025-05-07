@@ -32,6 +32,7 @@ class CharacterMesh : public BaseMesh
 protected:
 
     Texture* activeTexture = nullptr;
+    
 
     bool chargingAttack = false;
     float chargeTime = 0.f;
@@ -41,10 +42,11 @@ protected:
     bool pendingNormalAttack = false;
     bool pendingChargedAttack = false;
     float pendingChargeTime = 0.f;
+
     sf::Vector2f pendingDirection = { 0.f, 0.f };
 
     float attackTimer = 0.f;
-    const float attackDelay = 0.7f;
+    const float attackDelay = 1.f;
 
     map<TextureCategory,TextureMeta> texturesData;
     map<Direction, sf::Texture> idleTextures;
@@ -62,12 +64,12 @@ protected:
     bool isMoving = false;
     bool isDead = false;
     float moveSpeed = 250.f;
-    std::vector<ArrowMesh> arrows;
     
     void LoadTextures(map<Direction, Texture>& target, string commonPath, string nameOfTexture) override;
 
 public:
-    CharacterMesh() = delete;
+
+    CharacterMesh() = default;
     CharacterMesh(vector<TextureMeta> texturePathList, SpawnPoint spawnP) : BaseMesh(texturePathList, spawnP)
     {
         for (const auto& texture : texturePathList)
@@ -81,6 +83,8 @@ public:
 
             LoadTextures(target, texture.folderPath, texture.fileName);
         }
+
+        //this->projectileTexture = projectileTexture;
         
         int height = texturesData[TextureCategory::Idle].frameHeight;
         int width = texturesData[TextureCategory::Idle].frameWidth;
@@ -91,8 +95,8 @@ public:
         animation.SetSheet(&idleTextures[currentDir], width, height, columns, frames);
     }
 
-    
-    virtual float& GetSpeed();
+    virtual void SetSpeed(float val);
+    virtual const float& GetSpeed();
 
     virtual Direction& CurrentDir();
 
@@ -116,10 +120,7 @@ public:
 
     virtual bool& IsCharged();
     virtual bool& IsMoving();
-    virtual bool& IsDead()
-    {
-        return this->isDead;
-    }
+    virtual bool& IsDead();
     virtual bool& IsChargingAttack();
     virtual bool& PendingNormalAttack();
     virtual bool& PendingChargedAttack();

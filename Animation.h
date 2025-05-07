@@ -18,7 +18,8 @@ private:
     float frameDuration = 0.1f;
 
     bool isFinished = false,
-        mustBeLooped = true;
+        mustBeLooped = true,
+        paused = false;
 
 public:
 
@@ -32,6 +33,22 @@ public:
     void SetFrameDuration(float newValue)
     {
         this->frameDuration = newValue;
+    }
+
+    void FreezeOnMidFrame()
+    {
+        paused = true;
+
+        int lastFrameIndex = totalFrames/2;
+        int x = (lastFrameIndex % columns) * frameWidth;
+        int y = (lastFrameIndex / columns) * frameHeight;
+
+        sprite.setTextureRect(IntRect(x, y, frameWidth, frameHeight));
+    }
+
+    void Resume()
+    {
+        paused = false;
     }
 };
 

@@ -16,6 +16,7 @@ protected:
 	float health;
 	float energy;
 	EnergyType energyType;
+	bool isDead;
 
 public:
 
@@ -27,6 +28,7 @@ public:
 		this->health = health;
 		this->energy = energy;
 		this->energyType = eType;
+		isDead = false;
 	}
 
 	virtual string GetName() const;
@@ -44,6 +46,11 @@ public:
 	virtual float GetHealthPoints() const 
 	{
 		return this->health;
+	}
+
+	virtual bool& IsDead()
+	{
+		return this->isDead;
 	}
 
 	~Character() = default;

@@ -44,5 +44,6 @@ public:
     virtual Vector2f GetPosition() const;
     virtual bool IsDead() const;
     virtual void SetSpeed(float newSpeed);
+    virtual void EndLifeTime();
     
 };

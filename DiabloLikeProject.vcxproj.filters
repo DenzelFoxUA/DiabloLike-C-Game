@@ -73,6 +73,15 @@
     <Filter Include="Header Files\Controllers\Projectile">
       <UniqueIdentifier>{e42835aa-d327-4b60-a9b6-a1a637ce0a42}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Builders">
+      <UniqueIdentifier>{00edaa35-070f-4aa9-87f5-e053fff4dd27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Config">
+      <UniqueIdentifier>{95e58b61-598e-45c6-a73c-2357146c2507}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Units">
+      <UniqueIdentifier>{9f499bc2-75aa-43cd-a322-79a0e609ecb6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LadyArcherMesh.cpp">
@@ -193,6 +202,30 @@
     </ClInclude>
     <ClInclude Include="ProjectileController.h">
       <Filter>Header Files\Controllers\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="Arrow.h">
+      <Filter>Header Files\Entities\Projectiles</Filter>
+    </ClInclude>
+    <ClInclude Include="ArrowController.h">
+      <Filter>Header Files\Controllers\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="PathsConfig.h">
+      <Filter>Header Files\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="TexturesMetaConfig.h">
+      <Filter>Header Files\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="LadyArcherUnit.h">
+      <Filter>Header Files\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseUnit.h">
+      <Filter>Header Files\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitBuilder.h">
+      <Filter>Header Files\Builders</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonUnit.h">
+      <Filter>Header Files\Units</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -11,12 +11,4 @@ public:
 		: ProjectileController(mesh, arrow)
 	{
 	}
-
-	//void Update(float deltaTime/*, const sf::RenderWindow& window*/) override
-	//{
-
-	//	this->projMesh.Update(deltaTime/*, window*/);
-
-
-	//}
 };

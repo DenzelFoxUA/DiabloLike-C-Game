@@ -52,20 +52,10 @@ public:
 		this->_controller->Draw(window);
 	}
 
-	/*virtual LadyArcher& GetEntity()
-	{
-		return this->_character;
-	}*/
-
 	LadyArcherMesh& GetMesh() override
 	{
 		return this->_mesh;
 	}
-
-	//virtual bool& IsDead() override
-	//{
-	//	return this->_mesh.IsDead();
-	//}
 
 	Vector2f GetPosition() const  override
 	{

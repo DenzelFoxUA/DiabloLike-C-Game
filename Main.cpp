@@ -21,11 +21,6 @@ using namespace ArcherLadyCharacterPaths;
 using namespace Arrows;
 using namespace SkeletonCharacterPaths;
 
-//LadyArcherMesh BuildLadyArcherMesh(SpawnPoint);
-//SkeletonMesh BuildSkeletonMesh(SpawnPoint, float, float);
-//
-//template <typename CharMesh>
-//CharMesh BuildCharacterMesh(const vector<TextureMeta>&, Texture, SpawnPoint);
 
 int main()
 {
@@ -55,13 +50,6 @@ int main()
     string name = "Eva";
     Arrow arrowSimple = Arrow(52, false);
 
-    /*LadyArcherMesh heroModel = (BuildLadyArcherMesh(SpawnPoint{ 1000,400 }));
-    LadyArcher hero = LadyArcher(name,1600.f,1000.f);
-    LadyArcherController heroControl = LadyArcherController(heroModel, hero, arrowSimple);*/
-
-   /* LadyArcherUnit archerEva = LadyArcherUnit(1, LadyArcherMeta(), arrowTexture, SpawnPoint{ 1000,400 }, 
-        LadyArcher(name, 1600.f, 1000.f),arrowSimple);*/
-
     UnitBuilder<LadyArcherUnit, LadyArcherMesh, LadyArcher> ladyArcherBuilder;
     UnitBuilder<SkeletonUnit, SkeletonMesh, Skeleton> skeletonBuilder;
 
@@ -82,13 +70,8 @@ int main()
         .SetEntity(Skeleton(600.f, 500.f))
         .SetCooldown(2.f)
         .Build();
-
     skeleton1->SetAnimationDuration(0.4f);
     skeleton1->SetSpeed(80.f);
-    
-    //SkeletonMesh skeleton1Mesh = BuildSkeletonMesh(SpawnPoint{ 300,100 },80.f,0.4f);
-    //Skeleton * skeleton1 = new Skeleton(600.f,500.f);
-    //SkeletonController* skeleton1Conrol = new SkeletonController(&skeleton1Mesh, skeleton1, 1.f);
 
     sf::Clock clock;
 
@@ -101,16 +84,12 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
-            
-            //heroControl.HandleEvent(event, window);
 
             archerEva->HandleEvent(event, window);
         }
 
         
-        //heroControl.HandleInput(dt);
         archerEva->HandleInput(dt);
-        //heroControl.Update(dt, window, skeleton1Mesh, *skeleton1);
         archerEva->Update(dt, window, skeleton1->GetMesh(), skeleton1->GetEntity());
 
         skeleton1->HandleBehavior(archerEva->GetPosition(), archerEva->GetEntity(), dt);
@@ -127,8 +106,6 @@ int main()
 
         skeleton1->Draw(window);
 
-        //heroControl.Draw(window);
-
         archerEva->Draw(window);
 
         window.display();
@@ -136,33 +113,3 @@ int main()
 
     return 0;
 }
-
-//unique_ptr<LadyArcherUnit> BuildLadyArcher(int id, 
-//    string name, const vector<TextureMeta>& textures, Texture projectile, SpawnPoint sp, Arrow arrow)
-//{
-//    UnitBuilder<LadyArcherUnit, LadyArcherMesh, LadyArcher> builder;
-//
-//    return builder.SetId(id)
-//        .SetTextures(textures)
-//        .SetProjectileTexture(projectile)
-//        .SetSpawnPoint(SpawnPoint{ 1000,400 })
-//        .SetArrow(arrow)
-//        .SetEntity(LadyArcher(name, 1600.f, 1000.f))
-//        .Build();
-//}
-
-
-//SkeletonMesh BuildSkeletonMesh(SpawnPoint sp, float speed, float animationSpeed)
-//{
-//    vector<TextureMeta> skeletonTextures = SkeletonTexturesMeta();
-//    auto skeletonMesh = BuildCharacterMesh<SkeletonMesh>(skeletonTextures, Texture(), sp);
-//    skeletonMesh.SetSpeed(speed);
-//    skeletonMesh.SetAnimationDuration(animationSpeed);
-//    return skeletonMesh;
-//}
-//
-//template <typename CharMesh>
-//CharMesh BuildCharacterMesh(const vector<TextureMeta>& listOfTextures, Texture projectile, SpawnPoint sp)
-//{ 
-//    return CharMesh(listOfTextures, sp ,projectile);
-//}

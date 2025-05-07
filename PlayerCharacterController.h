@@ -17,11 +17,6 @@ protected:
 	Obj& characterEntity;
 
 public:
-	//PlayerController()
- //   {
- //       characterMesh = nullptr;
- //       characterEntity = nullptr;
- //   }
 
 	PlayerController(Mesh &_mesh, Obj &_characterObj):characterMesh(_mesh), characterEntity(_characterObj)
 	{

@@ -71,8 +71,6 @@ float NPC_Controller<Mesh, Obj>::GetDistanceToTarget(Vector2f point)
     return std::sqrt((b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y));
 }
 
-//template<typename Mesh, typename Obj>
-//void NPC_Controller<Mesh, Obj>::HandleBehavior(Vector2f target, float deltaTime)
 template<typename Mesh, typename Obj>
 void NPC_Controller<Mesh, Obj>::HandleBehavior(Vector2f target, Character & enemy, float deltaTime)
 {

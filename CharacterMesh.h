@@ -83,8 +83,6 @@ public:
 
             LoadTextures(target, texture.folderPath, texture.fileName);
         }
-
-        //this->projectileTexture = projectileTexture;
         
         int height = texturesData[TextureCategory::Idle].frameHeight;
         int width = texturesData[TextureCategory::Idle].frameWidth;

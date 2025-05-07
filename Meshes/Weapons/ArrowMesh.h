@@ -30,14 +30,4 @@ public:
         }
         return *this;
     }
-
-    //void Update(float deltaTime);
-    //void Draw(sf::RenderWindow& window);
-    //bool IsOffScreen(sf::RenderWindow& window) const;
-    //sf::FloatRect GetBounds() const;
-    //const sf::Texture* GetTexturePtr() const;
-    //sf::Vector2f GetPosition() const;
-    //bool IsDead() const;
-    //void SetSpeed(float newSpeed);
-    //void UpdateVelocity();
 };

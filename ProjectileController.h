@@ -121,11 +121,6 @@ protected:
 public:
     ProjectileController() = delete;
 
-    /*ProjectileController(Mesh&& _mesh, Obj&& _entity): projMesh(std::move(_mesh)), projEntity(std::move(_entity))
-    {
-        static_assert(std::is_base_of_v<ProjectileMesh, Mesh>, "Mesh must inherit from ProjectileMesh");
-        static_assert(std::is_base_of_v<Projectile, Obj>, "Obj must inherit from Projectile");
-    }*/
     ProjectileController(Mesh& _mesh, Obj& _entity)
         : projMesh(_mesh), projEntity(_entity)
     {

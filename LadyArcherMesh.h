@@ -4,8 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "Projectile.h"
 #include "Arrow.h"
-#include "ProjectileController.h"
-#include "ArrowController.h"
+
 
 class LadyArcherMesh : public PlayerCharacterMesh
 {

@@ -45,18 +45,13 @@ public:
 	virtual void SetDamage(float dmg);
 	virtual float GetDamage();
 	virtual void ApplyDamage(Character&target);
-	virtual bool& IsCharged()
-	{
-		return this->isCharged;
-	}
+	virtual bool& IsCharged();
 
 	virtual float GetHitRadius() { return hitRadius; }
 
 	virtual void SetHitTarget(bool val) { hitTarget = val; }
 	virtual bool HasHitTarget() const { return hitTarget; }
 
-	virtual ProjectileType GetType() override
-	{
-		return this->type;
-	}
+	virtual ProjectileType GetType();
+
 };

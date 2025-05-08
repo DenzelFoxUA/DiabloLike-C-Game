@@ -7,7 +7,7 @@
 #include "ProjectileManager.h"
 
 using namespace std;
-//template <typename ProjectileT>
+
 class LadyArcherUnit :public BaseUnit<LadyArcher>
 {
 protected:
@@ -16,8 +16,32 @@ protected:
 
 	optional<LadyArcherController> _controller;
 
-	
-	/*unique_ptr<IProjectile> equipedProj;*/
+	float CaltulateSpeed(bool isCharged)
+	{
+		int multiplyer = isCharged ? 2 : 1;
+
+		return this->_character.GetAttributes().strength * 100 * multiplyer;
+	}
+
+	float CalculateDamage(bool isCharged)
+	{
+		int multiplyer = isCharged ? 2 : 1;
+
+		float basicDamage = this->_projectileEquiped == ProjectileType::ArrowSimple ? 20 :
+			ProjectileType::ArrowMagic ? 40 : 0;
+
+		return this->_character.GetAttributes().agility * basicDamage * multiplyer;
+	}
+
+	float CalculateHitRadius(bool isCharged)
+	{
+		int multiplyer = isCharged ? 2 : 1;
+
+		float basicRadius = this->_projectileEquiped == ProjectileType::ArrowSimple ? 40 :
+			ProjectileType::ArrowMagic ? 60 : 0;
+
+		return this->_character.GetAttributes().agility * multiplyer + basicRadius;
+	}
 
 public:
 
@@ -27,9 +51,8 @@ public:
 		const LadyArcher& entity, 
 		ProjectileType projectile,
 		float cooldown, 
-		ProjectilesContainer*container): BaseUnit(id,entity,projectile,container), _mesh(textures,sp)/*, equipedProj(move(projectile))*/
+		ProjectilesContainer*container): BaseUnit(id,entity,projectile,container), _mesh(textures,sp)
 	{ 
-		//static_assert(std::is_base_of_v<IProjectile, ProjectileT>, "T must inherit from IProjectile");
 		_controller.emplace(_mesh, this->_character);
 	}
 
@@ -41,7 +64,6 @@ public:
 	void HandleInput(float deltaTime)
 	{
 		this->_controller->HandleInput(deltaTime);
-		
 	}
 
 	void HandleEvent(const sf::Event& event, const sf::RenderWindow& window)
@@ -51,50 +73,47 @@ public:
 
 	void Shot(Texture& texture) override
 	{
-		//Vector2f direction = this->_controller->Shot();
-		//Texture texture = this->_mesh.GetProjectileTexture();
-		//this->equipedProj.IsCharged() = false;
-		//Vector2f center = this->_mesh.GetCenter();
-		//ArrowMesh arrowMesh(texture, center, direction, 250.f, 6.f);
-		//ProjectileObject projObject = ProjectileObject(MeshT && _mesh, EntityT && _entity);
-		//this->allGameProjectiles.AddProjectile(projObject);
-		
 
 		Vector2f direction = this->_controller->Shot();
-		//Texture texture = this->_mesh.GetProjectileTexture();
+
 		bool isCharged = false;
 		Vector2f center = this->_mesh.GetCenter();
 
-		//ArrowMesh arrowMesh(texture, center, direction, 150.f, 6.f);
-		Arrow arrow = Arrow(_projectileEquiped, 100, 80, isCharged);
+		float speed = CaltulateSpeed(isCharged);
+		float damage = CalculateDamage(isCharged);
+		float hitRadius = CalculateHitRadius(isCharged);
+
 		std::unique_ptr<IProjectileObject> projectilePtr =
 			std::make_unique<ProjectileObject<ArrowMesh, Arrow>>(
-				std::move(ArrowMesh(texture, center, direction, 350.f, 6.f)),
-				std::move(arrow)
+				std::move(ArrowMesh(texture, center, direction, speed, 6.f)),
+				std::move(Arrow(_projectileEquiped, damage, hitRadius, isCharged))
 			);
 
 		this->allGameProjectiles->AddProjectile(std::move(projectilePtr));
-		
 	}
 
-	void ShotCharged(Texture& texture, float charge) override
+	void ShotCharged(Texture& texture) override
 	{
 
 		Vector2f direction = this->_controller->Shot();
+
 		bool isCharged = true;
 		Vector2f center = this->_mesh.GetCenter();
-		Arrow arrow = Arrow(_projectileEquiped, 200.f, 80, isCharged);
+
+		float speed = CaltulateSpeed(isCharged);
+		float damage = CalculateDamage(isCharged);
+		float hitRadius = CalculateHitRadius(isCharged);
 
 		std::unique_ptr<IProjectileObject> projectilePtr =
 			std::make_unique<ProjectileObject<ArrowMesh, Arrow>>(
-				std::move(ArrowMesh(texture, center, direction, 450.f, 8.f)),
-				std::move(arrow)
+				std::move(ArrowMesh(texture, center, direction, speed, 6.f)),
+				std::move(Arrow(_projectileEquiped, damage, hitRadius, isCharged))
 			);
 
 		this->allGameProjectiles->AddProjectile(std::move(projectilePtr));
 	}
 
-	void Update(float deltaTime, const sf::RenderWindow& window, Texture&projTexture)
+	void Update(float deltaTime, const sf::RenderWindow& window, Texture&projTexture, Texture& projChargedTexture)
 	{
 		this->_controller->Update(deltaTime, window);
 		float& chargeTime = this->_mesh.ChargeTime();
@@ -113,24 +132,19 @@ public:
 			if (this->_mesh.PendingNormalAttack()) {
 				Shot(projTexture);
 				this->_mesh.PendingNormalAttack() = false;
+				cout << "Normal----------------------------->" << endl;
 			}
 			else if (this->_mesh.PendingChargedAttack()) {
-				ShotCharged(projTexture, 2.f);
+				ShotCharged(projChargedTexture);
 				this->_mesh.PendingChargedAttack() = false;
+				cout << "CHARGED CHARGED!!!----------------------------->" << endl;
 			}
 
 			this->_mesh.IsAttacking() = false;
 			this->_mesh.CurrentState() = CharacterState::Idle;
 			this->_mesh.Animation().Resume();
 		}
-
-
 	}
-
-	//void UpdateArrows(float deltaTime, const sf::RenderWindow& window, vector<IController*> enemies)
-	//{
-	//	this->_controller->UpdateArrows(deltaTime, window, enemies);
-	//}
 
 	void Draw(sf::RenderWindow& window) override
 	{
@@ -163,7 +177,6 @@ public:
 	{
 		this->_mesh.SetSpeed(val);
 	}
-
 
 	template <typename,typename>
 	friend class UnitBuilder;

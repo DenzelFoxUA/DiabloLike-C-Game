@@ -14,9 +14,7 @@
 #include "LadyArcherUnit.h"
 #include "UnitBuilder.h"
 #include "SkeletonUnit.h"
-//#include "BaseUnit.h"
 #include "NPC_Controller.h"
-//#include "ProjectileManager.h"
 
 
 
@@ -43,10 +41,18 @@ int main()
     }
 
     Texture arrowTexture;
+    Texture powerArrowTexture;
     if (!arrowTexture.loadFromFile(ARROW_TEXTURES_SIMPLE_PATH + ARROW_TEXTURES_SIMPLE_FILE))
     {
         std::cout << "Error loading arrow texture!\n";
     }
+
+    if (!powerArrowTexture.loadFromFile(ARROW_TEXTURES_EFFECTS_PATH + ARROW_TEXTURES_FIRE_FILE))
+    {
+        std::cout << "Error loading arrow texture!\n";
+    }
+
+    //"C:\Users\denze\source\repos\DiabloLikeGame\x64\Debug\textures\Weapons\fire_arrow.png"
 
     sf::Sprite grassSprite;
     grassSprite.setTexture(grassTile);
@@ -62,11 +68,27 @@ int main()
 
     vector<unique_ptr<IBaseUnit>> skeletons;
 
+    CharacterAttributes mainCharAttributes = {
+        5, //str
+        7, //agil
+        5, //intell
+        5, //willpower
+        5 // luck
+    };
+
+    CharacterAttributes skeletonsAttribute = {
+        5, //str
+        4, //agil
+        1, //intell
+        1, //willpower
+        2 // luck
+    };
+
     auto archerEva = ladyArcherBuilder.SetId(0)
         .SetTextures(LadyArcherMeta())
         .SetSpawnPoint(SpawnPoint{ 1000,400 })
         .SetArrow(ProjectileType::ArrowSimple)
-        .SetEntity(LadyArcher(nameMainChar, 1600.f, 1000.f))
+        .SetEntity(LadyArcher(nameMainChar, 1600.f, 1000.f, mainCharAttributes))
         .SetCooldown(0.f)
         .SetContainer(&projContainer)
         .Build();
@@ -89,7 +111,7 @@ int main()
             .SetTextures(SkeletonTexturesMeta())
             .SetSpawnPoint(SpawnPoint{ x, y })
             .SetArrow(ProjectileType::None)
-            .SetEntity(Skeleton(400.f, 200.f))
+            .SetEntity(Skeleton(400.f, 200.f, skeletonsAttribute))
             .SetCooldown(2.f)
             .Build();
         skeleton1->SetAnimationDuration(0.4f);
@@ -133,7 +155,7 @@ int main()
         }
         archerEva->HandleInput(dt);
 
-        archerEva->Update(dt, window, skeletons[0]->GetMesh(), skeletons[0]->GetEntity(),arrowTexture);
+        archerEva->Update(dt, window,arrowTexture,powerArrowTexture);
         /*archerEva->UpdateArrows(dt, window, _enemiesRefs);*/
 
         for (auto& skeleton : skeletons)
@@ -142,7 +164,7 @@ int main()
 
 
             skeleton->GetController().HandleBehavior(archerEva->GetPosition(), archerEva->GetEntity(), dt);
-            skeleton->GetController().Update(dt, window, archerEva->GetMesh(), archerEva->GetEntity());
+            skeleton->GetController().Update(dt, window);
         }
 
         projContainer.Update(dt,enemyPointers);

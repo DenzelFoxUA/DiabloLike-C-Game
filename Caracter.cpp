@@ -34,3 +34,13 @@ CharacterAttributes &Character::GetAttributes()
 {
 	return this->attributes;
 }
+
+float Character::GetHealthPoints() const
+{
+	return this->health;
+}
+
+bool& Character::IsDead()
+{
+	return this->isDead;
+}

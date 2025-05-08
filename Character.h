@@ -58,15 +58,9 @@ public:
 
 	virtual CharacterAttributes& GetAttributes();
 
-	virtual float GetHealthPoints() const 
-	{
-		return this->health;
-	}
+	virtual float GetHealthPoints() const;
 
-	virtual bool& IsDead()
-	{
-		return this->isDead;
-	}
+	virtual bool& IsDead();
 
 	~Character() = default;
 };

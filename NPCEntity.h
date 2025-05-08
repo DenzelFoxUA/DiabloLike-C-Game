@@ -14,7 +14,8 @@ public:
 
 	NPCEntity() = delete;
 
-	NPCEntity(string name, float health, float energy, EnergyType eType, bool isFriendly) : Character(name, health, energy, eType)
+	NPCEntity(string name, float health, float energy, CharacterAttributes attributes, EnergyType eType, bool isFriendly)
+		: Character(name, health, energy, attributes, eType)
 	{
 		this->isFriendly = isFriendly;
 	}

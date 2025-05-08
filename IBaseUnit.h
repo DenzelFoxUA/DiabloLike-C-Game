@@ -21,7 +21,7 @@ public:
     virtual IController& GetController() = 0;
 
     virtual void Shot(Texture& texture) = 0;
-    virtual void ShotCharged(Texture& texture, float charge) = 0;
+    virtual void ShotCharged(Texture& texture) = 0;
 
     virtual ProjectileType GetTypeOfProjectile() = 0;
 

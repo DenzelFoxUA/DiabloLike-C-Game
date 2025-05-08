@@ -5,8 +5,8 @@ class LadyArcher : public PlayerCharacter
 {
 public:
 	LadyArcher() = delete;
-	LadyArcher(string name, float healthPoint, float energy, EnergyType eType = EnergyType::Stamina) :
-		PlayerCharacter(name, healthPoint, energy, eType)
+	LadyArcher(string name, float healthPoint, float energy, CharacterAttributes attributes, EnergyType eType = EnergyType::Stamina) :
+		PlayerCharacter(name, healthPoint, energy,attributes, eType)
 	{
 
 	}

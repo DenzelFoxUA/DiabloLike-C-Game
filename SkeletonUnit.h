@@ -82,7 +82,7 @@ public:
 	{
 
 	}
-	virtual void ShotCharged(Texture& projTexture, float charge) override
+	virtual void ShotCharged(Texture& projtexture) override
 	{
 
 	}

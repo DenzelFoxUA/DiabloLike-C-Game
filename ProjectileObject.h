@@ -8,10 +8,6 @@
 #include <concepts>
 #include <iostream>
 #include <cmath>
-//#include "BaseUnit.h"
-
-//using namespace std;
-//using namespace sf;
 
 class IProjectileObject 
 {
@@ -63,7 +59,7 @@ public:
 
         if (!IsDead())
         {
-            cout << "Arrow Drawed!" << endl;
+            //cout << "Arrow Drawed!" << endl;
             projMesh.Draw(window);
         }
 

@@ -38,5 +38,7 @@ namespace SkeletonCharacterPaths
 namespace Arrows
 {
 	const string ARROW_TEXTURES_SIMPLE_PATH = "textures/Weapons/";
+	const string ARROW_TEXTURES_EFFECTS_PATH = "textures/Weapons/Effects/";
 	const string ARROW_TEXTURES_SIMPLE_FILE = "arrow.png";
+	const string ARROW_TEXTURES_FIRE_FILE = "fire_arrow.png";
 }

@@ -39,8 +39,3 @@ void SkeletonController::HandleEvent(const sf::Event& event, const sf::RenderWin
     // Скелет не слухає мишку =) лишити пустим
 }
 
-//void Update(float deltaTime, const sf::RenderWindow& window, CharacterMesh& targetMesh, Character& target)
-//{
-//    this->HandleBehavior(target.GetCenter(), target, deltaTime);
-//}
-

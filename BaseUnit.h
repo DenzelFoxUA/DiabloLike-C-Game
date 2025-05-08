@@ -40,7 +40,7 @@ public:
     virtual IController& GetController() = 0;
 
     virtual void Shot(Texture& projTexture) = 0;
-    virtual void ShotCharged(Texture& projTexture, float charge) = 0;
+    virtual void ShotCharged(Texture& projTexture) = 0;
 
     virtual ProjectileType GetTypeOfProjectile() override
     {

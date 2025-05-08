@@ -7,7 +7,7 @@ void ProjectileMesh::Update(float deltaTime)
     
     sprite.move(velocity * deltaTime);
     lifeTime -= deltaTime;
-    std::cout << "Updating arrow. Remaining time: " << lifeTime << "s\n";
+    //std::cout << "Updating arrow. Remaining time: " << lifeTime << "s\n";
 }
 
 void ProjectileMesh::Draw(sf::RenderWindow& window)

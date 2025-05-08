@@ -7,7 +7,7 @@
 
 using namespace std;
 
-class SkeletonUnit :public BaseUnit<SkeletonMesh, Skeleton>
+class SkeletonUnit :public BaseUnit<Skeleton>
 {
 protected:
 
@@ -16,10 +16,20 @@ protected:
 
 public:
 
-	SkeletonUnit(int id, const vector<TextureMeta>& textures, SpawnPoint sp,
-		const Skeleton& entity, Texture projectile, Arrow arrow, float cooldown) : BaseUnit(id, entity), _mesh(textures, sp)
+	SkeletonUnit(int id, 
+		const vector<TextureMeta>& textures, 
+		SpawnPoint sp,
+		const Skeleton& entity, 
+		ProjectileType projectile,
+		float cooldown,
+		ProjectilesContainer* container) : BaseUnit(id, entity,projectile,container), _mesh(textures, sp)
 	{
-		_controller.emplace(_mesh, _character, cooldown);
+		_controller.emplace(_mesh, static_cast<Skeleton&>(_character), cooldown);
+	}
+
+	IController& GetController() override
+	{
+		return this->_controller.value();
 	}
 
 	void HandleBehavior(Vector2f target, Character& enemy, float deltaTime)
@@ -27,9 +37,9 @@ public:
 		this->_controller->HandleBehavior(target, enemy, deltaTime);
 	}
 
-	void Update(float deltaTime, const sf::RenderWindow& window, CharacterMesh& targetMesh, Character& target)
+	void Update(float deltaTime, const sf::RenderWindow& window)
 	{
-		this->_controller->Update(deltaTime, window,targetMesh,target);
+		this->_controller->Update(deltaTime, window);
 	}
 	void Draw(sf::RenderWindow& window)
 	{
@@ -63,6 +73,20 @@ public:
 		this->_controller->SetSpeed(val);
 	}
 
-	template <typename, typename, typename>
+	//const IController& GetController() const override
+	//{
+	//	return _controller.value();
+	//}
+
+	void Shot(Texture& projTexture)override
+	{
+
+	}
+	virtual void ShotCharged(Texture& projTexture, float charge) override
+	{
+
+	}
+
+	template <typename, typename>
 	friend class UnitBuilder;
 };

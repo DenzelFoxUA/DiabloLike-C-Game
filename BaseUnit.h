@@ -1,25 +1,26 @@
 #pragma once
-#include "Character.h"
+#include "IBaseUnit.h"
 
-using namespace std;
-using namespace sf;
+class ProjectilesContainer;
 
-template <typename Mesh, typename Entity>
-class BaseUnit
+template <typename EntityT>
+class BaseUnit : public IBaseUnit
 {
 protected:
 
     int id;
-    Entity _character;
+    EntityT _character;
+    ProjectileType _projectileEquiped;
+    ProjectilesContainer* allGameProjectiles;
 
 public:
 
-    BaseUnit(int id, const Entity& character) : id(id), _character(character)
+    BaseUnit(int id, const EntityT& character, ProjectileType equip, ProjectilesContainer* container)
+        : id(id), _character(character), _projectileEquiped(equip), allGameProjectiles(container)
     {
-        static_assert(std::is_base_of_v<Character, Entity>, "Obj must inherit from Character");
     }
 
-    virtual Entity& GetEntity()
+    virtual EntityT& GetEntity()
     {
         return this->_character;
     }
@@ -28,14 +29,26 @@ public:
     {
         return this->_character.IsDead();
     }
-    virtual Mesh& GetMesh() = 0;
+
+    virtual CharacterMesh& GetMesh() = 0;
     virtual Vector2f GetPosition() const = 0;
     virtual Vector2f GetCenter() const = 0;
     virtual Vector2f MoveToPoint(Vector2f point) = 0;
     virtual void SetAnimationDuration(float newVal) = 0;
     virtual void SetSpeed(float val) = 0;
-    virtual void Draw(sf::RenderWindow& window) = 0;
+    virtual void Draw(RenderWindow& window) = 0;
+    virtual IController& GetController() = 0;
 
-    template <typename, typename, typename>
+    virtual void Shot(Texture& projTexture) = 0;
+    virtual void ShotCharged(Texture& projTexture, float charge) = 0;
+
+    virtual ProjectileType GetTypeOfProjectile() override
+    {
+        return this->_projectileEquiped;
+    }
+
+    virtual ~BaseUnit() override = default;
+
+    template <typename, typename>
     friend class UnitBuilder;
 };

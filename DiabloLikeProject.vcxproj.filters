@@ -82,6 +82,9 @@
     <Filter Include="Header Files\Units">
       <UniqueIdentifier>{9f499bc2-75aa-43cd-a322-79a0e609ecb6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\ProjectileObjects">
+      <UniqueIdentifier>{824bb847-7203-4a92-be34-1c4faead1c8c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LadyArcherMesh.cpp">
@@ -200,14 +203,8 @@
     <ClInclude Include="Meshes\Weapons\ProjectileMesh.h">
       <Filter>Header Files\Meshes\Weapons</Filter>
     </ClInclude>
-    <ClInclude Include="ProjectileController.h">
-      <Filter>Header Files\Controllers\Projectile</Filter>
-    </ClInclude>
     <ClInclude Include="Arrow.h">
       <Filter>Header Files\Entities\Projectiles</Filter>
-    </ClInclude>
-    <ClInclude Include="ArrowController.h">
-      <Filter>Header Files\Controllers\Projectile</Filter>
     </ClInclude>
     <ClInclude Include="PathsConfig.h">
       <Filter>Header Files\Config</Filter>
@@ -226,6 +223,18 @@
     </ClInclude>
     <ClInclude Include="SkeletonUnit.h">
       <Filter>Header Files\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="IController.h">
+      <Filter>Header Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectileObject.h">
+      <Filter>Header Files\ProjectileObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="IBaseUnit.h">
+      <Filter>Header Files\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectileManager.h">
+      <Filter>Header Files\Controllers\Projectile</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

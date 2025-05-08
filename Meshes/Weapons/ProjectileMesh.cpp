@@ -7,12 +7,12 @@ void ProjectileMesh::Update(float deltaTime)
     
     sprite.move(velocity * deltaTime);
     lifeTime -= deltaTime;
-    //std::cout << "Updating arrow. Remaining time: " << lifeTime << "s\n";
+    std::cout << "Updating arrow. Remaining time: " << lifeTime << "s\n";
 }
 
 void ProjectileMesh::Draw(sf::RenderWindow& window)
 {
-    window.draw(sprite);
+    window.draw(this->sprite);
 }
 
 bool ProjectileMesh::IsOffScreen(sf::RenderWindow& window) const
@@ -36,6 +36,11 @@ sf::Vector2f ProjectileMesh::GetPosition() const {
 
 bool ProjectileMesh::IsDead() const {
     return lifeTime <= 0.f;
+}
+
+void ProjectileMesh::MarkToDestroy() {
+    
+    this->lifeTime = 0.f;
 }
 
 void ProjectileMesh::SetSpeed(float newSpeed) {

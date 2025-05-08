@@ -26,7 +26,3 @@ void LadyArcherMesh::Update(float deltaTime, const sf::RenderWindow& window)
     }
 }
 
-Texture& LadyArcherMesh::ArrowTex()
-{
-    return this->arrowTexture;
-}

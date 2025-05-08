@@ -32,7 +32,6 @@ class CharacterMesh : public BaseMesh
 protected:
 
     Texture* activeTexture = nullptr;
-    
 
     bool chargingAttack = false;
     float chargeTime = 0.f;
@@ -130,7 +129,11 @@ public:
     virtual float& PendingChargeTime();
     virtual const float AttackDelay();
     virtual const float MaxChargeTime();
+    //virtual Texture& GetProjectileTexture()
+    //{
+    //    return this->projectileTexture;
 
+    //}
     ~CharacterMesh()
     {
         cout << "Character mesh destroyed!" << endl;

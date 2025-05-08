@@ -6,6 +6,6 @@ class Arrow :public Projectile
 {
 public:
 	Arrow() = delete;
-	Arrow(float damage, bool isCharged) :Projectile(damage,isCharged) {}
+	Arrow(ProjectileType type, float damage,float hitRadius, bool isCharged) :Projectile(type,damage,hitRadius,isCharged) {}
 
 };

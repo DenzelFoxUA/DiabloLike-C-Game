@@ -8,6 +8,15 @@ enum EnergyType
 	Stamina
 };
 
+struct CharacterAttributes
+{
+	int strength,
+		agility,
+		willpower,
+		inteligence,
+		luck;
+};
+
 class Character
 {
 protected:
@@ -18,17 +27,21 @@ protected:
 	EnergyType energyType;
 	bool isDead;
 
+	CharacterAttributes attributes;
+
 public:
 
 	Character() = delete;
 
-	Character(string name, float health, float energy, EnergyType eType)
+	Character(string name, float health, float energy, CharacterAttributes attributes, EnergyType eType)
 	{
 		this->name = name;
 		this->health = health;
 		this->energy = energy;
 		this->energyType = eType;
+		this->attributes = attributes;
 		isDead = false;
+		
 	}
 
 	virtual string GetName() const;
@@ -42,6 +55,8 @@ public:
 	virtual void SpendEnergy(float eValue);
 
 	virtual EnergyType GetEnergyType() const;
+
+	virtual CharacterAttributes& GetAttributes();
 
 	virtual float GetHealthPoints() const 
 	{

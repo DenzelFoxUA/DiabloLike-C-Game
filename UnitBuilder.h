@@ -5,8 +5,9 @@
 #include "BaseUnit.h"
 #include <memory>
 #include <vector>
+#include "ProjectileManager.h"
 
-template <typename UnitT, typename MeshT, typename EntityT>
+template <typename UnitT, typename EntityT>
 class UnitBuilder
 {
 private:
@@ -14,9 +15,9 @@ private:
     vector<TextureMeta> _textures;
     SpawnPoint _spawnPoint;
     optional<EntityT> _entity;
-    optional<Texture> _projectileTexture;
-    optional<Arrow> _arrow;
+    ProjectileType _projectile;
     float _cooldown;
+    ProjectilesContainer* _container = nullptr;
 
 public:
     UnitBuilder& SetId(int id)
@@ -28,12 +29,6 @@ public:
     UnitBuilder& SetTextures(const std::vector<TextureMeta>& textures)
     {
         this->_textures = textures;
-        return *this;
-    }
-
-    UnitBuilder& SetProjectileTexture(const sf::Texture& texture)
-    {
-        this->_projectileTexture = texture;
         return *this;
     }
 
@@ -49,9 +44,9 @@ public:
         return *this;
     }
 
-    UnitBuilder& SetArrow(const Arrow& arrow)
+    UnitBuilder& SetArrow(ProjectileType type)
     {
-        this->_arrow = arrow;
+        this->_projectile = type;
         return *this;
     }
 
@@ -60,12 +55,31 @@ public:
         this->_cooldown = cd;
         return *this;
     }
+    UnitBuilder& SetContainer(ProjectilesContainer* container)
+    {
+        this->_container = container;
+        return *this;
+    }
 
     unique_ptr<UnitT> Build()
     {
-        static_assert(std::is_base_of_v<BaseUnit<MeshT, EntityT>, UnitT>,
-            "UnitType must inherit from BaseUnit<MeshType, EntityType>");
+        static_assert(std::is_base_of_v<BaseUnit<EntityT>, UnitT>,
+            "UnitType must inherit from BaseUnit!");
 
-        return make_unique<UnitT>(_id, _textures, _spawnPoint,*_entity,* _projectileTexture,*_arrow, _cooldown);
+        return make_unique<UnitT>(_id, 
+            _textures,
+            _spawnPoint,
+            *_entity,
+            _projectile,
+            _cooldown, 
+            _container);
+    }
+
+    void Reset()
+    {
+        //this->_arrow.reset();
+        //this->_projectileTexture.reset();
+        this->_entity.reset();
+        //this->_container.reset();
     }
 };

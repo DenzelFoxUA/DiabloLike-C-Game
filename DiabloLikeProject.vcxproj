@@ -158,11 +158,12 @@
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Arrow.h" />
-    <ClInclude Include="ArrowController.h" />
     <ClInclude Include="BaseUnit.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="CharacterMesh.h" />
     <ClInclude Include="BaseMesh.h" />
+    <ClInclude Include="IBaseUnit.h" />
+    <ClInclude Include="IController.h" />
     <ClInclude Include="LadyArcherUnit.h" />
     <ClInclude Include="PathsConfig.h" />
     <ClInclude Include="LadyArcher.h" />
@@ -177,7 +178,8 @@
     <ClInclude Include="PlayerCharacterController.h" />
     <ClInclude Include="PlayerCharacterMesh.h" />
     <ClInclude Include="Projectile.h" />
-    <ClInclude Include="ProjectileController.h" />
+    <ClInclude Include="ProjectileManager.h" />
+    <ClInclude Include="ProjectileObject.h" />
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="SkeletonController.h" />
     <ClInclude Include="SkeletonMesh.h" />

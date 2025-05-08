@@ -4,7 +4,7 @@
 #include "Skeleton.h"
 
 
-class SkeletonController : public NPC_Controller<SkeletonMesh, Skeleton>
+class SkeletonController : public NPC_Controller
 {
 protected:
 
@@ -16,11 +16,14 @@ public:
 	}
 
 	void HandleBehavior(Vector2f target, Character& enemy, float deltaTime) override;
-	void Update(float deltaTime, const sf::RenderWindow& window, CharacterMesh& targetMesh, Character& target) override;
+	void Update(float deltaTime, const sf::RenderWindow& window) override;
 	void Draw(sf::RenderWindow& window) override;
 
-	void SetSpeed(float val) override
-	{
-		this->npcMesh.SetSpeed(val);
-	}
+    Character& GetEntity() override;
+    void SetSpeed(float val) override;
+
+    void HandleInput(float deltaTime) override;
+
+    void HandleEvent(const sf::Event& event, const sf::RenderWindow& window) override;
+
 };

@@ -10,16 +10,16 @@
 class LadyArcherMesh : public PlayerCharacterMesh
 {
 protected:
-    //std::vector<ArrowMesh> arrows;
-    Texture arrowTexture;
+
+
 public:
 
     LadyArcherMesh() = delete;
-    LadyArcherMesh(vector<TextureMeta> texturePathList, SpawnPoint spawnP, Texture arrowTexture )
-        : PlayerCharacterMesh(texturePathList, spawnP), arrowTexture(arrowTexture) {
+    LadyArcherMesh(vector<TextureMeta> texturePathList, SpawnPoint spawnP)
+        : PlayerCharacterMesh(texturePathList, spawnP) {
     };
 
     void Update(float deltaTime, const sf::RenderWindow& window) override;
     void Draw(sf::RenderWindow& window) override;
-    Texture& ArrowTex();
+    
 };

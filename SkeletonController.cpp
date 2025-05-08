@@ -3,11 +3,11 @@
 
 void SkeletonController::HandleBehavior(Vector2f target, Character& enemy, float deltaTime)
 {
-    NPC_Controller<SkeletonMesh, Skeleton>::HandleBehavior(target,enemy,deltaTime);
+    NPC_Controller::HandleBehavior(target,enemy,deltaTime);
 }
 
 
-void SkeletonController::Update(float deltaTime, const sf::RenderWindow& window, CharacterMesh& targetMesh, Character& target)
+void SkeletonController::Update(float deltaTime, const sf::RenderWindow& window)
 {
 
     this->npcMesh.Update(deltaTime, window);
@@ -18,3 +18,29 @@ void SkeletonController::Draw(sf::RenderWindow& window)
 {
     npcMesh.Draw(window);
 }
+
+Character& SkeletonController::GetEntity()
+{
+    return this->npcEntity;
+}
+
+void SkeletonController::SetSpeed(float val)
+{
+    this->npcMesh.SetSpeed(val);
+}
+
+void SkeletonController::HandleInput(float deltaTime)
+{
+    // ШІ сам собі господар — тут можна залишити пусто
+}
+
+void SkeletonController::HandleEvent(const sf::Event& event, const sf::RenderWindow& window)
+{
+    // Скелет не слухає мишку =) лишити пустим
+}
+
+//void Update(float deltaTime, const sf::RenderWindow& window, CharacterMesh& targetMesh, Character& target)
+//{
+//    this->HandleBehavior(target.GetCenter(), target, deltaTime);
+//}
+

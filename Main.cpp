@@ -14,6 +14,10 @@
 #include "LadyArcherUnit.h"
 #include "UnitBuilder.h"
 #include "SkeletonUnit.h"
+//#include "BaseUnit.h"
+#include "NPC_Controller.h"
+//#include "ProjectileManager.h"
+
 
 
 using namespace std;
@@ -47,37 +51,77 @@ int main()
     sf::Sprite grassSprite;
     grassSprite.setTexture(grassTile);
 
-    string name = "Eva";
-    Arrow arrowSimple = Arrow(52, false);
+    ProjectilesContainer projContainer;
 
-    UnitBuilder<LadyArcherUnit, LadyArcherMesh, LadyArcher> ladyArcherBuilder;
-    UnitBuilder<SkeletonUnit, SkeletonMesh, Skeleton> skeletonBuilder;
+    string nameMainChar = "Eva";
+    //Arrow arrowSimple = Arrow(ProjectileType::ArrowMagic,152,80.f, false);
+    auto arrowSimple = std::make_unique<Arrow>(ProjectileType::ArrowMagic, 152, 80.f, false);
 
-    auto archerEva = ladyArcherBuilder.SetId(1)
+    UnitBuilder<LadyArcherUnit,LadyArcher> ladyArcherBuilder;
+
+
+    vector<unique_ptr<IBaseUnit>> skeletons;
+
+    auto archerEva = ladyArcherBuilder.SetId(0)
+        .SetTextures(LadyArcherMeta())
+        .SetSpawnPoint(SpawnPoint{ 1000,400 })
+        .SetArrow(ProjectileType::ArrowSimple)
+        .SetEntity(LadyArcher(nameMainChar, 1600.f, 1000.f))
+        .SetCooldown(0.f)
+        .SetContainer(&projContainer)
+        .Build();
+
+    /*skeletons.emplace_back(
+        ladyArcherBuilder.SetId(-1)
         .SetTextures(LadyArcherMeta())
         .SetProjectileTexture(arrowTexture)
         .SetSpawnPoint(SpawnPoint{ 1000,400 })
         .SetArrow(arrowSimple)
-        .SetEntity(LadyArcher(name, 1600.f, 1000.f))
+        .SetEntity(LadyArcher(nameMainChar, 1600.f, 1000.f))
         .SetCooldown(0.f)
-        .Build();
+        .Build()
+    );*/
 
-    auto skeleton1 = skeletonBuilder.SetId(1)
-        .SetTextures(SkeletonTexturesMeta())
-        .SetSpawnPoint(SpawnPoint{ 300,100 })
-        .SetProjectileTexture(arrowTexture)
-        .SetArrow(arrowSimple)
-        .SetEntity(Skeleton(600.f, 500.f))
-        .SetCooldown(2.f)
-        .Build();
-    skeleton1->SetAnimationDuration(0.4f);
-    skeleton1->SetSpeed(80.f);
+    for (int i = 1, x = 100, y = 100; i <= 3; i++)
+    {
+        UnitBuilder<SkeletonUnit, Skeleton> skeletonBuilder;
+        auto skeleton1 = skeletonBuilder.SetId(i)
+            .SetTextures(SkeletonTexturesMeta())
+            .SetSpawnPoint(SpawnPoint{ x, y })
+            .SetArrow(ProjectileType::None)
+            .SetEntity(Skeleton(400.f, 200.f))
+            .SetCooldown(2.f)
+            .Build();
+        skeleton1->SetAnimationDuration(0.4f);
+        skeleton1->SetSpeed(80.f);
+
+        skeletons.emplace_back(move(skeleton1));
+
+        if (i % 2 == 0)
+            x += x;
+        else
+            y += y;
+
+
+        skeletonBuilder.Reset();
+    }
+
+    //vector<IController*> _enemiesRefs;
+    //for (auto& enemie : skeletons)
+    //{
+    //    _enemiesRefs.emplace_back(&enemie->GetController());
+    //}
+
+
 
     sf::Clock clock;
 
     while (window.isOpen())
     {
         float dt = clock.restart().asSeconds();
+        std::vector<IBaseUnit*> enemyPointers;
+        for (auto& enemy : skeletons)
+            enemyPointers.push_back(enemy.get());
 
         sf::Event event;
         while (window.pollEvent(event))
@@ -87,13 +131,22 @@ int main()
 
             archerEva->HandleEvent(event, window);
         }
-
-        
         archerEva->HandleInput(dt);
-        archerEva->Update(dt, window, skeleton1->GetMesh(), skeleton1->GetEntity());
 
-        skeleton1->HandleBehavior(archerEva->GetPosition(), archerEva->GetEntity(), dt);
-        skeleton1->Update(dt, window, archerEva->GetMesh(), archerEva->GetEntity());
+        archerEva->Update(dt, window, skeletons[0]->GetMesh(), skeletons[0]->GetEntity(),arrowTexture);
+        /*archerEva->UpdateArrows(dt, window, _enemiesRefs);*/
+
+        for (auto& skeleton : skeletons)
+        {
+            if (skeleton->IsDead()) continue;
+
+
+            skeleton->GetController().HandleBehavior(archerEva->GetPosition(), archerEva->GetEntity(), dt);
+            skeleton->GetController().Update(dt, window, archerEva->GetMesh(), archerEva->GetEntity());
+        }
+
+        projContainer.Update(dt,enemyPointers);
+
 
         window.clear();
 
@@ -104,10 +157,13 @@ int main()
             }
         }
 
-        skeleton1->Draw(window);
+        for (auto& skeleton : skeletons)
+        {
+            skeleton->Draw(window);
+        } 
 
         archerEva->Draw(window);
-
+        projContainer.DrawAll(window);
         window.display();
     }
 

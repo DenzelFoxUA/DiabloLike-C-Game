@@ -29,3 +29,8 @@ string Character::GetName() const
 {
 	return name;
 }
+
+CharacterAttributes &Character::GetAttributes()
+{
+	return this->attributes;
+}

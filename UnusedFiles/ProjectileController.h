@@ -121,8 +121,15 @@ protected:
 public:
     ProjectileController() = delete;
 
-    ProjectileController(Mesh& _mesh, Obj& _entity)
-        : projMesh(_mesh), projEntity(_entity)
+    //ProjectileController(Mesh _mesh, Obj _entity)
+    //    : projMesh(_mesh), projEntity(_entity)
+    //{
+    //    static_assert(std::is_base_of_v<ProjectileMesh, Mesh>, "Mesh must inherit from ProjectileMesh");
+    //    static_assert(std::is_base_of_v<Projectile, Obj>, "Obj must inherit from Projectile");
+    //}
+
+    ProjectileController(Mesh&& _mesh, Obj&& _entity)
+        : projMesh(std::move(_mesh)), projEntity(std::move(_entity))
     {
         static_assert(std::is_base_of_v<ProjectileMesh, Mesh>, "Mesh must inherit from ProjectileMesh");
         static_assert(std::is_base_of_v<Projectile, Obj>, "Obj must inherit from Projectile");
@@ -131,7 +138,7 @@ public:
     virtual void HandleBehavior(Vector2f targetPoint, Character& enemy, float deltaTime)
     {
         projMesh.Update(deltaTime);
-
+        std::cout << "Arrow Pos: " << projMesh.GetPosition().x << " " << projMesh.GetPosition().y << std::endl;
         float dist = GetDistance(projMesh.GetPosition(), targetPoint);
 
         if (dist <= 80.f && !projEntity.HasHitTarget())
@@ -161,7 +168,13 @@ public:
 
     void Draw(sf::RenderWindow& window)
     {
-        projMesh.Draw(window);
+        
+        if (!IsDead())
+        {
+            cout << "Arrow Drawed!" << endl;
+            projMesh.Draw(window);
+        }
+            
     }
 
     bool IsDead() const
@@ -169,6 +182,8 @@ public:
         return projMesh.IsDead();
     }
 
-    const Mesh& GetMesh() const { return projMesh; }
-    const Obj& GetEntity() const { return projEntity; }
+    Mesh& GetMesh() const { return projMesh; }
+    Obj& GetEntity() { return projEntity; }
+
+    float GetDamage() { return projEntity.GetDamage(); }
 };

@@ -1,40 +1,33 @@
 #pragma once
 #include <iostream>
+#include <functional>
+#include "ICharacter.h"
 using namespace std;
 
-enum EnergyType
-{
-	Mana,
-	Stamina
-};
-
-struct CharacterAttributes
-{
-	int strength,
-		agility,
-		willpower,
-		inteligence,
-		luck;
-};
-
-class Character
+class Character:public ICharacter
 {
 protected:
 
+	int id;
 	string name;
 	float health;
 	float energy;
 	EnergyType energyType;
 	bool isDead;
+	float energyMax = 500;
 
 	CharacterAttributes attributes;
+
+	std::unordered_map<int, std::function<void(int)>> deathListeners;
+	int nextListenerId = 0;
 
 public:
 
 	Character() = delete;
 
-	Character(string name, float health, float energy, CharacterAttributes attributes, EnergyType eType)
+	Character(int id, string name, float health, float energy, CharacterAttributes attributes, EnergyType eType)
 	{
+		this->id = id;
 		this->name = name;
 		this->health = health;
 		this->energy = energy;
@@ -44,23 +37,60 @@ public:
 		
 	}
 
-	virtual string GetName() const;
+	virtual int GetId()const override
+	{
+		return id;
+	}
 
-	virtual void GetHit(float damage);
+	virtual float GetEnergy() const override
+	{
+		return this->energy;
+	}
 
-	virtual void GetHeal(float healValue);
+	virtual string GetName() const override;
 
-	virtual void GainEnergy(float eValue);
+	virtual void GetHit(float damage) override;
 
-	virtual void SpendEnergy(float eValue);
+	virtual void GetHeal(float healValue) override;
 
-	virtual EnergyType GetEnergyType() const;
+	virtual void GainEnergy(float eValue) override;
 
-	virtual CharacterAttributes& GetAttributes();
+	virtual void SpendEnergy(float eValue) override;
 
-	virtual float GetHealthPoints() const;
+	virtual EnergyType GetEnergyType() const override;
 
-	virtual bool& IsDead();
+	virtual CharacterAttributes& GetAttributes() override;
+
+	virtual float GetHealthPoints() const override;
+
+	virtual bool& IsDead() override;
+
+	virtual void Death()  override
+	{
+		if (isDead) return;
+		isDead = true;
+
+		std::cout << "Enemy died!\n";
+		for (auto& [_, listener] : deathListeners)
+		{
+			listener(100); // Наприклад, 100 досвіду
+		}
+	}
+	
+	int SubscribeOnDeath(std::function<void(int expGained)> caller)
+	{
+		int id = nextListenerId++;
+		deathListeners[id] = caller;
+		return id;
+	}
+
+	void UnsubscribeOnDeath(int listenerId)
+	{
+		deathListeners.erase(listenerId);
+	}
+
+
+	virtual void GainExperience(int expPoints) = 0;
 
 	~Character() = default;
 };

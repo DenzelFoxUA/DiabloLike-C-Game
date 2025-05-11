@@ -5,9 +5,9 @@ class Skeleton : public NPCEntity
 {
 public:
 	Skeleton() = delete;
-	Skeleton(float health, float energy, CharacterAttributes attributes,
+	Skeleton(int id, float health, float energy,float detectRadius,int gainXp, CharacterAttributes attributes,
 		EnergyType eType = EnergyType::Stamina, string name = "Skeleton", bool isFriendly = false) :
-		NPCEntity(name, health, energy,attributes, eType, isFriendly)
+		NPCEntity(id, name, health, energy,detectRadius,gainXp,attributes, eType, isFriendly)
 	{
 
 	}

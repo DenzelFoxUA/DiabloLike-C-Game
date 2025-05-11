@@ -1,4 +1,6 @@
 #pragma once
+#include <functional>
+#include <iostream>
 #include "IBaseUnit.h"
 
 class ProjectilesContainer;
@@ -8,15 +10,17 @@ class BaseUnit : public IBaseUnit
 {
 protected:
 
-    int id;
+    std::map<int, int> enemiesSubscriptions;
+
+    
     EntityT _character;
     ProjectileType _projectileEquiped;
     ProjectilesContainer* allGameProjectiles;
 
 public:
 
-    BaseUnit(int id, const EntityT& character, ProjectileType equip, ProjectilesContainer* container)
-        : id(id), _character(character), _projectileEquiped(equip), allGameProjectiles(container)
+    BaseUnit(const EntityT& character, ProjectileType equip, ProjectilesContainer* container)
+        : _character(character), _projectileEquiped(equip), allGameProjectiles(container)
     {
     }
 
@@ -25,7 +29,7 @@ public:
         return this->_character;
     }
 
-    virtual bool& IsDead()
+    virtual bool& IsDead() override
     {
         return this->_character.IsDead();
     }
@@ -42,10 +46,24 @@ public:
     virtual void Shot(Texture& projTexture) = 0;
     virtual void ShotCharged(Texture& projTexture) = 0;
 
+    virtual void Death() override
+    {
+
+    }
+
     virtual ProjectileType GetTypeOfProjectile() override
     {
         return this->_projectileEquiped;
     }
+
+    virtual void SubscribeOnEnemy(Character& enemy) = 0;
+    virtual void UnsubscribeFromEnemy(Character& enemy) = 0;
+
+    virtual void GainXP(int expPoints) = 0;
+
+    virtual void SpendEnergy(float value) = 0;
+    virtual void GainEnergyDueTime(float val, float deltaTime) = 0;
+    virtual void GainEnergyBySource(float value) = 0;
 
     virtual ~BaseUnit() override = default;
 

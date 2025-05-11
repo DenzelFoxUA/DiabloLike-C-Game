@@ -7,6 +7,7 @@ class IController;
 class Character;
 class CharacterMesh;
 
+
 class IBaseUnit {
 public:
     virtual Character& GetEntity() = 0;
@@ -24,6 +25,16 @@ public:
     virtual void ShotCharged(Texture& texture) = 0;
 
     virtual ProjectileType GetTypeOfProjectile() = 0;
+    virtual void Death() = 0;
+
+
+    virtual void SubscribeOnEnemy(Character& enemy) = 0;
+    virtual void UnsubscribeFromEnemy(Character& enemy) = 0;
+    virtual void GainXP(int expPoints) = 0;
+
+    virtual void SpendEnergy(float value) = 0;
+    virtual void GainEnergyDueTime(float val, float deltaTime) = 0;
+    virtual void GainEnergyBySource(float value) = 0;
 
     virtual ~IBaseUnit() = default;
 };

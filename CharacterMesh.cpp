@@ -1,3 +1,4 @@
+
 #include <SFML/Graphics.hpp>
 #include "CharacterMesh.h"
 #include <iostream>
@@ -33,7 +34,7 @@ void CharacterMesh::Update(float deltaTime, const sf::RenderWindow& window)
 }
 
 void CharacterMesh::Draw(sf::RenderWindow& window) {
-    window.draw(sprite);  
+    window.draw(sprite);
 }
 
 void CharacterMesh::SetSpeed(float value) {
@@ -41,7 +42,7 @@ void CharacterMesh::SetSpeed(float value) {
     {
         return;
     }
-    
+
     this->moveSpeed = value;
 }
 

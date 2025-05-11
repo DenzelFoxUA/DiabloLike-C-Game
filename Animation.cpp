@@ -1,6 +1,6 @@
 #include "Animation.h"
 
-Animation::Animation(sf::Sprite& spriteRef, float framesDuration) : sprite(spriteRef) 
+Animation::Animation(sf::Sprite& spriteRef, float framesDuration) : sprite(spriteRef)
 {
     this->frameDuration = framesDuration;
 }

@@ -1,3 +1,4 @@
+
 #pragma once
 #include <SFML/Graphics.hpp>
 
@@ -39,7 +40,7 @@ public:
     {
         paused = true;
 
-        int lastFrameIndex = totalFrames/2;
+        int lastFrameIndex = totalFrames / 2;
         int x = (lastFrameIndex % columns) * frameWidth;
         int y = (lastFrameIndex / columns) * frameHeight;
 
@@ -51,4 +52,3 @@ public:
         paused = false;
     }
 };
-

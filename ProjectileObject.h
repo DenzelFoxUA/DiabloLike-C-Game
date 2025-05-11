@@ -56,7 +56,6 @@ public:
 
     void Draw(sf::RenderWindow& window) override
     {
-
         if (!IsDead())
         {
             //cout << "Arrow Drawed!" << endl;

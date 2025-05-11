@@ -15,52 +15,68 @@
 #include "UnitBuilder.h"
 #include "SkeletonUnit.h"
 #include "NPC_Controller.h"
-
-
+#include "SmallHouse.h"
+#include "ForbiddenZonesConfig.h"
+#include "Tree.h"
 
 using namespace std;
 using namespace ArcherLadyCharacterPaths;
-using namespace Arrows;
+using namespace ArrowsPaths;
 using namespace SkeletonCharacterPaths;
-
 
 int main()
 {
     const int windowHeight = 1080;
     const int windowWidth = 1920;
-    const int tileHeight = 32,
-              tileWidth = 32;
-
-    string grassTexturePath = "textures/World/Grass/Pasto[1].png";
+    const int tileHeight = 128,
+              tileWidth = 256;
 
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "Diablo_Like Game");
 
+    string grassTexturePath = "textures/World/Grass/tileable-1-grey.png";
     sf::Texture grassTile;
     if (!grassTile.loadFromFile(grassTexturePath)) {
         std::cout << "Не вдалося завантажити фон!\n";
     }
 
-    Texture arrowTexture;
-    Texture powerArrowTexture;
-    if (!arrowTexture.loadFromFile(ARROW_TEXTURES_SIMPLE_PATH + ARROW_TEXTURES_SIMPLE_FILE))
-    {
-        std::cout << "Error loading arrow texture!\n";
-    }
-
-    if (!powerArrowTexture.loadFromFile(ARROW_TEXTURES_EFFECTS_PATH + ARROW_TEXTURES_FIRE_FILE))
-    {
-        std::cout << "Error loading arrow texture!\n";
-    }
-
-    //"C:\Users\denze\source\repos\DiabloLikeGame\x64\Debug\textures\Weapons\fire_arrow.png"
-
     sf::Sprite grassSprite;
     grassSprite.setTexture(grassTile);
+
+    Texture arrowTexture;
+    Texture powerArrowTexture;
+    if (!arrowTexture.loadFromFile(ARROW_TEXTURES_SIMPLE_FOLDER + ARROW_TEXTURES_SIMPLE_FILE))
+    {
+        std::cout << "Error loading arrow texture!\n";
+    }
+
+    if (!powerArrowTexture.loadFromFile(ARROW_TEXTURES_EFFECTS_FOLDER + ARROW_TEXTURES_FIRE_FILE))
+    {
+        std::cout << "Error loading arrow texture!\n";
+    }
+
+    SmallHouse house3 = SmallHouse(SmallHouseTexturesMeta_3(), SpawnPoint{ 100,600 });
+    ForbiddenZones::GetForbiddenZones().push_back(house3.GetMapBounds());
+
+    Tree tree = Tree(TreeTexturesMeta_2(), SpawnPoint{ 1500,320 });
+    Tree tree2 = Tree(TreeTexturesMeta_1(), SpawnPoint{ 600,180 });
+    Tree tree3 = Tree(TreeTexturesMeta_2(), SpawnPoint{ 1000,480 });
+    Tree tree4 = Tree(TreeTexturesMeta_1(), SpawnPoint{ 200,180 });
+    
+    ForbiddenZones::GetForbiddenZones().push_back(tree.GetMapBounds());
+    ForbiddenZones::GetForbiddenZones().push_back(tree2.GetMapBounds());
+    ForbiddenZones::GetForbiddenZones().push_back(tree3.GetMapBounds());
+    ForbiddenZones::GetForbiddenZones().push_back(tree4.GetMapBounds());
+
+    cout << "Forbidden zones" << endl;
+    for (auto zone : ForbiddenZones::GetForbiddenZones())
+    {
+        cout << "x" << zone.left << " y" << zone.top << endl;
+        cout << "width " << zone.width << " height " << zone.height << endl;
+    }
 
     ProjectilesContainer projContainer;
 
     string nameMainChar = "Eva";
-    //Arrow arrowSimple = Arrow(ProjectileType::ArrowMagic,152,80.f, false);
     auto arrowSimple = std::make_unique<Arrow>(ProjectileType::ArrowMagic, 152, 80.f, false);
 
     UnitBuilder<LadyArcherUnit,LadyArcher> ladyArcherBuilder;
@@ -83,39 +99,30 @@ int main()
         1, //willpower
         2 // luck
     };
+    vector<TextureMeta> lady_archerMetaList = 
+        JSONTextureLoader::LoadTextureMeta(JSON_TEXTURES_PATH + LADYARCHER_JSON_TEXTURES_FILE);
 
-    auto archerEva = ladyArcherBuilder.SetId(0)
-        .SetTextures(LadyArcherMeta())
+    auto archerEva = ladyArcherBuilder
+        .SetTextures(lady_archerMetaList)
         .SetSpawnPoint(SpawnPoint{ 1000,400 })
         .SetArrow(ProjectileType::ArrowSimple)
-        .SetEntity(LadyArcher(nameMainChar, 1600.f, 1000.f, mainCharAttributes))
+        .SetEntity(LadyArcher(0,nameMainChar, 1600.f, 500.f, mainCharAttributes))
         .SetCooldown(0.f)
         .SetContainer(&projContainer)
         .Build();
 
-    /*skeletons.emplace_back(
-        ladyArcherBuilder.SetId(-1)
-        .SetTextures(LadyArcherMeta())
-        .SetProjectileTexture(arrowTexture)
-        .SetSpawnPoint(SpawnPoint{ 1000,400 })
-        .SetArrow(arrowSimple)
-        .SetEntity(LadyArcher(nameMainChar, 1600.f, 1000.f))
-        .SetCooldown(0.f)
-        .Build()
-    );*/
-
     for (int i = 1, x = 100, y = 100; i <= 3; i++)
     {
         UnitBuilder<SkeletonUnit, Skeleton> skeletonBuilder;
-        auto skeleton1 = skeletonBuilder.SetId(i)
+        auto skeleton1 = skeletonBuilder
             .SetTextures(SkeletonTexturesMeta())
             .SetSpawnPoint(SpawnPoint{ x, y })
             .SetArrow(ProjectileType::None)
-            .SetEntity(Skeleton(400.f, 200.f, skeletonsAttribute))
+            .SetEntity(Skeleton(i,600.f, 200.f,700.f,100.f, skeletonsAttribute))
             .SetCooldown(2.f)
             .Build();
-        skeleton1->SetAnimationDuration(0.4f);
-        skeleton1->SetSpeed(80.f);
+        skeleton1->SetAnimationDuration(0.3f);
+        skeleton1->SetSpeed(180.f);
 
         skeletons.emplace_back(move(skeleton1));
 
@@ -124,17 +131,8 @@ int main()
         else
             y += y;
 
-
         skeletonBuilder.Reset();
     }
-
-    //vector<IController*> _enemiesRefs;
-    //for (auto& enemie : skeletons)
-    //{
-    //    _enemiesRefs.emplace_back(&enemie->GetController());
-    //}
-
-
 
     sf::Clock clock;
 
@@ -145,6 +143,7 @@ int main()
         for (auto& enemy : skeletons)
             enemyPointers.push_back(enemy.get());
 
+
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -154,14 +153,17 @@ int main()
             archerEva->HandleEvent(event, window);
         }
         archerEva->HandleInput(dt);
-
         archerEva->Update(dt, window,arrowTexture,powerArrowTexture);
-        /*archerEva->UpdateArrows(dt, window, _enemiesRefs);*/
+
+        for (auto& skeleton : enemyPointers)
+        {
+            archerEva->SubscribeOnEnemy(skeleton->GetEntity());
+        }
+
 
         for (auto& skeleton : skeletons)
         {
             if (skeleton->IsDead()) continue;
-
 
             skeleton->GetController().HandleBehavior(archerEva->GetPosition(), archerEva->GetEntity(), dt);
             skeleton->GetController().Update(dt, window);
@@ -172,20 +174,39 @@ int main()
 
         window.clear();
 
-        for (int y = 0; y < windowHeight; y += tileHeight) {
-            for (int x = 0; x < windowWidth; x += tileWidth) {
-                grassSprite.setPosition(x, y);
+
+        float offsetX = -1 * tileHeight;
+        float offsetY = -1 * tileWidth;
+        
+
+        for (int y = 0; y <= windowHeight + tileHeight; y += tileHeight) {
+            for (int x = 0; x <= windowWidth + tileHeight; x += tileWidth) {
+                grassSprite.setPosition(x + offsetX, y + offsetY);
                 window.draw(grassSprite);
             }
         }
 
+        house3.DrawBottom(window);
+
         for (auto& skeleton : skeletons)
         {
             skeleton->Draw(window);
-        } 
-
+        }
+        
         archerEva->Draw(window);
         projContainer.DrawAll(window);
+        
+        house3.DrawTop(window);
+
+        tree.DrawTop(window);
+        tree.DrawBottom(window);
+        tree2.DrawTop(window);
+        tree2.DrawBottom(window);
+        tree3.DrawTop(window);
+        tree3.DrawBottom(window);
+        tree4.DrawTop(window);
+        tree4.DrawBottom(window);
+        
         window.display();
     }
 

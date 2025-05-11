@@ -16,13 +16,13 @@ protected:
 
 public:
 
-	SkeletonUnit(int id, 
+	SkeletonUnit( 
 		const vector<TextureMeta>& textures, 
 		SpawnPoint sp,
 		const Skeleton& entity, 
 		ProjectileType projectile,
 		float cooldown,
-		ProjectilesContainer* container) : BaseUnit(id, entity,projectile,container), _mesh(textures, sp)
+		ProjectilesContainer* container) : BaseUnit(entity,projectile,container), _mesh(textures, sp)
 	{
 		_controller.emplace(_mesh, static_cast<Skeleton&>(_character), cooldown);
 	}
@@ -82,10 +82,28 @@ public:
 	{
 
 	}
-	virtual void ShotCharged(Texture& projtexture) override
+	void ShotCharged(Texture& projtexture) override
 	{
 
 	}
+
+	void SubscribeOnEnemy(Character& enemy) override
+	{
+
+	}
+	void UnsubscribeFromEnemy(Character& enemy) override
+	{
+
+	}
+
+	void GainXP(int expPoints) override
+	{
+
+	}
+
+	virtual void SpendEnergy(float value) {};
+	virtual void GainEnergyDueTime(float val, float deltaTime) {};
+	virtual void GainEnergyBySource(float value) {};
 
 	template <typename, typename>
 	friend class UnitBuilder;

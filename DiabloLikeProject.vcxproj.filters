@@ -85,6 +85,21 @@
     <Filter Include="Header Files\ProjectileObjects">
       <UniqueIdentifier>{824bb847-7203-4a92-be34-1c4faead1c8c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Meshes\Static">
+      <UniqueIdentifier>{846e7df9-97ce-4f99-9e57-180addc34c92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Meshes\Static">
+      <UniqueIdentifier>{fd35af75-62aa-4bb1-8672-13f2a59d5e99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ConfigCpp">
+      <UniqueIdentifier>{e5827ffb-4b7f-494a-8b93-b8c01426415a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utiltity">
+      <UniqueIdentifier>{c59de2a3-1c7f-4327-9bee-756c8087c128}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TextureLoader">
+      <UniqueIdentifier>{ea9ea4d9-b092-4092-841d-831f20629ef5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LadyArcherMesh.cpp">
@@ -143,6 +158,18 @@
     </ClCompile>
     <ClCompile Include="Meshes\Weapons\ProjectileMesh.cpp">
       <Filter>Source Files\Meshes\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMesh.cpp">
+      <Filter>Source Files\Meshes\Static</Filter>
+    </ClCompile>
+    <ClCompile Include="ForbiddenZonesConfig.cpp">
+      <Filter>Source Files\ConfigCpp</Filter>
+    </ClCompile>
+    <ClCompile Include="SmallHouse.cpp">
+      <Filter>Source Files\Meshes\Static</Filter>
+    </ClCompile>
+    <ClCompile Include="JSONTextureLoader.cpp">
+      <Filter>Source Files\TextureLoader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -235,6 +262,24 @@
     </ClInclude>
     <ClInclude Include="ProjectileManager.h">
       <Filter>Header Files\Controllers\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="ICharacter.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMesh.h">
+      <Filter>Header Files\Meshes\Static</Filter>
+    </ClInclude>
+    <ClInclude Include="SmallHouse.h">
+      <Filter>Header Files\Meshes\Static</Filter>
+    </ClInclude>
+    <ClInclude Include="ForbiddenZonesConfig.h">
+      <Filter>Header Files\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="Tree.h">
+      <Filter>Header Files\Meshes\Static</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonTextureLoader.h">
+      <Filter>Utiltity</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

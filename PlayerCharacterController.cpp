@@ -1,4 +1,10 @@
-#include "PlayerCharacterController.h"
+﻿#include "PlayerCharacterController.h"
+
+Character& PlayerController::GetEntity()
+{
+    return this->characterEntity;
+}
+
 void PlayerController::HandleInput(float deltaTime)
 {
     sf::Vector2f velocity{ 0.f, 0.f };
@@ -11,12 +17,12 @@ void PlayerController::HandleInput(float deltaTime)
 
         if (curState != CharacterState::Dead)
         {
-            cout << characterEntity.GetName() << " is died!" << endl;
+            std::cout << characterEntity.GetName() << " is died!\n";
 
             curState = CharacterState::Dead;
             auto& curDir = characterMesh.CurrentDir();
 
-            sf::Texture* newTexture = &characterMesh.DeathTextures()[curDir];
+            Texture* newTexture = &characterMesh.DeathTextures()[curDir];
 
             const auto& meta = characterMesh.TextureData(TextureCategory::Death);
 
@@ -32,36 +38,63 @@ void PlayerController::HandleInput(float deltaTime)
             characterMesh.LastDir() = curDir;
         }
         characterMesh.Animation().Update(deltaTime);
-
     }
     else
     {
+        sf::FloatRect playerBounds = characterMesh.Sprite().getGlobalBounds();
+        sf::Vector2f proposedMove(0.f, 0.f);
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-            velocity.y -= characterMesh.GetSpeed();
             characterMesh.CurrentDir() = Direction::Up;
-            isMoving = true;
+            proposedMove.y -= characterMesh.GetSpeed() * deltaTime;
         }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-            velocity.y += characterMesh.GetSpeed();
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
             characterMesh.CurrentDir() = Direction::Down;
-            isMoving = true;
+            proposedMove.y += characterMesh.GetSpeed() * deltaTime;
         }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-            velocity.x -= characterMesh.GetSpeed();
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
             characterMesh.CurrentDir() = Direction::Left;
-            isMoving = true;
+            proposedMove.x -= characterMesh.GetSpeed() * deltaTime;
         }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-            velocity.x += characterMesh.GetSpeed();
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
             characterMesh.CurrentDir() = Direction::Right;
-            isMoving = true;
+            proposedMove.x += characterMesh.GetSpeed() * deltaTime;
         }
 
-        if (velocity.x != 0 && velocity.y != 0)
-            velocity /= std::sqrt(2.f);
+        // нормалізація діагонального руху
+        if (proposedMove.x != 0 && proposedMove.y != 0)
+            proposedMove /= std::sqrt(2.f);
 
-        characterMesh.Sprite().move(velocity * deltaTime);
+        sf::Vector2f finalMove(0.f, 0.f);
+
+        // Перевірка по осі X
+        sf::FloatRect movedX = playerBounds;
+        movedX.left += proposedMove.x;
+        bool blockedX = false;
+        for (const auto& zone : ForbiddenZones::GetForbiddenZones()) {
+            if (movedX.intersects(zone)) {
+                blockedX = true;
+                break;
+            }
+        }
+        if (!blockedX) finalMove.x = proposedMove.x;
+
+        // Перевірка по осі Y
+        sf::FloatRect movedY = playerBounds;
+        movedY.top += proposedMove.y;
+        bool blockedY = false;
+        for (const auto& zone : ForbiddenZones::GetForbiddenZones()) {
+            if (movedY.intersects(zone)) {
+                blockedY = true;
+                break;
+            }
+        }
+        if (!blockedY) finalMove.y = proposedMove.y;
+
+        if (finalMove != sf::Vector2f(0.f, 0.f)) {
+            characterMesh.Sprite().move(finalMove);
+            isMoving = true;
+        }
 
         if (!characterMesh.IsAttacking() && !characterMesh.IsDead()) {
             characterMesh.CurrentState() = isMoving ? CharacterState::Run : CharacterState::Idle;
@@ -90,4 +123,79 @@ void PlayerController::HandleInput(float deltaTime)
             characterMesh.LastDir() = curDir;
         }
     }
+}
+
+void PlayerController::MoveUp(Vector2f& velocity)
+{
+    velocity.y -= characterMesh.GetSpeed();
+}
+
+void PlayerController::MoveDown(Vector2f& velocity)
+{
+    velocity.y += characterMesh.GetSpeed();
+}
+
+void PlayerController::MoveLeft(Vector2f& velocity)
+{
+    velocity.x -= characterMesh.GetSpeed();
+}
+
+void PlayerController::MoveRight(Vector2f& velocity)
+{
+    velocity.x += characterMesh.GetSpeed();
+}
+
+bool PlayerController::IsTressPassing(vector<FloatRect> forbiddenZones)
+{
+    FloatRect playerZone = this->characterMesh.Sprite().getGlobalBounds();
+    for (auto zone : forbiddenZones)
+    {
+        if (playerZone.intersects(zone))
+        {
+            cout << "Tresspassing zone:" << zone.height << "X" << zone.width << endl;
+            this->isTressPass = true;
+        }
+        else
+        {
+            this->isTressPass = false;
+        }
+    }
+
+    return isTressPass;
+}
+
+void PlayerController::Update(float deltaTime, const sf::RenderWindow& window)
+{
+    this->characterEntity.LevelUp();
+
+    if (!ForbiddenZones::GetForbiddenZones().empty())
+        this->IsTressPassing(ForbiddenZones::GetForbiddenZones());
+
+    characterMesh.Update(deltaTime, window);
+}
+
+bool& PlayerController::IsDead()
+{
+    return this->characterEntity.IsDead();
+}
+
+void PlayerController::SubscribeOnEnemy(NPCEntity& enemy)
+{
+    //cout << "Subscribed in controller on " << enemy.GetName() << endl;
+    this->characterEntity.SubscribeOnEnemy(enemy);
+}
+
+void PlayerController::UnsubscribeFromEnemy(Character& enemy)
+{
+    this->characterEntity.UnsubscribeFromEnemy(enemy);
+}
+
+void PlayerController::Death()
+{
+    this->characterEntity.Death();
+}
+
+Vector2f PlayerController::GetCenter()
+{
+    return this->characterMesh.GetCenter();
 }

@@ -78,8 +78,6 @@ void LadyArcherController::HandleEvent(const sf::Event& event, const sf::RenderW
             }
 
             pendingDirection = direction;
-
-            // Повернути анімацію до нормального стану
             characterMesh.Animation().Resume();
         }
     }
@@ -87,7 +85,8 @@ void LadyArcherController::HandleEvent(const sf::Event& event, const sf::RenderW
 
 void LadyArcherController::Update(float deltaTime, const sf::RenderWindow& window)
 {
-    characterMesh.Update(deltaTime, window);
+    PlayerController::Update(deltaTime,window);
+    //characterMesh.Update(deltaTime, window);
 }
 
 void LadyArcherController::Draw(sf::RenderWindow& window)
@@ -97,7 +96,6 @@ void LadyArcherController::Draw(sf::RenderWindow& window)
 
 void LadyArcherController::HandleBehavior(sf::Vector2f target, Character& enemy, float deltaTime)
 {
-    // Поки порожній — гравець сам себе контролює
 }
 
 Character& LadyArcherController::GetEntity()

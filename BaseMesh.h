@@ -15,7 +15,9 @@ enum TextureCategory
     Idle,
     Move,
     Attack,
-    Death
+    Death,
+    Static,
+    StaticAnimated
 };
 
 struct TextureMeta
@@ -53,6 +55,7 @@ public:
     virtual Vector2f GetCenter() const;
     virtual void Update(float deltaTime, const sf::RenderWindow& window);
     virtual Vector2f MoveToPoint(Vector2f point);
+
     virtual void SetAnimationDuration(float newVal)
     {
         this->animation.SetFrameDuration(newVal);

@@ -11,7 +11,6 @@ template <typename UnitT, typename EntityT>
 class UnitBuilder
 {
 private:
-    int _id = 0;
     vector<TextureMeta> _textures;
     SpawnPoint _spawnPoint;
     optional<EntityT> _entity;
@@ -20,11 +19,11 @@ private:
     ProjectilesContainer* _container = nullptr;
 
 public:
-    UnitBuilder& SetId(int id)
-    {
-        this->_id = id;
-        return *this;
-    }
+    //UnitBuilder& SetId(int id)
+    //{
+    //    this->_id = id;
+    //    return *this;
+    //}
 
     UnitBuilder& SetTextures(const std::vector<TextureMeta>& textures)
     {
@@ -65,8 +64,10 @@ public:
     {
         static_assert(std::is_base_of_v<BaseUnit<EntityT>, UnitT>,
             "UnitType must inherit from BaseUnit!");
-
-        return make_unique<UnitT>(_id, 
+        if (!_entity.has_value()) {
+            throw std::logic_error("Entity was not set in UnitBuilder before Build()");
+        }
+        return make_unique<UnitT>( 
             _textures,
             _spawnPoint,
             *_entity,

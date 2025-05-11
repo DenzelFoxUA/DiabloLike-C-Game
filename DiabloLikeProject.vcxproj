@@ -44,7 +44,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <EnableASAN>true</EnableASAN>
+    <EnableASAN>false</EnableASAN>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -139,6 +139,8 @@
     <ClCompile Include="BaseMesh.cpp" />
     <ClCompile Include="Caracter.cpp" />
     <ClCompile Include="CharacterMesh.cpp" />
+    <ClCompile Include="ForbiddenZonesConfig.cpp" />
+    <ClCompile Include="JSONTextureLoader.cpp" />
     <ClCompile Include="LadyArcherController.cpp" />
     <ClCompile Include="LadyArcherMesh.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -154,6 +156,8 @@
     <ClCompile Include="Skeleton.cpp" />
     <ClCompile Include="SkeletonController.cpp" />
     <ClCompile Include="SkeletonMesh.cpp" />
+    <ClCompile Include="SmallHouse.cpp" />
+    <ClCompile Include="StaticMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -162,8 +166,11 @@
     <ClInclude Include="Character.h" />
     <ClInclude Include="CharacterMesh.h" />
     <ClInclude Include="BaseMesh.h" />
+    <ClInclude Include="ForbiddenZonesConfig.h" />
     <ClInclude Include="IBaseUnit.h" />
+    <ClInclude Include="ICharacter.h" />
     <ClInclude Include="IController.h" />
+    <ClInclude Include="JsonTextureLoader.h" />
     <ClInclude Include="LadyArcherUnit.h" />
     <ClInclude Include="PathsConfig.h" />
     <ClInclude Include="LadyArcher.h" />
@@ -184,7 +191,10 @@
     <ClInclude Include="SkeletonController.h" />
     <ClInclude Include="SkeletonMesh.h" />
     <ClInclude Include="SkeletonUnit.h" />
+    <ClInclude Include="SmallHouse.h" />
     <ClInclude Include="TexturesMetaConfig.h" />
+    <ClInclude Include="StaticMesh.h" />
+    <ClInclude Include="Tree.h" />
     <ClInclude Include="UnitBuilder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

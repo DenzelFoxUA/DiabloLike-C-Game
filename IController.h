@@ -30,4 +30,5 @@ public:
     virtual void HandleBehavior(Vector2f target, Character& enemy, float deltaTime) = 0;
     virtual bool& IsDead() = 0;
     virtual Vector2f GetCenter() = 0;
+    virtual void Death() = 0;
 };

@@ -26,6 +26,6 @@ public:
 	void HandleBehavior(Vector2f target, Character& enemy, float deltaTime) override;
     void HandleInput(float deltaTime) override; //not using
 
-    
+	virtual void RegenerateMana(float val, float deltaTime) override {}
 
 };

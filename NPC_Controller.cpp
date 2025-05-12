@@ -53,7 +53,7 @@ void NPC_Controller::HandleBehavior(Vector2f target, Character& enemy, float del
         this->npcMesh.DeathAnimation_Timer() += deltaTime;
 
         if (npcMesh.DeathAnimation_Timer() >= npcMesh.DeathAnimationTimeLimit())
-            this->npcEntity.Death();
+            this->Death();
 
         auto& curState = npcMesh.CurrentState();
 
@@ -227,26 +227,28 @@ void NPC_Controller::Death()
 {
     cout << "Object died in controller NPC" << endl;
     this->npcEntity.Death();
+    this->npcMesh.IsDead() = true;
+    cout << "Is npc mesh dead: " << npcMesh.IsDead() << endl;
 }
 
 void NPC_Controller::SpendEnergy(float value)
 {
-    this->npcEntity.SpendEnergy(value);
+    this->npcEntity.SpendStamina(value);
 }
 
 void NPC_Controller::GainEnergy(float value)
 {
-    this->npcEntity.GainEnergy(value);
+    this->npcEntity.GainStamina(value);
 }
 
 float NPC_Controller::GetEnergyLimit()
 {
-    return this->npcEntity.GetEnergyLimit();
+    return this->npcEntity.GetStaminaLimit();
 }
 
 void NPC_Controller::SetEnergyLimit(float value)
 {
-    this->npcEntity.SetEnergyLimit(value);
+    this->npcEntity.SetStaminaLimit(value);
 }
 
 float& NPC_Controller::GetChargeTime() const
@@ -286,6 +288,30 @@ bool& NPC_Controller::PendingChargedAttack()
 
 void NPC_Controller::Update(float deltaTime, const sf::RenderWindow& window)
 {
-    RegenerateEnergy(this->npcEntity.GetEnergyRegainValue(), deltaTime);
+    RegenerateEnergy(this->npcEntity.GetStaminaRegainValue(), deltaTime);
     RegenerateHP(this->npcEntity.GetHPRegainValue(), deltaTime);
+
+    this->npcMesh.Update(deltaTime, window,
+        this->npcEntity.GetHealthPoints(), this->npcEntity.GetHPMaxLimit());
+    //
+    /*UpdateHealthBar(this->npcMesh.GetHealthSprite(), this->npcMesh.GetHealthTexture(),
+        this->npcEntity.GetHealthPoints(), this->npcEntity.GetHPMaxLimit());*/
+}
+
+void NPC_Controller::UpdateHealthBar(sf::Sprite& barSprite, 
+    const sf::Texture& barTexture, int currentHp, int maxHp)
+{
+    // Безпечне ділення
+    float healthRatio = static_cast<float>(currentHp) / std::max(1, maxHp);
+
+    // Розміри текстури
+    int fullWidth = barTexture.getSize().x;
+    int height = barTexture.getSize().y;
+
+    // Гарантія що хоч 1 піксель буде намальовано
+    int visibleWidth = std::max(1, static_cast<int>(fullWidth * healthRatio));
+    Vector2f charPos = { this->npcMesh.GetPosition().x,this->npcMesh.GetPosition().y };
+    // Встановлюємо текстуру (важливо: перед setTextureRect)
+    barSprite.setTexture(barTexture,true);
+    barSprite.setTextureRect(sf::IntRect(charPos.x, charPos.y, visibleWidth, height));
 }

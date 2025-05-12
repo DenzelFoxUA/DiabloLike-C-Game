@@ -19,15 +19,10 @@ private:
     ProjectilesContainer* _container = nullptr;
 
 public:
-    //UnitBuilder& SetId(int id)
-    //{
-    //    this->_id = id;
-    //    return *this;
-    //}
 
-    UnitBuilder& SetTextures(const std::vector<TextureMeta>& textures)
+    UnitBuilder& SetTextures(vector<TextureMeta> textures)
     {
-        this->_textures = textures;
+        this->_textures = move(textures);
         return *this;
     }
 

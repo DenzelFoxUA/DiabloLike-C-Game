@@ -19,13 +19,13 @@ public:
 
 	NPCEntity(int id, string name, 
 		float health, 
-		float energy, 
+		float stamina,
+		float mana,
 		float detectRadius,
 		int expReward,
-		CharacterAttributes attributes, 
-		EnergyType eType,
+		CharacterAttributes attributes,
 		bool isFriendly)
-		: Character(id,name, health, energy, attributes, eType)
+		: Character(id,name, health,stamina,mana, attributes)
 	{
 		this->isFriendly = isFriendly;
 		this->detectRadius = detectRadius;

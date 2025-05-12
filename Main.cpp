@@ -20,10 +20,7 @@
 #include "Tree.h"
 
 using namespace std;
-using namespace ArcherLadyCharacterPaths;
 using namespace ArrowsPaths;
-using namespace SkeletonCharacterPaths;
-
 int main()
 {
     const int windowHeight = 1080;
@@ -31,12 +28,12 @@ int main()
     const int tileHeight = 128,
               tileWidth = 256;
 
-    sf::RenderWindow window(sf::VideoMode(1920, 1080), "Diablo_Like Game");
+    sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Diablo_Like Game");
 
     string grassTexturePath = "textures/World/Grass/tileable-1-grey.png";
     sf::Texture grassTile;
     if (!grassTile.loadFromFile(grassTexturePath)) {
-        std::cout << "Не вдалося завантажити фон!\n";
+        std::cout << "Error loading grass texture!\n";
     }
 
     sf::Sprite grassSprite;
@@ -54,25 +51,25 @@ int main()
         std::cout << "Error loading arrow texture!\n";
     }
 
-    SmallHouse house3 = SmallHouse(SmallHouseTexturesMeta_3(), SpawnPoint{ 100,600 });
-    ForbiddenZones::GetForbiddenZones().push_back(house3.GetMapBounds());
+    //loaded static textures for multiple use
+    map<int, Texture> trees = JSONTextureLoader
+        ::LoadStaticTextures(JSON_TEXTURES_PATH + TREES_JSON_TEXTURES_FILE);
+    map<int, Texture> houses = JSONTextureLoader
+        ::LoadStaticTextures(JSON_TEXTURES_PATH + HOUSES_TEXTURES_JSON_FILE);
 
-    Tree tree = Tree(TreeTexturesMeta_2(), SpawnPoint{ 1500,320 });
-    Tree tree2 = Tree(TreeTexturesMeta_1(), SpawnPoint{ 600,180 });
-    Tree tree3 = Tree(TreeTexturesMeta_2(), SpawnPoint{ 1000,480 });
-    Tree tree4 = Tree(TreeTexturesMeta_1(), SpawnPoint{ 200,180 });
-    
+    SmallHouse house3 = SmallHouse(houses[3], SpawnPoint{100,600});
+
+    Tree tree = Tree(trees[1], SpawnPoint{1500,320});
+    Tree tree2 = Tree(trees[1], SpawnPoint{ 600,180 });
+    Tree tree3 = Tree(trees[2], SpawnPoint{ 1000,480 });
+    Tree tree4 = Tree(trees[2], SpawnPoint{ 200,180 });
+
+    //creating boundries
+    ForbiddenZones::GetForbiddenZones().push_back(house3.GetMapBounds());
     ForbiddenZones::GetForbiddenZones().push_back(tree.GetMapBounds());
     ForbiddenZones::GetForbiddenZones().push_back(tree2.GetMapBounds());
     ForbiddenZones::GetForbiddenZones().push_back(tree3.GetMapBounds());
     ForbiddenZones::GetForbiddenZones().push_back(tree4.GetMapBounds());
-
-    cout << "Forbidden zones" << endl;
-    for (auto zone : ForbiddenZones::GetForbiddenZones())
-    {
-        cout << "x" << zone.left << " y" << zone.top << endl;
-        cout << "width " << zone.width << " height " << zone.height << endl;
-    }
 
     ProjectilesContainer projContainer;
 
@@ -80,7 +77,6 @@ int main()
     auto arrowSimple = std::make_unique<Arrow>(ProjectileType::ArrowMagic, 152, 80.f, false);
 
     UnitBuilder<LadyArcherUnit,LadyArcher> ladyArcherBuilder;
-
 
     vector<unique_ptr<IBaseUnit>> skeletons;
 
@@ -99,14 +95,13 @@ int main()
         1, //willpower
         2 // luck
     };
-    vector<TextureMeta> lady_archerMetaList = 
-        JSONTextureLoader::LoadTextureMeta(JSON_TEXTURES_PATH + LADYARCHER_JSON_TEXTURES_FILE);
 
     auto archerEva = ladyArcherBuilder
-        .SetTextures(lady_archerMetaList)
+        .SetTextures(JSONTextureLoader::
+            LoadTextureMeta(JSON_TEXTURES_PATH + LADYARCHER_JSON_TEXTURES_FILE))
         .SetSpawnPoint(SpawnPoint{ 1000,400 })
         .SetArrow(ProjectileType::ArrowSimple)
-        .SetEntity(LadyArcher(0,nameMainChar, 1600.f, 500.f, mainCharAttributes))
+        .SetEntity(LadyArcher(0,nameMainChar, 1600.f, 500.f, 200.f,mainCharAttributes))
         .SetCooldown(0.f)
         .SetContainer(&projContainer)
         .Build();
@@ -115,10 +110,11 @@ int main()
     {
         UnitBuilder<SkeletonUnit, Skeleton> skeletonBuilder;
         auto skeleton1 = skeletonBuilder
-            .SetTextures(SkeletonTexturesMeta())
+            .SetTextures(JSONTextureLoader::
+                LoadTextureMeta(JSON_TEXTURES_PATH + SKELETON_BASIC_JSON_TEXTURES_FILE))
             .SetSpawnPoint(SpawnPoint{ x, y })
             .SetArrow(ProjectileType::None)
-            .SetEntity(Skeleton(i,600.f, 200.f,700.f,100.f, skeletonsAttribute))
+            .SetEntity(Skeleton(i,600.f, 200.f,700.f,100.f, 100, skeletonsAttribute))
             .SetCooldown(2.f)
             .Build();
         skeleton1->SetAnimationDuration(0.3f);

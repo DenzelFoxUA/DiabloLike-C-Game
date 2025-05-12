@@ -137,7 +137,7 @@
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="BaseMesh.cpp" />
-    <ClCompile Include="Caracter.cpp" />
+    <ClCompile Include="Character.cpp" />
     <ClCompile Include="CharacterMesh.cpp" />
     <ClCompile Include="ForbiddenZonesConfig.cpp" />
     <ClCompile Include="JSONTextureLoader.cpp" />
@@ -193,7 +193,6 @@
     <ClInclude Include="SkeletonMesh.h" />
     <ClInclude Include="SkeletonUnit.h" />
     <ClInclude Include="SmallHouse.h" />
-    <ClInclude Include="TexturesMetaConfig.h" />
     <ClInclude Include="StaticMesh.h" />
     <ClInclude Include="Tree.h" />
     <ClInclude Include="UnitBuilder.h" />

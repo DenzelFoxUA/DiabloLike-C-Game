@@ -11,16 +11,18 @@ protected:
 	int id;
 	string name;
 	float health;
-	float energy;
-	EnergyType energyType;
+	float stamina;
+	float mana;
 	bool isDead;
 
-	float energyMax; 
+	float staminaMax;
 	float healthMax;
+	float manaMax;
 
 	CharacterAttributes attributes;
 
-	float energyRegainValue = 20;
+	float staminaRegainValue = 20;
+	float manaRegainValue = 5;
 	float healthRegainValue = 0;
 
 	std::unordered_map<int, std::function<void(int)>> deathListeners;
@@ -33,17 +35,18 @@ public:
 	Character(int id, 
 		string name, 
 		float health, 
-		float energy, 
-		CharacterAttributes attributes, 
-		EnergyType eType)
+		float stamina,
+		float mana,
+		CharacterAttributes attributes)
 	{
 		this->id = id;
 		this->name = name;
 		this->health = health;
-		this->energy = energy;
-		this->energyMax = energy;
+		this->stamina = stamina;
+		this->staminaMax = stamina;
 		this->healthMax = health;
-		this->energyType = eType;
+		this->mana = mana; 
+		this->manaMax = mana;
 		this->attributes = attributes;
 		isDead = false;
 		
@@ -52,26 +55,45 @@ public:
 	//values
 	string GetName() override;
 	int GetId() override;
-	float GetEnergy() override;
-	EnergyType GetEnergyType() const override;
+	float GetStaminaPoints() override;
+
+	float GetStaminaLimit() override;
+	void SetStaminaLimit(float value) override;
+	float GetManaLimit() override;
+	void SetManaLimit(float value) override;
+
 	CharacterAttributes& GetAttributes() override;
+
+	void GainMana(float eValue) override;
+
+	void SpendMana(float eValue) override;
+
 	float GetHealthPoints() override;
-	void SetEnergyLimit(float value) override;
-	float GetEnergyLimit() override;
+	float GetManaPoints() override;
 	void SetHPMaxLimit(float value) override;
 	float GetHPMaxLimit() override;
 
-	float GetEnergyRegainValue() override
+	float GetStaminaRegainValue() override
 	{
-		return this->energyRegainValue;
+		return this->staminaRegainValue;
 	}
 	float GetHPRegainValue() override
 	{
 		return this->healthRegainValue;
 	}
-	void SetEnergyRegainValue(float val) override
+	float GetManaRegainValue() override
 	{
-		this->energyRegainValue = val;
+		return this->staminaRegainValue;
+	}
+
+	void SetStaminaRegainValue(float val) override
+	{
+		this->staminaRegainValue = val;
+	}
+
+	void SetManaRegainValue(float val) override
+	{
+		this->manaRegainValue = val;
 	}
 
 	void SetHPRegainValue(float val) override
@@ -82,8 +104,8 @@ public:
 	//actions
 	void GetHit(float damage) override;
 	void Heal(float healValue) override;
-	void GainEnergy(float eValue) override;
-	void SpendEnergy(float eValue) override;
+	void GainStamina(float eValue) override;
+	void SpendStamina(float eValue) override;
 	virtual void Death() override;
 	virtual void GainExperience(int expPoints) = 0;
 

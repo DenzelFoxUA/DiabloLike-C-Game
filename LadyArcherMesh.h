@@ -18,7 +18,8 @@ public:
         : PlayerCharacterMesh(texturePathList, spawnP) {
     };
 
-    void Update(float deltaTime, const sf::RenderWindow& window) override;
+    void Update(float deltaTime, const sf::RenderWindow& window, float hp, float hpMax,
+        float stamina, float staminaMax, float mana, float manaMax) override;
     void Draw(sf::RenderWindow& window) override;
     
 };

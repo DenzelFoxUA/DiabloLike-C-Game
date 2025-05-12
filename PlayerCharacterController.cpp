@@ -168,12 +168,16 @@ void PlayerController::Update(float deltaTime, const sf::RenderWindow& window)
 {
     this->characterEntity.LevelUp();
     this->RegenerateHP(this->characterEntity.GetHPRegainValue(),deltaTime);
-    this->RegenerateEnergy(this->characterEntity.GetEnergyRegainValue(), deltaTime);
+    this->RegenerateEnergy(this->characterEntity.GetStaminaRegainValue(), deltaTime);
+    RegenerateMana(this->characterEntity.GetManaRegainValue(), deltaTime);
 
     if (!ForbiddenZones::GetForbiddenZones().empty())
         this->IsTressPassing(ForbiddenZones::GetForbiddenZones());
 
-    characterMesh.Update(deltaTime, window);
+    this->characterMesh.Update(deltaTime, window,
+        this->characterEntity.GetHealthPoints(), this->characterEntity.GetHPMaxLimit(),
+        this->characterEntity.GetStaminaPoints(), this->characterEntity.GetStaminaLimit(),
+        this->characterEntity.GetManaPoints(), this->characterEntity.GetManaLimit());
 }
 
 bool& PlayerController::IsDead()
@@ -205,22 +209,22 @@ Vector2f PlayerController::GetCenter()
 
 void PlayerController::SpendEnergy(float value)
 {
-    this->characterEntity.SpendEnergy(value);
+    this->characterEntity.SpendStamina(value);
 }
 
 void PlayerController::GainEnergy(float value)
 {
-    this->characterEntity.GainEnergy(value);
+    this->characterEntity.GainStamina(value);
 }
 
 float PlayerController::GetEnergyLimit()
 {
-    return this->characterEntity.GetEnergyLimit();
+    return this->characterEntity.GetStaminaLimit();
 }
 
 void PlayerController::SetEnergyLimit(float value)
 {
-    this->characterEntity.SetEnergyLimit(value);
+    this->characterEntity.SetStaminaLimit(value);
 }
 
 float& PlayerController::GetChargeTime() const

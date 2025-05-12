@@ -6,7 +6,8 @@ void BaseMesh::Draw(sf::RenderWindow& window)
     window.draw(sprite);
 }
 
-void BaseMesh::Update(float deltaTime, const sf::RenderWindow& window) 
+void BaseMesh::Update(float deltaTime, const sf::RenderWindow& window, float hp, float hpMax,
+    float stamina, float staminaMax, float mana, float manaMax)
 {
     animation.Update(deltaTime);
 }

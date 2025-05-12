@@ -60,14 +60,14 @@ public:
     void SetEnergyLimit(float value) override;
 
     float GetEnergy() override {
-        return this->npcEntity.GetEnergy();
+        return this->npcEntity.GetStaminaPoints();
     }
 
     void RegenerateEnergy(float val, float deltaTime) override
     {
         regainE_Tik += deltaTime;
 
-        if (this->npcEntity.GetEnergy() < this->npcEntity.GetEnergyLimit() 
+        if (this->npcEntity.GetStaminaPoints() < this->npcEntity.GetStaminaLimit() 
             && regainE_Timer <= regainE_Tik)
         {
             cout << "Gained " << val << " energy!" << endl;
@@ -93,7 +93,7 @@ public:
 
     void SetEnergyRegainValue(float val) override
     {
-        this->npcEntity.SetEnergyRegainValue(val);
+        this->npcEntity.SetStaminaRegainValue(val);
     }
 
     void SetHPRegainValue(float val) override
@@ -117,7 +117,8 @@ public:
     bool AnimationIsFinished() override;
     bool& PendingNormalAttack() override;
     bool& PendingChargedAttack() override;
-
+    void UpdateHealthBar(sf::Sprite& barSprite, const Texture& barTexture, 
+        int currentHp, int maxHp);
     //input and behavior
     virtual void HandleBehavior(Vector2f target, Character& enemy, float deltaTime) override;
     virtual void HandleInput(float deltaTime) = 0;

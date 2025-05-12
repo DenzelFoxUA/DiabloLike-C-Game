@@ -1,19 +1,19 @@
 #include "StaticMesh.h"
 
-void StaticMesh::LoadTextures(string folderPath, string fileName) {
-
-    string path = folderPath + fileName;
-    
-    Texture tex;
-    if (!_textureStatic.loadFromFile(path)) 
-    {
-        std::cout << "Failed to load: " << path << "\n";
-        return;
-    }
-
-    top.setTexture(_textureStatic);
-    bottom.setTexture(_textureStatic);
-}
+//void StaticMesh::LoadTextures(string folderPath, string fileName) {
+//
+//    string path = folderPath + fileName;
+//    
+//    Texture tex;
+//    if (!_textureStatic.loadFromFile(path)) 
+//    {
+//        std::cout << "Failed to load: " << path << "\n";
+//        return;
+//    }
+//
+//    top.setTexture(_textureStatic);
+//    bottom.setTexture(_textureStatic);
+//}
 
 
 void StaticMesh::DrawTop(sf::RenderWindow& window) {

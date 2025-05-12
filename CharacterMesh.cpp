@@ -1,4 +1,4 @@
-
+﻿
 #include <SFML/Graphics.hpp>
 #include "CharacterMesh.h"
 #include <iostream>
@@ -21,7 +21,8 @@ void CharacterMesh::LoadTextures(map<Direction, Texture>& target, string folderP
     this->sprite.setTexture(target[currentDir]);
 }
 
-void CharacterMesh::Update(float deltaTime, const sf::RenderWindow& window)
+void CharacterMesh::Update(float deltaTime, const sf::RenderWindow& window, float hp, float hpMax,
+    float stamina, float staminaMax, float mana, float manaMax)
 {
     animation.Update(deltaTime);
     if (chargingAttack) {
@@ -35,6 +36,7 @@ void CharacterMesh::Update(float deltaTime, const sf::RenderWindow& window)
 
 void CharacterMesh::Draw(sf::RenderWindow& window) {
     window.draw(sprite);
+    
 }
 
 void CharacterMesh::SetSpeed(float value) {

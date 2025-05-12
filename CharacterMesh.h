@@ -34,6 +34,12 @@ protected:
 
     Texture* activeTexture = nullptr;
 
+    sf::Sprite healthMeterSprite;
+    Texture healthMeterTex;
+
+    sf::Sprite healthBarSprite;
+    Texture healthBarTex;
+
     bool chargingAttack = false;
     float chargeTime = 0.f;
     const float maxChargeTime = 2.f;
@@ -71,30 +77,32 @@ protected:
 
     void LoadTextures(map<Direction, Texture>& target, string commonPath, string nameOfTexture) override;
 
+
 public:
     CharacterMesh() = default;
 
     CharacterMesh(vector<TextureMeta> texturePathList, SpawnPoint spawnP) : BaseMesh(texturePathList, spawnP)
-{
-    for (const auto& texture : texturePathList)
     {
-        texturesData.emplace(texture.category, texture);
+        for (const auto& texture : texturePathList)
+        {
+            texturesData.emplace(texture.category, texture);
 
-        auto& target = (texture.category == TextureCategory::Idle) ? idleTextures :
-            (texture.category == TextureCategory::Move) ? movementTextures :
-            (texture.category == TextureCategory::Death) ? deathTextures :
-            (texture.category == TextureCategory::Attack) ? attackTextures :
-            throw exception("Wrong textures category!");
+            auto& target = (texture.category == TextureCategory::Idle) ? idleTextures :
+                (texture.category == TextureCategory::Move) ? movementTextures :
+                (texture.category == TextureCategory::Death) ? deathTextures :
+                (texture.category == TextureCategory::Attack) ? attackTextures :
+                throw exception("Wrong textures category!");
 
-        LoadTextures(target, texture.folderPath, texture.fileName);
-    }
+            LoadTextures(target, texture.folderPath, texture.fileName);
+        }
 
-    const auto& idleMeta = texturesData[TextureCategory::Idle];
+        const auto& idleMeta = texturesData[TextureCategory::Idle];
 
-    sprite.setPosition(spawnP.x, spawnP.y);
-    animation.SetSheet(&idleTextures[currentDir], idleMeta.frameWidth, idleMeta.frameHeight,
+        sprite.setPosition(spawnP.x, spawnP.y);
+        animation.SetSheet(&idleTextures[currentDir], idleMeta.frameWidth, idleMeta.frameHeight,
         idleMeta.numberOfColumns, idleMeta.numberOfFrames);
-}
+
+    }
 
     //    InitFromTextures(spawnP);
     //}
@@ -130,7 +138,8 @@ public:
     virtual Animation& Animation();
     virtual TextureMeta& TextureData(TextureCategory category);
 
-    void Update(float deltaTime, const sf::RenderWindow& window) override;
+    void Update(float deltaTime, const sf::RenderWindow& window, float hp = 0, float hpMax = 0,
+        float stamina = 0, float staminaMax = 0, float mana = 0, float manaMax = 0) override;
     void Draw(sf::RenderWindow& window) override;
 
     virtual bool& IsCharged();

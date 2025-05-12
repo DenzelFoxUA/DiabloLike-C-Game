@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "Animation.h"
 
+
 using namespace std;
 using namespace sf;
 
@@ -50,7 +51,8 @@ public:
     virtual void Draw(sf::RenderWindow& window);
     virtual Vector2f GetPosition() const;
     virtual Vector2f GetCenter() const;
-    virtual void Update(float deltaTime, const sf::RenderWindow& window);
+    virtual void Update(float deltaTime, const sf::RenderWindow& window, float hp = 0, float hpMax = 0, 
+        float stamina = 0, float staminaMax = 0, float mana = 0, float manaMax = 0);
     virtual Vector2f MoveToPoint(Vector2f point);
     virtual void SetAnimationDuration(float newVal);
 };

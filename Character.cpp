@@ -10,20 +10,26 @@ void Character::Heal(float healValue)
 	this->health += healValue;
 }
 
-void Character::GainEnergy(float eValue)
+void Character::GainStamina(float eValue)
 {
-	this->energy += eValue;
+	this->stamina += eValue;
 }
 
-void Character::SpendEnergy(float eValue)
+void Character::SpendStamina(float eValue)
 {
-	this->energy -= eValue;
+	this->stamina -= eValue;
 }
 
-EnergyType Character::GetEnergyType() const
+void Character::GainMana(float eValue)
 {
-	return energyType;
+	this->mana += eValue;
 }
+
+void Character::SpendMana(float eValue)
+{
+	this->mana -= eValue;
+}
+
 
 string Character::GetName()
 {
@@ -38,6 +44,11 @@ CharacterAttributes &Character::GetAttributes()
 float Character::GetHealthPoints()
 {
 	return this->health;
+}
+
+float Character::GetManaPoints()
+{
+	return this->mana;
 }
 
 bool& Character::IsDead()
@@ -69,14 +80,14 @@ void Character::UnsubscribeOnDeath(int listenerId)
 	deathListeners.erase(listenerId);
 }
 
-void Character::SetEnergyLimit(float value)
+void Character::SetStaminaLimit(float value)
 {
-	this->energyMax = value;
+	this->staminaMax = value;
 }
 
-float Character::GetEnergyLimit()
+float Character::GetStaminaLimit()
 {
-	return this->energyMax;
+	return this->staminaMax;
 }
 
 void Character::SetHPMaxLimit(float value)
@@ -89,12 +100,21 @@ float Character::GetHPMaxLimit()
 	return this->healthMax;
 }
 
+float Character::GetManaLimit()
+{
+	return this->manaMax;
+}
+void Character::SetManaLimit(float value)
+{
+	this->manaMax = value;
+}
+
 int Character::GetId()
 {
 	return id;
 }
 
-float Character::GetEnergy()
+float Character::GetStaminaPoints()
 {
-	return this->energy;
+	return this->stamina;
 }

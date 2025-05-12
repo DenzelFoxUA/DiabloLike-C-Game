@@ -9,7 +9,8 @@ void SkeletonController::HandleBehavior(Vector2f target, Character& enemy, float
 
 void SkeletonController::Update(float deltaTime, const sf::RenderWindow& window)
 {
-    this->npcMesh.Update(deltaTime, window);
+    this->npcMesh.Update(deltaTime, window, 
+        this->npcEntity.GetHealthPoints(), this->npcEntity.GetHPMaxLimit());
 }
 
 void SkeletonController::Draw(sf::RenderWindow& window)

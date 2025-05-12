@@ -10,6 +10,8 @@
 
 using namespace std;
 
+
+
 class PlayerController : public IController
 {
 protected:
@@ -18,8 +20,11 @@ protected:
 	PlayerCharacter& characterEntity;
     bool isTressPass = false;
 
-    float regainE_Timer = 2.f;
+    float regainE_Timer = 1.2f;
     float regainE_Tik = 0.f;
+
+    float regainMana_Timer = 2.f;
+    float regainMana_Tik = 0.f;
 
     float regainHP_Timer = 2.f;
     float regainHP_Tik = 0.f;
@@ -53,14 +58,14 @@ public:
     void SetEnergyLimit(float value) override;
 
     virtual float GetEnergy() override {
-        return this->characterEntity.GetEnergy();
+        return this->characterEntity.GetStaminaPoints();
     }
 
     void RegenerateEnergy(float val, float deltaTime) override
     {
         regainE_Tik += deltaTime;
 
-        if (this->characterEntity.GetEnergy() < this->characterEntity.GetEnergyLimit() 
+        if (this->characterEntity.GetStaminaPoints() < this->characterEntity.GetStaminaLimit() 
             && regainE_Timer <= regainE_Tik)
         {
             cout << "Gained " << val << " energy!" << endl;
@@ -79,14 +84,28 @@ public:
         {
             cout << "Gained " << val << " health!" << endl;
             this->characterEntity.Heal(val);
-            regainE_Tik = 0.f;
+            regainHP_Tik = 0.f;
+        }
+
+    }
+
+    void RegenerateMana(float val, float deltaTime) override
+    {
+        regainMana_Tik += deltaTime;
+
+        if (this->characterEntity.GetManaPoints() < this->characterEntity.GetManaLimit()
+            && regainMana_Timer <= regainMana_Tik)
+        {
+            cout << "Gained " << val << " health!" << endl;
+            this->characterEntity.Heal(val);
+            regainMana_Tik = 0.f;
         }
 
     }
 
     void SetEnergyRegainValue(float val) override
     {
-        this->characterEntity.SetEnergyRegainValue(val);
+        this->characterEntity.SetStaminaRegainValue(val);
     }
 
     void SetHPRegainValue(float val) override

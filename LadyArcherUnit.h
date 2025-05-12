@@ -54,7 +54,7 @@ public:
 	void Shot(Texture& texture) override
 	{
 		cout << "Current energy: " << this->_controller->GetEnergy();
-		if (_character.GetEnergy() >= 50)
+		if (_character.GetStaminaPoints() >= 50)
 		{
 			cout << "Energy spent: " << 50 << endl; //normal attack value
 			this->_controller->SpendEnergy(50);

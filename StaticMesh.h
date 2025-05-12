@@ -18,28 +18,23 @@ protected:
     Sprite top,
         bottom;
 
-    Texture _textureStatic;
+    Texture *_textureStatic;
     FloatRect _bounds;
-
-    virtual void LoadTextures(string commonPath, 
-        string nameOfTexture);
 
 public:
 
     StaticMesh() = default;
-    StaticMesh(TextureMeta textureData, SpawnPoint spawnP)
+    StaticMesh(Texture& texture, SpawnPoint spawnP)
     {
 
-        LoadTextures(textureData.folderPath, textureData.fileName);
-        int height = textureData.frameHeight;
-        int width = textureData.frameWidth;
-        int columns = textureData.numberOfColumns;
-        int frames = textureData.numberOfFrames;
+        this->_textureStatic = &texture;
+        int split = texture.getSize().y / 2;
 
-        int split = height / 2;
+        bottom.setTexture(*_textureStatic);
+        top.setTexture(*_textureStatic);
 
-        bottom.setTextureRect(IntRect(0, split, width, height - split));
-        top.setTextureRect(sf::IntRect(0, 0, width, split));
+        bottom.setTextureRect(IntRect(0, split, texture.getSize().x, texture.getSize().y - split));
+        top.setTextureRect(sf::IntRect(0, 0, texture.getSize().x, split));
 
         top.setPosition(spawnP.x, spawnP.y);
         bottom.setPosition(spawnP.x, spawnP.y + split);

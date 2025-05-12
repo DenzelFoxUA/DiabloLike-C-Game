@@ -23,10 +23,10 @@ public:
 	PlayerCharacter(int id, 
 		string name, 
 		float health, 
-		float energy, 
-		CharacterAttributes attributes, 
-		EnergyType eType)
-		: Character(id,name, health, energy, attributes, eType), level(1),experience(0) {}
+		float stamina,
+		float mana,
+		CharacterAttributes attributes)
+		: Character(id,name, health, stamina, mana, attributes), level(1),experience(0) {}
 
 	//actions
 	virtual void LevelUp();

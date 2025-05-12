@@ -8,10 +8,10 @@ public:
 	LadyArcher(int id, 
 		string name, 
 		float healthPoint, 
-		float energy, 
-		CharacterAttributes attributes, 
-		EnergyType eType = EnergyType::Stamina) :
-		PlayerCharacter(id, name, healthPoint, energy,attributes, eType)
+		float stamina,
+		float mana,
+		CharacterAttributes attributes) :
+		PlayerCharacter(id, name, healthPoint, stamina, mana, attributes)
 	{
 
 	}

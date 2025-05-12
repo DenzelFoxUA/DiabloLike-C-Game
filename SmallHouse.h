@@ -8,13 +8,17 @@ protected:
 public:
 
 	SmallHouse() = delete;
-	SmallHouse(TextureMeta texture, SpawnPoint spawnP)
+	SmallHouse(Texture& texture, SpawnPoint spawnP)
 		: StaticMesh(texture, spawnP) {
+
+		if (texture.getSize().x == 0 || texture.getSize().y == 0) {
+			std::cerr << "Warning: SmallHouse received empty texture!" << std::endl;
+		}
 
 		this->_bounds.top = this->GetCenter(Bottom).y-60;
 		this->_bounds.left = this->GetPosition().x + 60;
-		this->_bounds.width = texture.frameWidth - 180;
-		this->_bounds.height = texture.frameHeight/13;
+		this->_bounds.width = texture.getSize().x - 180;
+		this->_bounds.height = texture.getSize().y /13;
 	} 
 
 	FloatRect GetMapBounds() const override

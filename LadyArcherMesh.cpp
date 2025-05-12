@@ -5,9 +5,10 @@ void LadyArcherMesh::Draw(sf::RenderWindow& window)
     PlayerCharacterMesh::Draw(window);  
 }
 
-void LadyArcherMesh::Update(float deltaTime, const sf::RenderWindow& window)
+void LadyArcherMesh::Update(float deltaTime, const sf::RenderWindow& window, float hp, float hpMax,
+    float stamina, float staminaMax, float mana, float manaMax)
 {
-    PlayerCharacterMesh::Update(deltaTime, window);
+    PlayerCharacterMesh::Update(deltaTime, window,hp,hpMax,stamina,staminaMax,mana,manaMax);
 
     if (isAttacking) {
         attackTimer += deltaTime;

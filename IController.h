@@ -36,7 +36,7 @@ public:
     virtual void SetHPRegainValue(float val) = 0;
     virtual void SetEnergyRegainValue(float val) = 0;
     virtual void HealBySource(float val) = 0;
-
+    virtual void RegenerateMana(float val, float deltaTime) = 0;
     virtual float GetEnergy() = 0;
 
 

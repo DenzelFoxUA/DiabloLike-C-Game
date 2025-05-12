@@ -8,7 +8,7 @@ protected:
 public:
 
 	Tree() = delete;
-	Tree(TextureMeta texture, SpawnPoint spawnP)
+	Tree(Texture& texture, SpawnPoint spawnP)
 		: StaticMesh(texture, spawnP) {
 
 		this->_bounds.top = this->GetCenter(Bottom).y-30;

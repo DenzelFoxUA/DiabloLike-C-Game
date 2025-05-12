@@ -6,38 +6,12 @@ using namespace std;
 using namespace sf;
 
 const string JSON_TEXTURES_PATH = "JSONData/textures/";
+const string PLAYER_UI_TEX_FILE = "Player_UI.json";
+const string HOUSES_TEXTURES_JSON_FILE = "HousesTextures.json";
+const string LADYARCHER_JSON_TEXTURES_FILE = "LadyArcherTextureMeta.json";
+const string SKELETON_BASIC_JSON_TEXTURES_FILE = "Skeleton_Basic_Textures_Meta.json";
+const string TREES_JSON_TEXTURES_FILE = "TreesTextures.json";
 
-namespace ArcherLadyCharacterPaths
-{
-	const string LADY_ARCHER_TEXTURES_RUN_FOLDER = "textures/Characters/ArcherLady/Run_Bow/";
-	const string LADY_ARCHER_TEXTURES_IDLE_FOLDER = "textures/Characters/ArcherLady/Idle_Bow/";
-	const string LADY_ARCHER_TEXTURES_ATTACK_FOLDER = "textures/Characters/ArcherLady/Attack_Bow/";
-	const string LADY_ARCHER_TEXTURES_DEATH_FOLDER = "textures/Characters/ArcherLady/Death_Bow/";
-
-	const string LADY_ARCHER_TEXTURES_DEATH_FILE = "Death_Bow_Body";
-	const string LADY_ARCHER_TEXTURES_IDLE_FILE = "Idle_Bow_Body";
-	const string LADY_ARCHER_TEXTURES_RUN_FILE = "Run_Bow_Body";
-	const string LADY_ARCHER_TEXTURES_ATTACK_FILE = "Attack_Bow_Body";
-
-	const string LADYARCHER_JSON_TEXTURES_FILE = "LadyArcherTextureMeta.json";
-
-	
-}
-
-namespace SkeletonCharacterPaths
-{
-	const string SKELETON_TEXTURES_RUN_FOLDER = "textures/Characters/SceletonBasic/Run_Forward/";
-	const string SKELETON_TEXTURES_IDLE_FOLDER = "textures/Characters/SceletonBasic/Idle_Simple/";
-	const string SKELETON_TEXTURES_ATTACK_FOLDER = "textures/Characters/SceletonBasic/Attack_Slash_01/";
-	const string SKELETON_TEXTURES_DEATH_FOLDER = "textures/Characters/SceletonBasic/Death_Back/";
-
-	const string SKELETON_TEXTURES_DEATH_FILE = "GlowEyes_Death_Back_Body";
-	const string SKELETON_TEXTURES_IDLE_FILE = "DarkEyes_Idle_Simple_Body";
-	const string SKELETON_TEXTURES_RUN_FILE = "DarkEyes_Run_Forward_Body";
-	const string SKELETON_TEXTURES_ATTACK_FILE = "DarkEyes_Attack_Slash_01_Body";
-
-
-}
 
 namespace ArrowsPaths
 {
@@ -47,14 +21,3 @@ namespace ArrowsPaths
 	const string ARROW_TEXTURES_FIRE_FILE = "fire_arrow.png";
 }
 
-namespace SmallHousesPaths
-{
-	const string SMALL_HOUSES_TEXTURE_FOLDER = "textures/World/Buildings/Small/";
-	const string HOUSE3_TEXTURE = "House3.png";
-}
-
-namespace PlantsPaths {
-	const string TREE_TEXTURE_FOLDER = "textures/World/Trees/";
-	const string TREE_TEXTURE_1 = "Tree1.png";
-	const string TREE_TEXTURE_2 = "Tree2.png";
-}

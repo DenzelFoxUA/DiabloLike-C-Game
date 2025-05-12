@@ -144,7 +144,7 @@
     <ClCompile Include="PlayerCharacter.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="Caracter.cpp">
+    <ClCompile Include="Character.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
     <ClCompile Include="NPCEntity.cpp">
@@ -249,9 +249,6 @@
       <Filter>Header Files\Entities\Projectiles</Filter>
     </ClInclude>
     <ClInclude Include="PathsConfig.h">
-      <Filter>Header Files\Config</Filter>
-    </ClInclude>
-    <ClInclude Include="TexturesMetaConfig.h">
       <Filter>Header Files\Config</Filter>
     </ClInclude>
     <ClInclude Include="LadyArcherUnit.h">

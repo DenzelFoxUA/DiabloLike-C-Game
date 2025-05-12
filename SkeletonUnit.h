@@ -73,11 +73,6 @@ public:
 		this->_controller->SetSpeed(val);
 	}
 
-	//const IController& GetController() const override
-	//{
-	//	return _controller.value();
-	//}
-
 	void Shot(Texture& projTexture)override
 	{
 
@@ -101,9 +96,19 @@ public:
 
 	}
 
-	virtual void SpendEnergy(float value) {};
-	virtual void GainEnergyDueTime(float val, float deltaTime) {};
-	virtual void GainEnergyBySource(float value) {};
+	virtual void SpendEnergy(float value) override
+	{
+		this->_controller->SpendEnergy(value);
+	}
+
+	virtual void GainEnergyBySource(float value) override
+	{
+		this->_controller->GainEnergy(value);
+	}
+	virtual void HealBySource(float value) override
+	{
+		this->_controller->HealBySource(value);
+	}
 
 	template <typename, typename>
 	friend class UnitBuilder;

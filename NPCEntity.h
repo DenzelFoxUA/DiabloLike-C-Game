@@ -32,15 +32,16 @@ public:
 		this->expPontsGranted = expReward;
 	}
 
+	//status
 	bool IsFriendly() const;
-
 	void SetFriendly();
 	
+	//values
 	int GetXPReward();
-
-	virtual void GainExperience(int expPoints) override{}
-
 	virtual float GetDetectRadius();
+
+	//actions
+	virtual void GainExperience(int expPoints) override{}
 
 	~NPCEntity() = default;
 };

@@ -9,9 +9,7 @@ void SkeletonController::HandleBehavior(Vector2f target, Character& enemy, float
 
 void SkeletonController::Update(float deltaTime, const sf::RenderWindow& window)
 {
-
     this->npcMesh.Update(deltaTime, window);
-
 }
 
 void SkeletonController::Draw(sf::RenderWindow& window)
@@ -31,11 +29,11 @@ void SkeletonController::SetSpeed(float val)
 
 void SkeletonController::HandleInput(float deltaTime)
 {
-    // ШІ сам собі господар — тут можна залишити пусто
+    
 }
 
 void SkeletonController::HandleEvent(const sf::Event& event, const sf::RenderWindow& window)
 {
-    // Скелет не слухає мишку =) лишити пустим
+    
 }
 

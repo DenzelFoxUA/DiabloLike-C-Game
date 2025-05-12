@@ -31,3 +31,8 @@ Vector2f BaseMesh::MoveToPoint(Vector2f point) {
     else
         return sf::Vector2f(0.f, 0.f);
 }
+
+void BaseMesh::SetAnimationDuration(float newVal)
+{
+    this->animation.SetFrameDuration(newVal);
+}

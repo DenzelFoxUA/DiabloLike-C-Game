@@ -143,6 +143,7 @@
     <ClCompile Include="JSONTextureLoader.cpp" />
     <ClCompile Include="LadyArcherController.cpp" />
     <ClCompile Include="LadyArcherMesh.cpp" />
+    <ClCompile Include="LadyArcherUnit.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Meshes\Weapons\ArrowMesh.cpp" />
     <ClCompile Include="Meshes\Weapons\ProjectileMesh.cpp" />

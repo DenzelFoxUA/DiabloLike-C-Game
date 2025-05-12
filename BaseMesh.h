@@ -45,19 +45,12 @@ public:
 
     BaseMesh() = delete;
 
-    BaseMesh(vector<TextureMeta> texturePathList, SpawnPoint spawnPoint) :animation(sprite) 
-    {
-
-    }
+    BaseMesh(vector<TextureMeta> texturePathList, SpawnPoint spawnPoint) :animation(sprite) {}
 
     virtual void Draw(sf::RenderWindow& window);
     virtual Vector2f GetPosition() const;
     virtual Vector2f GetCenter() const;
     virtual void Update(float deltaTime, const sf::RenderWindow& window);
     virtual Vector2f MoveToPoint(Vector2f point);
-
-    virtual void SetAnimationDuration(float newVal)
-    {
-        this->animation.SetFrameDuration(newVal);
-    }
+    virtual void SetAnimationDuration(float newVal);
 };

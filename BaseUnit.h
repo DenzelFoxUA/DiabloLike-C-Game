@@ -10,9 +10,8 @@ class BaseUnit : public IBaseUnit
 {
 protected:
 
-    std::map<int, int> enemiesSubscriptions;
+    map<int, int> enemiesSubscriptions;
 
-    
     EntityT _character;
     ProjectileType _projectileEquiped;
     ProjectilesContainer* allGameProjectiles;
@@ -62,8 +61,9 @@ public:
     virtual void GainXP(int expPoints) = 0;
 
     virtual void SpendEnergy(float value) = 0;
-    virtual void GainEnergyDueTime(float val, float deltaTime) = 0;
+    
     virtual void GainEnergyBySource(float value) = 0;
+    virtual void HealBySource(float value) = 0;
 
     virtual ~BaseUnit() override = default;
 

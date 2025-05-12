@@ -31,24 +31,7 @@ public:
     void Update(float deltaTime);
     void Reset();
     bool IsFinished() const;
-    void SetFrameDuration(float newValue)
-    {
-        this->frameDuration = newValue;
-    }
-
-    void FreezeOnMidFrame()
-    {
-        paused = true;
-
-        int lastFrameIndex = totalFrames / 2;
-        int x = (lastFrameIndex % columns) * frameWidth;
-        int y = (lastFrameIndex / columns) * frameHeight;
-
-        sprite.setTextureRect(IntRect(x, y, frameWidth, frameHeight));
-    }
-
-    void Resume()
-    {
-        paused = false;
-    }
+    void SetFrameDuration(float newValue);
+    void FreezeOnMidFrame();
+    void Resume();
 };

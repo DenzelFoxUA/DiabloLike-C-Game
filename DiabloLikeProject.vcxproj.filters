@@ -100,6 +100,21 @@
     <Filter Include="Source Files\TextureLoader">
       <UniqueIdentifier>{ea9ea4d9-b092-4092-841d-831f20629ef5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Entities\PlayerCharacters">
+      <UniqueIdentifier>{c00401ca-c2cd-4585-b39a-53af6eec6abf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Controllers\PlayerController">
+      <UniqueIdentifier>{9a0b193a-4c81-43ba-96ca-5c04d8975b72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Units">
+      <UniqueIdentifier>{62eb72c6-fa68-4a3c-b07b-0d04527561f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Units\Player">
+      <UniqueIdentifier>{c43e4a24-084b-45e7-9b74-b96d9098ec59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Units\NPC">
+      <UniqueIdentifier>{20a5d245-d8fb-4397-8bef-d6f854ac6103}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LadyArcherMesh.cpp">
@@ -122,12 +137,6 @@
     </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerCharacterController.cpp">
-      <Filter>Source Files\Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="LadyArcherController.cpp">
-      <Filter>Source Files\Controllers</Filter>
     </ClCompile>
     <ClCompile Include="Meshes\Weapons\ArrowMesh.cpp">
       <Filter>Source Files\Meshes\Weapons</Filter>
@@ -171,6 +180,15 @@
     <ClCompile Include="JSONTextureLoader.cpp">
       <Filter>Source Files\TextureLoader</Filter>
     </ClCompile>
+    <ClCompile Include="LadyArcherController.cpp">
+      <Filter>Source Files\Controllers\PlayerController</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerCharacterController.cpp">
+      <Filter>Source Files\Controllers\PlayerController</Filter>
+    </ClCompile>
+    <ClCompile Include="LadyArcherUnit.cpp">
+      <Filter>Source Files\Units\NPC</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LadyArcherMesh.h">
@@ -199,9 +217,6 @@
     </ClInclude>
     <ClInclude Include="LadyArcherController.h">
       <Filter>Header Files\Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="LadyArcher.h">
-      <Filter>Header Files\Entities</Filter>
     </ClInclude>
     <ClInclude Include="Meshes\Weapons\ArrowMesh.h">
       <Filter>Header Files\Meshes\Weapons</Filter>
@@ -280,6 +295,9 @@
     </ClInclude>
     <ClInclude Include="JsonTextureLoader.h">
       <Filter>Utiltity</Filter>
+    </ClInclude>
+    <ClInclude Include="LadyArcher.h">
+      <Filter>Header Files\Entities\PlayerCharacters</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

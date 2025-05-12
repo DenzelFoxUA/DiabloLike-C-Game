@@ -14,9 +14,14 @@ protected:
 	float energy;
 	EnergyType energyType;
 	bool isDead;
-	float energyMax = 500;
+
+	float energyMax; 
+	float healthMax;
 
 	CharacterAttributes attributes;
+
+	float energyRegainValue = 20;
+	float healthRegainValue = 0;
 
 	std::unordered_map<int, std::function<void(int)>> deathListeners;
 	int nextListenerId = 0;
@@ -25,72 +30,69 @@ public:
 
 	Character() = delete;
 
-	Character(int id, string name, float health, float energy, CharacterAttributes attributes, EnergyType eType)
+	Character(int id, 
+		string name, 
+		float health, 
+		float energy, 
+		CharacterAttributes attributes, 
+		EnergyType eType)
 	{
 		this->id = id;
 		this->name = name;
 		this->health = health;
 		this->energy = energy;
+		this->energyMax = energy;
+		this->healthMax = health;
 		this->energyType = eType;
 		this->attributes = attributes;
 		isDead = false;
 		
 	}
 
-	virtual int GetId()const override
+	//values
+	string GetName() override;
+	int GetId() override;
+	float GetEnergy() override;
+	EnergyType GetEnergyType() const override;
+	CharacterAttributes& GetAttributes() override;
+	float GetHealthPoints() override;
+	void SetEnergyLimit(float value) override;
+	float GetEnergyLimit() override;
+	void SetHPMaxLimit(float value) override;
+	float GetHPMaxLimit() override;
+
+	float GetEnergyRegainValue() override
 	{
-		return id;
+		return this->energyRegainValue;
+	}
+	float GetHPRegainValue() override
+	{
+		return this->healthRegainValue;
+	}
+	void SetEnergyRegainValue(float val) override
+	{
+		this->energyRegainValue = val;
 	}
 
-	virtual float GetEnergy() const override
+	void SetHPRegainValue(float val) override
 	{
-		return this->energy;
+		this->healthRegainValue = val;
 	}
 
-	virtual string GetName() const override;
-
-	virtual void GetHit(float damage) override;
-
-	virtual void GetHeal(float healValue) override;
-
-	virtual void GainEnergy(float eValue) override;
-
-	virtual void SpendEnergy(float eValue) override;
-
-	virtual EnergyType GetEnergyType() const override;
-
-	virtual CharacterAttributes& GetAttributes() override;
-
-	virtual float GetHealthPoints() const override;
-
-	virtual bool& IsDead() override;
-
-	virtual void Death()  override
-	{
-		if (isDead) return;
-		isDead = true;
-
-		std::cout << "Enemy died!\n";
-		for (auto& [_, listener] : deathListeners)
-		{
-			listener(100); // Наприклад, 100 досвіду
-		}
-	}
-	
-	int SubscribeOnDeath(std::function<void(int expGained)> caller)
-	{
-		int id = nextListenerId++;
-		deathListeners[id] = caller;
-		return id;
-	}
-
-	void UnsubscribeOnDeath(int listenerId)
-	{
-		deathListeners.erase(listenerId);
-	}
-
-
+	//actions
+	void GetHit(float damage) override;
+	void Heal(float healValue) override;
+	void GainEnergy(float eValue) override;
+	void SpendEnergy(float eValue) override;
+	virtual void Death() override;
 	virtual void GainExperience(int expPoints) = 0;
+
+	//bool
+	bool& IsDead() override;
+	
+	//events funcs
+	int SubscribeOnDeath(std::function<void(int expGained)> caller);
+	void UnsubscribeOnDeath(int listenerId);
 
 	~Character() = default;
 };

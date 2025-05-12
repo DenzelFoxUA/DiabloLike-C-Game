@@ -1,5 +1,27 @@
 ﻿#include "NPC_Controller.h"
 
+Character& NPC_Controller::GetEntity()
+{
+    return this->npcEntity;
+}
+
+bool NPC_Controller::IsTressPassing(const vector<FloatRect>& forbiddenZones)
+{
+    FloatRect npcZone = this->npcMesh.Sprite().getGlobalBounds();
+    for (const auto& zone : forbiddenZones)
+    {
+        if (npcZone.intersects(zone))
+        {
+            std::cout << "Tresspassing zone: " << zone.left << ", " << zone.top << ", "
+                << zone.width << "x" << zone.height << std::endl;
+            this->isTressPass = true;
+            return true;
+        }
+    }
+
+    this->isTressPass = false;
+    return false;
+}
 
 void NPC_Controller::ChasingEnemy(Vector2f point, float deltaTime, bool& isMoving)
 {
@@ -191,4 +213,79 @@ void NPC_Controller::HandleBehavior(Vector2f target, Character& enemy, float del
     npcMesh.Animation().Update(deltaTime);
 }
 
+bool& NPC_Controller::IsDead()
+{
+    return this->npcEntity.IsDead();
+}
 
+Vector2f NPC_Controller::GetCenter()
+{
+    return this->npcMesh.GetCenter();
+}
+
+void NPC_Controller::Death()
+{
+    cout << "Object died in controller NPC" << endl;
+    this->npcEntity.Death();
+}
+
+void NPC_Controller::SpendEnergy(float value)
+{
+    this->npcEntity.SpendEnergy(value);
+}
+
+void NPC_Controller::GainEnergy(float value)
+{
+    this->npcEntity.GainEnergy(value);
+}
+
+float NPC_Controller::GetEnergyLimit()
+{
+    return this->npcEntity.GetEnergyLimit();
+}
+
+void NPC_Controller::SetEnergyLimit(float value)
+{
+    this->npcEntity.SetEnergyLimit(value);
+}
+
+float& NPC_Controller::GetChargeTime() const
+{
+    return this->npcMesh.ChargeTime();
+}
+
+bool& NPC_Controller::IsChargingAttack() const
+{
+    return this->npcMesh.IsChargingAttack();
+}
+
+void NPC_Controller::FreezeOnMidFrame()
+{
+    this->npcMesh.Animation().FreezeOnMidFrame();
+}
+
+bool& NPC_Controller::IsAttacking() const
+{
+    return this->npcMesh.IsAttacking();
+}
+
+bool NPC_Controller::AnimationIsFinished()
+{
+    return this->npcMesh.Animation().IsFinished();
+}
+
+bool& NPC_Controller::PendingNormalAttack()
+{
+    return this->npcMesh.PendingNormalAttack();
+}
+
+bool& NPC_Controller::PendingChargedAttack()
+{
+    return this->npcMesh.PendingChargedAttack();
+}
+
+void NPC_Controller::Update(float deltaTime, const sf::RenderWindow& window)
+{
+    RegenerateEnergy(this->npcEntity.GetEnergyRegainValue(), deltaTime);
+    RegenerateHP(this->npcEntity.GetHPRegainValue(), deltaTime);
+}

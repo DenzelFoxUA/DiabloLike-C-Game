@@ -167,6 +167,8 @@ bool PlayerController::IsTressPassing(vector<FloatRect> forbiddenZones)
 void PlayerController::Update(float deltaTime, const sf::RenderWindow& window)
 {
     this->characterEntity.LevelUp();
+    this->RegenerateHP(this->characterEntity.GetHPRegainValue(),deltaTime);
+    this->RegenerateEnergy(this->characterEntity.GetEnergyRegainValue(), deltaTime);
 
     if (!ForbiddenZones::GetForbiddenZones().empty())
         this->IsTressPassing(ForbiddenZones::GetForbiddenZones());
@@ -198,4 +200,58 @@ void PlayerController::Death()
 Vector2f PlayerController::GetCenter()
 {
     return this->characterMesh.GetCenter();
+}
+
+
+void PlayerController::SpendEnergy(float value)
+{
+    this->characterEntity.SpendEnergy(value);
+}
+
+void PlayerController::GainEnergy(float value)
+{
+    this->characterEntity.GainEnergy(value);
+}
+
+float PlayerController::GetEnergyLimit()
+{
+    return this->characterEntity.GetEnergyLimit();
+}
+
+void PlayerController::SetEnergyLimit(float value)
+{
+    this->characterEntity.SetEnergyLimit(value);
+}
+
+float& PlayerController::GetChargeTime() const
+{
+    return this->characterMesh.ChargeTime();
+}
+
+bool& PlayerController::IsChargingAttack() const
+{
+    return this->characterMesh.IsChargingAttack();
+}
+void PlayerController::FreezeOnMidFrame()
+{
+    this->characterMesh.Animation().FreezeOnMidFrame();
+}
+bool& PlayerController::IsAttacking() const
+{
+    return this->characterMesh.IsAttacking();
+}
+
+bool PlayerController::AnimationIsFinished()
+{
+    return this->characterMesh.Animation().IsFinished();
+}
+
+bool& PlayerController::PendingNormalAttack()
+{
+    return this->characterMesh.PendingNormalAttack();
+}
+
+bool& PlayerController::PendingChargedAttack()
+{
+    return this->characterMesh.PendingChargedAttack();
 }

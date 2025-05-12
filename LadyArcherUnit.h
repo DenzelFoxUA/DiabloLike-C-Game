@@ -13,50 +13,15 @@ class LadyArcherUnit :public BaseUnit<LadyArcher>
 protected:
 
 	LadyArcherMesh _mesh;
-	float energyRegainValue = 10;
-	float regainTimer = 2.f;
-	float regainTik = 0.f;
+
 	optional<LadyArcherController> _controller;
 
-	float CaltulateSpeed(bool isCharged)
-	{
-		int multiplyer = isCharged ? 2 : 1;
+	float CaltulateSpeed(bool isCharged);
 
-		return this->_character.GetAttributes().strength * 100 * multiplyer;
-	}
+	float CalculateDamage(bool isCharged);
 
-	float CalculateDamage(bool isCharged)
-	{
-		int multiplyer = isCharged ? 2 : 1;
+	float CalculateHitRadius(bool isCharged);
 
-		float basicDamage = this->_projectileEquiped == ProjectileType::ArrowSimple ? 20 :
-			ProjectileType::ArrowMagic ? 40 : 0;
-
-		return this->_character.GetAttributes().agility * basicDamage * multiplyer;
-	}
-
-	float CalculateHitRadius(bool isCharged)
-	{
-		int multiplyer = isCharged ? 2 : 1;
-
-		float basicRadius = this->_projectileEquiped == ProjectileType::ArrowSimple ? 40 :
-			ProjectileType::ArrowMagic ? 60 : 0;
-
-		return this->_character.GetAttributes().agility * multiplyer + basicRadius;
-	}
-
-	void GainEnergyDueTime(float val, float deltaTime)
-	{
-		regainTik += deltaTime;
-
-		if (this->_character.GetEnergy() < 500 && regainTimer <= regainTik)
-		{
-			cout << "Gained " << val << " energy!" << endl;
-			this->_controller->GainEnergy(val);
-			regainTik = 0.f;
-		}
-			
-	}
 
 public:
 
@@ -88,15 +53,15 @@ public:
 
 	void Shot(Texture& texture) override
 	{
-		cout << "Current energy: " << this->_character.GetEnergy();
+		cout << "Current energy: " << this->_controller->GetEnergy();
 		if (_character.GetEnergy() >= 50)
 		{
 			cout << "Energy spent: " << 50 << endl; //normal attack value
-			this->_character.SpendEnergy(50);
+			this->_controller->SpendEnergy(50);
 			Vector2f direction = this->_controller->Shot();
 
 			bool isCharged = false;
-			Vector2f center = this->_mesh.GetCenter();
+			Vector2f center = this->_controller->GetCenter();
 
 			float speed = CaltulateSpeed(isCharged);
 			float damage = CalculateDamage(isCharged);
@@ -118,11 +83,11 @@ public:
 
 	void ShotCharged(Texture& texture) override
 	{
-		cout << "Current energy: " << this->_character.GetEnergy();
-		if (_character.GetEnergy() >= 210)
+		cout << "Current energy: " << this->_controller->GetEnergy();
+		if (this->_controller->GetEnergy() >= 210)
 		{
 			cout << "Energy spent: " << 210 << endl; //power value
-			this->_character.SpendEnergy(210);
+			this->_controller->SpendEnergy(210);
 
 			Vector2f direction = this->_controller->Shot();
 
@@ -150,30 +115,29 @@ public:
 
 	void Update(float deltaTime, const sf::RenderWindow& window, Texture&projTexture, Texture& projChargedTexture)
 	{
-		GainEnergyDueTime(energyRegainValue, deltaTime);
 
 		this->_controller->Update(deltaTime, window);
-		float& chargeTime = this->_mesh.ChargeTime();
-		bool& chargingShot = this->_mesh.IsChargingAttack();
+		float& chargeTime = this->_controller->GetChargeTime();
+		bool& chargingShot = this->_controller->IsChargingAttack();
 
 		if (chargingShot) {
 
 			chargeTime += deltaTime;
 			if (chargeTime >= 2.0f) {
-				this->_mesh.Animation().FreezeOnMidFrame();
+				this->_controller->FreezeOnMidFrame();
 			}
 		}
 
-		if (this->_mesh.IsAttacking() && this->_mesh.Animation().IsFinished()) {
-			if (this->_mesh.PendingNormalAttack()) {
+		if (this->_controller->IsAttacking() && this->_controller->AnimationIsFinished()) {
+			if (this->_controller->PendingNormalAttack()) {
 				Shot(projTexture);
-				this->_mesh.PendingNormalAttack() = false;
+				this->_controller->PendingNormalAttack() = false;
 				cout << "Normal----------------------------->" << endl;
-	
+
 			}
-			else if (this->_mesh.PendingChargedAttack()) {
+			else if (this->_controller->PendingChargedAttack()) {
 				ShotCharged(projChargedTexture);
-				this->_mesh.PendingChargedAttack() = false;
+				this->_controller->PendingChargedAttack() = false;
 				cout << "CHARGED CHARGED!!!----------------------------->" << endl;
 			}
 
@@ -181,11 +145,6 @@ public:
 			this->_mesh.CurrentState() = CharacterState::Idle;
 			this->_mesh.Animation().Resume();
 		}
-	}
-
-	void SetEnergyRegainValue(float val)
-	{
-		this->energyRegainValue = val;
 	}
 
 	void Draw(sf::RenderWindow& window) override
@@ -255,6 +214,11 @@ public:
 	virtual void GainEnergyBySource(float value)
 	{
 		this->_controller->GainEnergy(value);
+	}
+
+	virtual void HealBySource(float value)
+	{
+		this->_controller->HealBySource(value);
 	}
 
 	template <typename,typename>

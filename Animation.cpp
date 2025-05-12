@@ -60,3 +60,24 @@ bool Animation::IsFinished() const
 {
     return isFinished;
 }
+
+void Animation::SetFrameDuration(float newValue)
+{
+    this->frameDuration = newValue;
+}
+
+void Animation::FreezeOnMidFrame()
+{
+    paused = true;
+
+    int lastFrameIndex = totalFrames / 2;
+    int x = (lastFrameIndex % columns) * frameWidth;
+    int y = (lastFrameIndex / columns) * frameHeight;
+
+    sprite.setTextureRect(IntRect(x, y, frameWidth, frameHeight));
+}
+
+void Animation::Resume()
+{
+    paused = false;
+}

@@ -3,6 +3,7 @@
 #include "Character.h"
 #include "NPCEntity.h"
 #include <map>
+
 using namespace std;
 
 class PlayerCharacter : public Character
@@ -19,18 +20,20 @@ public:
 
 	PlayerCharacter() = delete;
 
-	PlayerCharacter(int id, string name, float health, float energy, CharacterAttributes attributes, EnergyType eType)
-		: Character(id,name, health, energy, attributes, eType), level(1),experience(0)
-	{
+	PlayerCharacter(int id, 
+		string name, 
+		float health, 
+		float energy, 
+		CharacterAttributes attributes, 
+		EnergyType eType)
+		: Character(id,name, health, energy, attributes, eType), level(1),experience(0) {}
 
-	}
-
+	//actions
 	virtual void LevelUp();
-
 	virtual void GainExperience(int points) override;
 
+	//events funcs
 	void SubscribeOnEnemy(Character& enemy);
-
 	void UnsubscribeFromEnemy(Character& enemy);
 
 	~PlayerCharacter() = default;

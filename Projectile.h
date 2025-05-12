@@ -39,8 +39,15 @@ protected:
 public:
 
 	Projectile() = delete;
-	Projectile(ProjectileType type, float damage, float hitRadius, bool isCharged, bool isHit = false)
-		: damage(damage),hitRadius(hitRadius), isCharged(isCharged),type(type), hitTarget(isHit) { }
+	Projectile(ProjectileType type, 
+		float damage, 
+		float hitRadius, 
+		bool isCharged, 
+		bool isHit = false)
+		: damage(damage),hitRadius(hitRadius), 
+		isCharged(isCharged),
+		type(type), 
+		hitTarget(isHit) { }
 
 	virtual void SetDamage(float dmg);
 	virtual float GetDamage();

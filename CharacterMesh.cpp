@@ -98,3 +98,12 @@ bool& CharacterMesh::IsDead()
 {
     return this->isDead;
 }
+
+float& CharacterMesh::DeathAnimation_Timer()
+{
+    return this->deathAnimTik;
+}
+float CharacterMesh::DeathAnimationTimeLimit()
+{
+    return this->deathAnimatuionTime;
+}

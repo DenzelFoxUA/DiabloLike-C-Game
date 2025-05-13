@@ -19,7 +19,7 @@ protected:
     //behavior
     virtual void ChasingEnemy(Vector2f point, float deltaTime, bool& isMoving) = 0;
     //service
-    virtual float GetDistanceToTarget(Vector2f point) = 0;
+    
 
 public:
 
@@ -51,6 +51,9 @@ public:
     virtual bool& PendingChargedAttack() = 0;
     virtual float& GetChargeTime() const = 0;
     virtual bool& IsChargingAttack() const = 0;
+    virtual float GetDistanceToTarget(Vector2f point) = 0;
+    virtual Direction GetCurrentDirection() = 0;
+    virtual Vector2f GetCurrentPosition() = 0;
 
     //input and behavior
     virtual void HandleInput(float deltaTime) = 0;

@@ -11,7 +11,8 @@ template <typename UnitT, typename EntityT>
 class UnitBuilder
 {
 private:
-    vector<TextureMeta> _textures;
+    vector<TextureMeta> _texturesRanged;
+    vector<TextureMeta> _texturesMelee;
     SpawnPoint _spawnPoint;
     optional<EntityT> _entity;
     ProjectileType _projectile;
@@ -20,9 +21,15 @@ private:
 
 public:
 
-    UnitBuilder& SetTextures(vector<TextureMeta> textures)
+    UnitBuilder& SetTexturesRanged(vector<TextureMeta> textures)
     {
-        this->_textures = move(textures);
+        this->_texturesRanged = move(textures);
+        return *this;
+    }
+
+    UnitBuilder& SetTexturesMelee(vector<TextureMeta> textures)
+    {
+        this->_texturesMelee = move(textures);
         return *this;
     }
 
@@ -34,7 +41,7 @@ public:
 
     UnitBuilder& SetEntity(const EntityT& entity)
     {
-        this->_entity = entity;
+        this->_entity = move(entity);
         return *this;
     }
 
@@ -63,7 +70,8 @@ public:
             throw std::logic_error("Entity was not set in UnitBuilder before Build()");
         }
         return make_unique<UnitT>( 
-            _textures,
+            _texturesRanged,
+            _texturesMelee,
             _spawnPoint,
             *_entity,
             _projectile,

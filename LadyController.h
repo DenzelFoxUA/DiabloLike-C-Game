@@ -8,20 +8,18 @@
 #include "ProjectileObject.h"
 
 
-class LadyArcherController : public PlayerController
+class LadyController : public PlayerController
 {
 protected:
 
     void ChasingEnemy(Vector2f point, float deltaTime, bool& isMoving) {}
-    float GetDistanceToTarget(Vector2f point) { return this->GetDistanceToTarget(point); }
+    
 
 public:
 
-    LadyArcherController(LadyArcherMesh& _mesh, LadyArcher& _entity)
-        : PlayerController(_mesh, _entity)
-    {
-     
-    }
+    LadyController(LadyArcherMesh* _meshCurrent, LadyArcher& _entity)
+        : PlayerController(_meshCurrent, _entity){}
+
     virtual Character& GetEntity() override;
     void HandleEvent(const sf::Event& event, const sf::RenderWindow& window) override;
     void HandleInput(float deltaTime) override;
@@ -35,7 +33,7 @@ public:
 
     void SetSpeed(float val) override
     {
-        this->characterMesh.SetSpeed(val);
+        this->charActiveMesh->SetSpeed(val);
     }
 
 };

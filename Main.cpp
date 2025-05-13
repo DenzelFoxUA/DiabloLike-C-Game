@@ -4,14 +4,13 @@
 #include "CharacterMesh.h"
 #include "LadyArcherMesh.h"
 #include "LadyArcher.h"
-#include "LadyArcherController.h"
+#include "LadyController.h"
 #include "Skeleton.h"
 #include "SkeletonMesh.h"
 #include "SkeletonController.h"
 #include <iostream>
 #include "PathsConfig.h"
-#include "TexturesMetaConfig.h"
-#include "LadyArcherUnit.h"
+#include "LadyUnit.h"
 #include "UnitBuilder.h"
 #include "SkeletonUnit.h"
 #include "NPC_Controller.h"
@@ -21,6 +20,8 @@
 
 using namespace std;
 using namespace ArrowsPaths;
+
+
 int main()
 {
     const int windowHeight = 1080;
@@ -76,7 +77,7 @@ int main()
     string nameMainChar = "Eva";
     auto arrowSimple = std::make_unique<Arrow>(ProjectileType::ArrowMagic, 152, 80.f, false);
 
-    UnitBuilder<LadyArcherUnit,LadyArcher> ladyArcherBuilder;
+    UnitBuilder<LadyUnit,LadyArcher> ladyArcherBuilder;
 
     vector<unique_ptr<IBaseUnit>> skeletons;
 
@@ -97,9 +98,11 @@ int main()
     };
 
     auto archerEva = ladyArcherBuilder
-        .SetTextures(JSONTextureLoader::
+        .SetTexturesRanged(JSONTextureLoader::
             LoadTextureMeta(JSON_TEXTURES_PATH + LADYARCHER_JSON_TEXTURES_FILE))
-        .SetSpawnPoint(SpawnPoint{ 1000,400 })
+        .SetTexturesMelee(JSONTextureLoader::
+            LoadTextureMeta(JSON_TEXTURES_PATH + LADYSWORD_JSON_TEXTURES_FILE))
+        .SetSpawnPoint(SpawnPoint{ 1000,900 })
         .SetArrow(ProjectileType::ArrowSimple)
         .SetEntity(LadyArcher(0,nameMainChar, 1600.f, 500.f, 200.f,mainCharAttributes))
         .SetCooldown(0.f)
@@ -110,11 +113,11 @@ int main()
     {
         UnitBuilder<SkeletonUnit, Skeleton> skeletonBuilder;
         auto skeleton1 = skeletonBuilder
-            .SetTextures(JSONTextureLoader::
+            .SetTexturesRanged(JSONTextureLoader::
                 LoadTextureMeta(JSON_TEXTURES_PATH + SKELETON_BASIC_JSON_TEXTURES_FILE))
             .SetSpawnPoint(SpawnPoint{ x, y })
             .SetArrow(ProjectileType::None)
-            .SetEntity(Skeleton(i,600.f, 200.f,700.f,100.f, 100, skeletonsAttribute))
+            .SetEntity(Skeleton(i,600.f, 200.f,700.f,900.f, 100, skeletonsAttribute))
             .SetCooldown(2.f)
             .Build();
         skeleton1->SetAnimationDuration(0.3f);
@@ -127,18 +130,23 @@ int main()
         else
             y += y;
 
-        skeletonBuilder.Reset();
+        skeletonBuilder.Reset();  
+    }
+
+    for (auto& skeleton : skeletons)
+    {
+        Enemies::Add(skeleton->GetEntity().GetId(), skeleton.get());
     }
 
     sf::Clock clock;
 
     while (window.isOpen())
     {
+        Enemies::Update();
         float dt = clock.restart().asSeconds();
         std::vector<IBaseUnit*> enemyPointers;
         for (auto& enemy : skeletons)
             enemyPointers.push_back(enemy.get());
-
 
         sf::Event event;
         while (window.pollEvent(event))
@@ -148,6 +156,7 @@ int main()
 
             archerEva->HandleEvent(event, window);
         }
+
         archerEva->HandleInput(dt);
         archerEva->Update(dt, window,arrowTexture,powerArrowTexture);
 
@@ -156,24 +165,20 @@ int main()
             archerEva->SubscribeOnEnemy(skeleton->GetEntity());
         }
 
-
         for (auto& skeleton : skeletons)
         {
             if (skeleton->IsDead()) continue;
 
-            skeleton->GetController().HandleBehavior(archerEva->GetPosition(), archerEva->GetEntity(), dt);
+            skeleton->HandleBehavior(archerEva.get(), dt);
             skeleton->GetController().Update(dt, window);
         }
 
         projContainer.Update(dt,enemyPointers);
 
-
         window.clear();
 
-
         float offsetX = -1 * tileHeight;
-        float offsetY = -1 * tileWidth;
-        
+        float offsetY = -1 * tileWidth;        
 
         for (int y = 0; y <= windowHeight + tileHeight; y += tileHeight) {
             for (int x = 0; x <= windowWidth + tileHeight; x += tileWidth) {

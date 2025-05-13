@@ -36,7 +36,7 @@ protected:
         isTressPass = false;
 
     virtual void ChasingEnemy(Vector2f point, float deltaTime, bool& isMoving) override;
-    virtual float GetDistanceToTarget(Vector2f point) override;
+    
 
     virtual bool IsTressPassing(const vector<FloatRect>& forbiddenZones);
 
@@ -119,6 +119,10 @@ public:
     bool& PendingChargedAttack() override;
     void UpdateHealthBar(sf::Sprite& barSprite, const Texture& barTexture, 
         int currentHp, int maxHp);
+    virtual float GetDistanceToTarget(Vector2f point) override;
+
+    Direction GetCurrentDirection() override { return this->npcMesh.CurrentDir(); }
+    Vector2f GetCurrentPosition() override { return this->npcMesh.GetPosition(); }
     //input and behavior
     virtual void HandleBehavior(Vector2f target, Character& enemy, float deltaTime) override;
     virtual void HandleInput(float deltaTime) = 0;

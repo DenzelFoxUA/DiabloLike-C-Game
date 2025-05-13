@@ -16,6 +16,8 @@ protected:
 
 	map<int, int> enemiesSubscriptions;
 
+	bool isModeTwoActive = false;
+
 public:
 
 	PlayerCharacter() = delete;
@@ -31,6 +33,16 @@ public:
 	//actions
 	virtual void LevelUp();
 	virtual void GainExperience(int points) override;
+	virtual void SetModeTwoActive(bool isActive)
+	{
+		this->isModeTwoActive = isActive;
+	}
+
+	virtual bool IsModeTwoActive()
+	{
+		return this->isModeTwoActive;
+	}
+
 
 	//events funcs
 	void SubscribeOnEnemy(Character& enemy);

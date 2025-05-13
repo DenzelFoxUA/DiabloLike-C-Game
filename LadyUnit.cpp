@@ -1,13 +1,13 @@
-#include "LadyArcherUnit.h"
+#include "LadyUnit.h"
 
-float LadyArcherUnit::CaltulateSpeed(bool isCharged)
+float LadyUnit::CaltulateShootSpeed(bool isCharged)
 {
 	int multiplyer = isCharged ? 2 : 1;
 
 	return this->_character.GetAttributes().strength * 100 * multiplyer;
 }
 
-float LadyArcherUnit::CalculateDamage(bool isCharged)
+float LadyUnit::CalculateShootDamage(bool isCharged)
 {
 	int multiplyer = isCharged ? 2 : 1;
 
@@ -17,7 +17,7 @@ float LadyArcherUnit::CalculateDamage(bool isCharged)
 	return this->_character.GetAttributes().agility * basicDamage * multiplyer;
 }
 
-float LadyArcherUnit::CalculateHitRadius(bool isCharged)
+float LadyUnit::CalculateHitRadius(bool isCharged)
 {
 	int multiplyer = isCharged ? 2 : 1;
 

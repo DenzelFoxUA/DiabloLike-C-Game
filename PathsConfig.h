@@ -11,7 +11,7 @@ const string HOUSES_TEXTURES_JSON_FILE = "HousesTextures.json";
 const string LADYARCHER_JSON_TEXTURES_FILE = "LadyArcherTextureMeta.json";
 const string SKELETON_BASIC_JSON_TEXTURES_FILE = "Skeleton_Basic_Textures_Meta.json";
 const string TREES_JSON_TEXTURES_FILE = "TreesTextures.json";
-
+const string LADYSWORD_JSON_TEXTURES_FILE = "LadySwordTextureMeta.json";
 
 namespace ArrowsPaths
 {

@@ -115,6 +115,12 @@
     <Filter Include="Source Files\Units\NPC">
       <UniqueIdentifier>{20a5d245-d8fb-4397-8bef-d6f854ac6103}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Global">
+      <UniqueIdentifier>{ee6772c9-5af9-4263-b40d-c33f539317cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Global">
+      <UniqueIdentifier>{7b852d8d-713f-4a6f-a461-f2bcb27ae406}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LadyArcherMesh.cpp">
@@ -180,14 +186,20 @@
     <ClCompile Include="JSONTextureLoader.cpp">
       <Filter>Source Files\TextureLoader</Filter>
     </ClCompile>
-    <ClCompile Include="LadyArcherController.cpp">
+    <ClCompile Include="LadyController.cpp">
       <Filter>Source Files\Controllers\PlayerController</Filter>
     </ClCompile>
     <ClCompile Include="PlayerCharacterController.cpp">
       <Filter>Source Files\Controllers\PlayerController</Filter>
     </ClCompile>
-    <ClCompile Include="LadyArcherUnit.cpp">
+    <ClCompile Include="LadyUnit.cpp">
       <Filter>Source Files\Units\NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="LadySwordMesh.cpp">
+      <Filter>Source Files\Meshes\Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemies.cpp">
+      <Filter>Source Files\Global</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -215,7 +227,7 @@
     <ClInclude Include="PlayerCharacterController.h">
       <Filter>Header Files\Controllers</Filter>
     </ClInclude>
-    <ClInclude Include="LadyArcherController.h">
+    <ClInclude Include="LadyController.h">
       <Filter>Header Files\Controllers</Filter>
     </ClInclude>
     <ClInclude Include="Meshes\Weapons\ArrowMesh.h">
@@ -251,7 +263,7 @@
     <ClInclude Include="PathsConfig.h">
       <Filter>Header Files\Config</Filter>
     </ClInclude>
-    <ClInclude Include="LadyArcherUnit.h">
+    <ClInclude Include="LadyUnit.h">
       <Filter>Header Files\Units</Filter>
     </ClInclude>
     <ClInclude Include="BaseUnit.h">
@@ -295,6 +307,12 @@
     </ClInclude>
     <ClInclude Include="LadyArcher.h">
       <Filter>Header Files\Entities\PlayerCharacters</Filter>
+    </ClInclude>
+    <ClInclude Include="LadySwordMesh.h">
+      <Filter>Header Files\Meshes\Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemies.h">
+      <Filter>Header Files\Global</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

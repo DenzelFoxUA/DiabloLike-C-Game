@@ -21,12 +21,7 @@ enum class CharacterState
     Dead
 };
 
-enum AttackType
-{
-    Ranged,
-    Magic,
-    Melee
-};
+
 
 class CharacterMesh : public BaseMesh
 {
@@ -76,7 +71,6 @@ protected:
     float deathAnimTik = 0.f;
 
     void LoadTextures(map<Direction, Texture>& target, string commonPath, string nameOfTexture) override;
-
 
 public:
     CharacterMesh() = default;
@@ -159,6 +153,16 @@ public:
 
     virtual float& DeathAnimation_Timer();
     virtual float DeathAnimationTimeLimit();
+
+    virtual void SyncWith(CharacterMesh& other)
+    {
+        this->SetPosition(other.GetPosition());
+        this->currentDir = other.CurrentDir();
+        this->currentState = other.CurrentState();
+        this->isDead = other.IsDead();
+        this->isMoving = other.IsMoving();
+    }
+
 
     ~CharacterMesh()
     {

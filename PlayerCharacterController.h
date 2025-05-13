@@ -16,8 +16,9 @@ class PlayerController : public IController
 {
 protected:
 
-	CharacterMesh& characterMesh;
+	CharacterMesh* charActiveMesh;
 	PlayerCharacter& characterEntity;
+
     bool isTressPass = false;
 
     float regainE_Timer = 1.2f;
@@ -30,7 +31,7 @@ protected:
     float regainHP_Tik = 0.f;
 
     virtual void ChasingEnemy(Vector2f point, float deltaTime, bool& isMoving) = 0;
-    virtual float GetDistanceToTarget(Vector2f point) = 0;
+    //virtual float GetDistanceToTarget(Vector2f point) = 0;
 
     virtual void MoveUp(Vector2f& velocity);
     virtual void MoveDown(Vector2f& velocity);
@@ -41,8 +42,8 @@ protected:
 
 public:
 
-	PlayerController(CharacterMesh&_mesh, PlayerCharacter &_characterObj)
-        :characterMesh(_mesh), characterEntity(_characterObj)
+	PlayerController(CharacterMesh*_meshCurrent, PlayerCharacter &_characterObj)
+        :charActiveMesh(_meshCurrent), characterEntity(_characterObj)
 	{
 
 	}
@@ -129,6 +130,28 @@ public:
     bool AnimationIsFinished() override;
     bool& PendingNormalAttack() override;
     bool& PendingChargedAttack() override;
+
+    void SetActiveMesh(CharacterMesh* activeMesh)
+    {
+        charActiveMesh = activeMesh;
+    }
+
+    virtual float GetDistanceToTarget(Vector2f point) override
+    {
+        Vector2f a = charActiveMesh->GetPosition();
+        Vector2f b = point;
+        return std::sqrt((b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y));
+    };
+
+    Direction GetCurrentDirection() override
+    {
+        return this->charActiveMesh->CurrentDir();
+    }
+    Vector2f GetCurrentPosition() override 
+    { 
+        return  this->charActiveMesh->GetPosition();
+    }
+
 
     //input and behavior
     virtual void HandleInput(float deltaTime) override;

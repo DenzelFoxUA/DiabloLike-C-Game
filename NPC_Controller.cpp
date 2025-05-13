@@ -125,7 +125,7 @@ void NPC_Controller::HandleBehavior(Vector2f target, Character& enemy, float del
             attackTimer.restart();
         }
     }
-    else if (distance > 500 || !targetAlive)
+    else if (distance > this->npcEntity.GetDetectRadius() || !targetAlive)
     {
         npcMesh.IsAttacking() = false;
         isChasing = false;

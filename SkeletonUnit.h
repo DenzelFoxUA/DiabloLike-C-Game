@@ -17,7 +17,8 @@ protected:
 public:
 
 	SkeletonUnit( 
-		const vector<TextureMeta>& textures, 
+		const vector<TextureMeta>& textures,
+		const vector<TextureMeta>& texturesAdditonal,
 		SpawnPoint sp,
 		const Skeleton& entity, 
 		ProjectileType projectile,
@@ -32,9 +33,9 @@ public:
 		return this->_controller.value();
 	}
 
-	void HandleBehavior(Vector2f target, Character& enemy, float deltaTime)
+	void HandleBehavior(IBaseUnit* target, float deltaTime)
 	{
-		this->_controller->HandleBehavior(target, enemy, deltaTime);
+		this->_controller->HandleBehavior(target->GetPosition(), target->GetEntity(), deltaTime);
 	}
 
 	void Update(float deltaTime, const sf::RenderWindow& window)
@@ -51,7 +52,7 @@ public:
 		return this->_mesh;
 	}
 
-	Vector2f GetPosition() const  override
+	Vector2f GetPosition()  override
 	{
 		return this->_mesh.GetPosition();
 	}
@@ -95,6 +96,8 @@ public:
 	{
 
 	}
+
+	void MeleeAttack(Direction facing, const std::vector<IBaseUnit*>& enemies) override{}
 
 	virtual void SpendEnergy(float value) override
 	{

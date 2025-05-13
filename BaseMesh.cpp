@@ -16,6 +16,11 @@ Vector2f BaseMesh::GetPosition() const {
     return this->sprite.getPosition();
 }
 
+void BaseMesh::SetPosition(Vector2f pos)
+{
+    this->sprite.setPosition(pos);
+}
+
 Vector2f BaseMesh::GetCenter() const {
     sf::FloatRect bounds = this->sprite.getGlobalBounds();
     return {

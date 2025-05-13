@@ -3,6 +3,7 @@
 #include <iostream>
 #include "IBaseUnit.h"
 
+
 class ProjectilesContainer;
 
 template <typename EntityT>
@@ -34,7 +35,7 @@ public:
     }
 
     virtual CharacterMesh& GetMesh() = 0;
-    virtual Vector2f GetPosition() const = 0;
+    virtual Vector2f GetPosition() = 0;
     virtual Vector2f GetCenter() const = 0;
     virtual Vector2f MoveToPoint(Vector2f point) = 0;
     virtual void SetAnimationDuration(float newVal) = 0;
@@ -44,6 +45,12 @@ public:
 
     virtual void Shot(Texture& projTexture) = 0;
     virtual void ShotCharged(Texture& projTexture) = 0;
+
+    virtual void MeleeAttack(Direction facing, const std::vector<IBaseUnit*>& enemies)
+    {
+        
+    };
+    //virtual void ShotCharged(Texture& projTexture) = 0;
 
     virtual void Death() override
     {
@@ -64,7 +71,7 @@ public:
     
     virtual void GainEnergyBySource(float value) = 0;
     virtual void HealBySource(float value) = 0;
-
+    virtual void HandleBehavior(IBaseUnit* target, float deltaTime) = 0;
     virtual ~BaseUnit() override = default;
 
     template <typename, typename>

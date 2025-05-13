@@ -10,7 +10,6 @@
 #include "SkeletonController.h"
 #include <iostream>
 #include "PathsConfig.h"
-#include "TexturesMetaConfig.h"
 #include "LadyArcherUnit.h"
 #include "UnitBuilder.h"
 #include "SkeletonUnit.h"

@@ -8,7 +8,7 @@ using namespace sf;
 
 struct SpawnPoint
 {
-    int x, y;
+    float x, y;
 };
 
 enum TextureCategory

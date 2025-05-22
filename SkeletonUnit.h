@@ -23,95 +23,64 @@ public:
 		const Skeleton& entity, 
 		ProjectileType projectile,
 		float cooldown,
-		ProjectilesContainer* container) : BaseUnit(entity,projectile,container), _mesh(textures, sp)
+		ProjectilesContainer* container) 
+		: BaseUnit(entity,projectile,container), _mesh(textures, sp)
 	{
-		_controller.emplace(_mesh, static_cast<Skeleton&>(_character), cooldown);
+		_controller.emplace(&_mesh, static_cast<Skeleton&>(_character), cooldown);
 	}
 
-	IController& GetController() override
-	{
-		return this->_controller.value();
+	//mesh methods
+	void SetDeathAnimationTime(float val) override;
+	void Draw(sf::RenderWindow& window);
+	Vector2f GetPosition()  override;
+	Vector2f GetCenter() override;
+	void MoveToPoint(Vector2f point, float deltaTime)  override;
+	void SetAnimationDuration(float newVal)  override;
+	void SetSpeed(float val) override;
+
+	virtual void SetAttackDelay(float time) override {
+		this->_controller->SetAttackDelay(time);
 	}
 
-	void HandleBehavior(IBaseUnit* target, float deltaTime)
+	//update input handle events
+	void Update(float deltaTime, const sf::RenderWindow& window) override;
+	void HandleBehavior(IBaseUnit* target, float deltaTime) override;
+
+	//direct controller
+	IController& GetController() override;
+
+	//combat
+	void MeleeAttack(Direction facing, const std::vector<IBaseUnit*>& enemies) override;
+
+	//stats
+	void SpendEnergy(float value) override;
+	void GainEnergyBySource(float value) override;
+	void HealBySource(float value) override;
+
+	void SetEnergyRegainValue(float val) override
 	{
-		this->_controller->HandleBehavior(target->GetPosition(), target->GetEntity(), deltaTime);
+		this->_controller->SetEnergyRegainValue(val);
 	}
 
-	void Update(float deltaTime, const sf::RenderWindow& window)
+	void SetManaRegainValue(float val) override
 	{
-		this->_controller->Update(deltaTime, window);
-	}
-	void Draw(sf::RenderWindow& window)
-	{
-		this->_controller->Draw(window);
+		this->_controller->SetManaRegainValue(val);
 	}
 
-	SkeletonMesh& GetMesh() override
+	void SetHPRegainValue(float val) override
 	{
-		return this->_mesh;
+		this->_controller->SetHPRegainValue(val);
 	}
 
-	Vector2f GetPosition()  override
-	{
-		return this->_mesh.GetPosition();
-	}
-	Vector2f GetCenter() const  override
-	{
-		return this->_mesh.GetCenter();
-	}
-	Vector2f MoveToPoint(Vector2f point)  override
-	{
-		return this->_mesh.MoveToPoint(point);
-	}
-	void SetAnimationDuration(float newVal)  override
-	{
-		this->_mesh.SetAnimationDuration(newVal);
-	}
+	//unused
+	void Shot(Texture& projTexture)override {}
+	void ShotCharged(Texture& projtexture) override {}
 
-	void SetSpeed(float val) override
-	{
-		this->_controller->SetSpeed(val);
-	}
-
-	void Shot(Texture& projTexture)override
-	{
-
-	}
-	void ShotCharged(Texture& projtexture) override
-	{
-
-	}
-
-	void SubscribeOnEnemy(Character& enemy) override
-	{
-
-	}
-	void UnsubscribeFromEnemy(Character& enemy) override
-	{
-
-	}
-
-	void GainXP(int expPoints) override
-	{
-
-	}
-
-	void MeleeAttack(Direction facing, const std::vector<IBaseUnit*>& enemies) override{}
-
-	virtual void SpendEnergy(float value) override
-	{
-		this->_controller->SpendEnergy(value);
-	}
-
-	virtual void GainEnergyBySource(float value) override
-	{
-		this->_controller->GainEnergy(value);
-	}
-	virtual void HealBySource(float value) override
-	{
-		this->_controller->HealBySource(value);
-	}
+	void SubscribeOnEnemy(Character& enemy) override {}
+	void UnsubscribeFromEnemy(Character& enemy) override {}
+	void GainXP(int expPoints) override {}
+	void HandleInput(float deltaTime) override {};
+	void HandleEvent(const sf::Event& event, const sf::RenderWindow& window) override {};
 
 	template <typename, typename>
 	friend class UnitBuilder;

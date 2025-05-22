@@ -12,8 +12,7 @@ class LadyController : public PlayerController
 {
 protected:
 
-    void ChasingEnemy(Vector2f point, float deltaTime, bool& isMoving) {}
-    
+    void ChasingEnemy(Vector2f point, float deltaTime, bool& isMoving) override {}
 
 public:
 
@@ -27,13 +26,14 @@ public:
     Vector2f ShotCharged();
     
     void Update(float deltaTime, const sf::RenderWindow& window) override;
-    void Draw(sf::RenderWindow& window) override;
-    void HandleBehavior(sf::Vector2f target, Character& enemy, float deltaTime) override;
+    void Draw(sf::RenderWindow& window) override; //
+    void HandleBehavior(sf::Vector2f target, Character& enemy, float deltaTime) override;//
     
+    //void ChasingEnemy(Vector2f point, float deltaTime, bool& isMoving) override {}//
 
-    void SetSpeed(float val) override
+    void SetSpeed(float val) override //
     {
-        this->charActiveMesh->SetSpeed(val);
+        this->mesh->SetSpeed(val);
     }
 
 };

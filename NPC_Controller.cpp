@@ -1,101 +1,75 @@
 ﻿#include "NPC_Controller.h"
 
-Character& NPC_Controller::GetEntity()
+void NPC_Controller::MoveToPoint(Vector2f point, float deltaTime, bool& isMoving)
 {
-    return this->npcEntity;
-}
+    //задати напрям
+    auto direction = mesh->MoveToPoint(point - mesh->GetPosition());
+    mesh->PendingDirection() = direction;
+    
+    //оновити статус
+    isChasing = true;
+    mesh->IsAttacking() = false;
+    isMoving = true;
+    mesh->CurrentState() = CharacterState::Run;
 
-bool NPC_Controller::IsTressPassing(const vector<FloatRect>& forbiddenZones)
-{
-    FloatRect npcZone = this->npcMesh.Sprite().getGlobalBounds();
-    for (const auto& zone : forbiddenZones)
-    {
-        if (npcZone.intersects(zone))
-        {
-            std::cout << "Tresspassing zone: " << zone.left << ", " << zone.top << ", "
-                << zone.width << "x" << zone.height << std::endl;
-            this->isTressPass = true;
-            return true;
+    //рух
+    sf::Vector2f moveVector = mesh->PendingDirection() * mesh->GetSpeed() * deltaTime;
+    sf::FloatRect bounds = mesh->Sprite().getGlobalBounds();
+    sf::Vector2f finalMove(0.f, 0.f);
+
+    sf::FloatRect movedX = bounds;
+    movedX.left += moveVector.x;
+    bool blockedX = false;
+    for (const auto& zone : ForbiddenZones::GetForbiddenZones()) {
+        if (movedX.intersects(zone)) {
+            blockedX = true;
+            break;
         }
     }
+    if (!blockedX) finalMove.x = moveVector.x;
 
-    this->isTressPass = false;
-    return false;
+    sf::FloatRect movedY = bounds;
+    movedY.top += moveVector.y;
+    bool blockedY = false;
+    for (const auto& zone : ForbiddenZones::GetForbiddenZones()) {
+        if (movedY.intersects(zone)) {
+            blockedY = true;
+            break;
+        }
+    }
+    if (!blockedY) finalMove.y = moveVector.y;
+
+    if (finalMove == sf::Vector2f(0.f, 0.f)) {
+        isMoving = false;
+        mesh->CurrentState() = CharacterState::Idle;
+        mesh->PendingDirection() = { 0.f, 0.f };
+    }
+
+    mesh->Sprite().move(finalMove);
 }
 
 void NPC_Controller::ChasingEnemy(Vector2f point, float deltaTime, bool& isMoving)
 {
-    auto direction = npcMesh.MoveToPoint(point - npcMesh.GetPosition());
-    npcMesh.PendingDirection() = direction;
+    auto direction = mesh->MoveToPoint(point - mesh->GetPosition());
+    mesh->PendingDirection() = direction;
 
     isChasing = true;
-    npcMesh.IsAttacking() = false;
+    mesh->IsAttacking() = false;
     isMoving = true;
-}
-
-float NPC_Controller::GetDistanceToTarget(Vector2f point)
-{
-    Vector2f a = npcMesh.GetPosition();
-    Vector2f b = point;
-    return std::sqrt((b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y));
 }
 
 void NPC_Controller::HandleBehavior(Vector2f target, Character& enemy, float deltaTime)
 {
-    bool& isMoving = npcMesh.IsMoving();
-    Vector2f curPosition = npcMesh.GetPosition();
+    bool& isMoving = mesh->IsMoving();
+    Vector2f curPosition = mesh->GetPosition();
+
     float distance = GetDistanceToTarget(target);
-    bool inAttackRange = distance <= 60;
+    bool inAttackRange = distance <= Range::MELEE_ATTACK;
     bool targetAlive = enemy.GetHealthPoints() > 0;
 
-    if (this->npcEntity.GetHealthPoints() <= 0)
+    if (this->entity.GetHealthPoints() <= 0)
     {
-        this->npcMesh.DeathAnimation_Timer() += deltaTime;
-
-        if (npcMesh.DeathAnimation_Timer() >= npcMesh.DeathAnimationTimeLimit())
-            this->Death();
-
-        auto& curState = npcMesh.CurrentState();
-
-        if (curState != CharacterState::Dead)
-        {
-            std::cout << npcEntity.GetName() << " is died!\n";
-
-            curState = CharacterState::Dead;
-            auto& curDir = npcMesh.CurrentDir();
-
-            sf::Texture* newTexture = &npcMesh.DeathTextures()[curDir];
-
-            const auto& meta = npcMesh.TextureData(TextureCategory::Death);
-
-            npcMesh.Animation().SetSheet(
-                newTexture,
-                meta.frameWidth,
-                meta.frameHeight,
-                meta.numberOfColumns,
-                meta.numberOfFrames,
-                false);
-
-            npcMesh.PreviousState() = curState;
-            npcMesh.LastDir() = curDir;
-        }
-        else if (npcMesh.Animation().IsFinished())
-        {
-            npcMesh.Animation().Reset();
-            auto& curDir = npcMesh.CurrentDir();
-            sf::Texture* newTexture = &npcMesh.DeathTextures()[curDir];
-            const auto& meta = npcMesh.TextureData(TextureCategory::Death);
-
-            npcMesh.Animation().SetSheet(
-                newTexture,
-                meta.frameWidth,
-                meta.frameHeight,
-                meta.numberOfColumns,
-                meta.numberOfFrames,
-                false);
-        }
-
-        npcMesh.Animation().Update(deltaTime);
+        this->Death(deltaTime);
         return;
     }
 
@@ -103,102 +77,81 @@ void NPC_Controller::HandleBehavior(Vector2f target, Character& enemy, float del
     {
         isChasing = false;
         isMoving = false;
-        npcMesh.PendingDirection() = { 0.f, 0.f };
+        mesh->PendingDirection() = { 0.f, 0.f };
 
-        if (npcMesh.CurrentState() == CharacterState::Attack &&
-            npcMesh.Animation().IsFinished())
+        if (mesh->CurrentState() == CharacterState::Attack &&
+            mesh->Animation().IsFinished())
         {
-            npcMesh.IsAttacking() = false;
-            npcMesh.CurrentState() = CharacterState::Idle;
+            mesh->IsAttacking() = false;
+            mesh->CurrentState() = CharacterState::Idle;
         }
         else if (attackTimer.getElapsedTime() < attackCooldown)
         {
-            npcMesh.IsAttacking() = false;
+            mesh->IsAttacking() = false;
         }
         else
         {
-            npcMesh.IsAttacking() = true;
-            npcMesh.CurrentState() = CharacterState::Attack;
-            enemy.GetHit(100);
-            std::cout << enemy.GetName() << " taking " << 100 << " damage!\n";
-            std::cout << enemy.GetName() << " has " << enemy.GetHealthPoints() << " HP.\n";
+            mesh->IsAttacking() = true;
+            mesh->CurrentState() = CharacterState::Attack;
             attackTimer.restart();
         }
     }
-    else if (distance > this->npcEntity.GetDetectRadius() || !targetAlive)
+    else if (distance > this->entity.GetDetectRadius() || !targetAlive)
     {
-        npcMesh.IsAttacking() = false;
-        isChasing = false;
-        isMoving = false;
-        npcMesh.CurrentState() = CharacterState::Idle;
-        npcMesh.PendingDirection() = { 0.f, 0.f };
+        //idle behavior
+        IdleBehavior();
     }
     else
     {
-        ChasingEnemy(target, deltaTime, isMoving);
-        npcMesh.CurrentState() = CharacterState::Run;
-
-        sf::Vector2f moveVector = npcMesh.PendingDirection() * npcMesh.GetSpeed() * deltaTime;
-        sf::FloatRect bounds = npcMesh.Sprite().getGlobalBounds();
-        sf::Vector2f finalMove(0.f, 0.f);
-
-        sf::FloatRect movedX = bounds;
-        movedX.left += moveVector.x;
-        bool blockedX = false;
-        for (const auto& zone : ForbiddenZones::GetForbiddenZones()) {
-            if (movedX.intersects(zone)) {
-                blockedX = true;
-                break;
-            }
-        }
-        if (!blockedX) finalMove.x = moveVector.x;
-
-        sf::FloatRect movedY = bounds;
-        movedY.top += moveVector.y;
-        bool blockedY = false;
-        for (const auto& zone : ForbiddenZones::GetForbiddenZones()) {
-            if (movedY.intersects(zone)) {
-                blockedY = true;
-                break;
-            }
-        }
-        if (!blockedY) finalMove.y = moveVector.y;
-
-        if (finalMove == sf::Vector2f(0.f, 0.f)) {
-            isMoving = false;
-            npcMesh.CurrentState() = CharacterState::Idle;
-            npcMesh.PendingDirection() = { 0.f, 0.f };
-        }
-
-        npcMesh.Sprite().move(finalMove);
+        MoveToPoint(target, deltaTime, isMoving); 
     }
 
-    auto& curDir = npcMesh.CurrentDir();
-    if (std::abs(target.x - curPosition.x) > std::abs(target.y - curPosition.y))
+    if (!mesh->IsDead());
+        UpdateStateAndDirection(target);
+
+    mesh->Animation().Update(deltaTime);
+}
+
+void NPC_Controller::IdleBehavior()
+{
+    mesh->IsAttacking() = false;
+    isChasing = false;
+    mesh->IsMoving() = false;
+    mesh->CurrentState() = CharacterState::Idle;
+    mesh->PendingDirection() = { 0.f, 0.f };
+}
+
+void NPC_Controller::UpdateStateAndDirection(Vector2f target)
+{
+
+    auto curPosition = mesh->GetPosition();
+    auto& curDir = mesh->CurrentDir();
+
+    if (abs(target.x - curPosition.x) > abs(target.y - curPosition.y))
         curDir = (target.x > curPosition.x) ? Direction::Right : Direction::Left;
     else
         curDir = (target.y > curPosition.y) ? Direction::Down : Direction::Up;
 
-    auto& curState = npcMesh.CurrentState();
-    auto& prevState = npcMesh.PreviousState();
-    auto& lastDir = npcMesh.LastDir();
+    auto& curState = mesh->CurrentState();
+    auto& prevState = mesh->PreviousState();
+    auto& lastDir = mesh->LastDir();
 
     if (curState != prevState || curDir != lastDir)
     {
         sf::Texture* newTexture =
-            (curState == CharacterState::Run) ? &npcMesh.MoveTextures()[curDir] :
-            (curState == CharacterState::Attack) ? &npcMesh.AttackTextures()[curDir] :
-            &npcMesh.IdleTextures()[curDir];
+            (curState == CharacterState::Run) ? &mesh->MoveTextures()[curDir] :
+            (curState == CharacterState::Attack) ? &mesh->AttackTextures()[curDir] :
+            &mesh->IdleTextures()[curDir];
 
         TextureCategory texCategory =
             (curState == CharacterState::Run) ? TextureCategory::Move :
             (curState == CharacterState::Attack) ? TextureCategory::Attack :
             TextureCategory::Idle;
 
-        const auto& meta = npcMesh.TextureData(texCategory);
+        const auto& meta = mesh->TextureData(texCategory);
         bool shouldLoop = (curState != CharacterState::Attack);
 
-        npcMesh.Animation().SetSheet(
+        mesh->Animation().SetSheet(
             newTexture,
             meta.frameWidth,
             meta.frameHeight,
@@ -209,109 +162,73 @@ void NPC_Controller::HandleBehavior(Vector2f target, Character& enemy, float del
         prevState = curState;
         lastDir = curDir;
     }
-
-    npcMesh.Animation().Update(deltaTime);
 }
 
-bool& NPC_Controller::IsDead()
+void NPC_Controller::Death(float deltaTime)
 {
-    return this->npcEntity.IsDead();
+    mesh->DeathAnimation_Timer() += deltaTime;
+
+    if (mesh->DeathAnimation_Timer() >= mesh->DeathAnimationTimeLimit())
+    {
+        this->entity.Death();
+        mesh->IsDead() = true;
+        std::cout << "Is npc mesh dead: " << mesh->IsDead() << std::endl;
+    }
+
+    auto& curState = mesh->CurrentState();
+
+    if (curState != CharacterState::Dead)
+    {
+        std::cout << entity.GetName() << " is died!\n";
+
+        curState = CharacterState::Dead;
+        auto& curDir = mesh->CurrentDir();
+
+        sf::Texture* newTexture = &mesh->DeathTextures()[curDir];
+        const auto& meta = mesh->TextureData(TextureCategory::Death);
+
+        mesh->Animation().SetSheet(
+            newTexture,
+            meta.frameWidth,
+            meta.frameHeight,
+            meta.numberOfColumns,
+            meta.numberOfFrames,
+            false);
+
+        mesh->PreviousState() = curState;
+        mesh->LastDir() = curDir;
+    }
+
+    mesh->Animation().Update(deltaTime);
 }
 
-Vector2f NPC_Controller::GetCenter()
-{
-    return this->npcMesh.GetCenter();
-}
-
-void NPC_Controller::Death()
-{
-    cout << "Object died in controller NPC" << endl;
-    this->npcEntity.Death();
-    this->npcMesh.IsDead() = true;
-    cout << "Is npc mesh dead: " << npcMesh.IsDead() << endl;
-}
-
-void NPC_Controller::SpendEnergy(float value)
-{
-    this->npcEntity.SpendStamina(value);
-}
-
-void NPC_Controller::GainEnergy(float value)
-{
-    this->npcEntity.GainStamina(value);
-}
-
-float NPC_Controller::GetEnergyLimit()
-{
-    return this->npcEntity.GetStaminaLimit();
-}
-
-void NPC_Controller::SetEnergyLimit(float value)
-{
-    this->npcEntity.SetStaminaLimit(value);
-}
-
-float& NPC_Controller::GetChargeTime() const
-{
-    return this->npcMesh.ChargeTime();
-}
-
-bool& NPC_Controller::IsChargingAttack() const
-{
-    return this->npcMesh.IsChargingAttack();
-}
-
-void NPC_Controller::FreezeOnMidFrame()
-{
-    this->npcMesh.Animation().FreezeOnMidFrame();
-}
-
-bool& NPC_Controller::IsAttacking() const
-{
-    return this->npcMesh.IsAttacking();
-}
-
-bool NPC_Controller::AnimationIsFinished()
-{
-    return this->npcMesh.Animation().IsFinished();
-}
-
-bool& NPC_Controller::PendingNormalAttack()
-{
-    return this->npcMesh.PendingNormalAttack();
-}
-
-bool& NPC_Controller::PendingChargedAttack()
-{
-    return this->npcMesh.PendingChargedAttack();
-}
 
 void NPC_Controller::Update(float deltaTime, const sf::RenderWindow& window)
 {
-    RegenerateEnergy(this->npcEntity.GetStaminaRegainValue(), deltaTime);
-    RegenerateHP(this->npcEntity.GetHPRegainValue(), deltaTime);
+    RegenerateEnergy(deltaTime);
+    RegenerateHP(deltaTime);
 
-    this->npcMesh.Update(deltaTime, window,
-        this->npcEntity.GetHealthPoints(), this->npcEntity.GetHPMaxLimit());
-    //
-    /*UpdateHealthBar(this->npcMesh.GetHealthSprite(), this->npcMesh.GetHealthTexture(),
-        this->npcEntity.GetHealthPoints(), this->npcEntity.GetHPMaxLimit());*/
+    mesh->Update(deltaTime, window,
+        this->entity.GetHealthPoints(), this->entity.GetHPMaxLimit());
 }
 
 void NPC_Controller::UpdateHealthBar(sf::Sprite& barSprite, 
     const sf::Texture& barTexture, int currentHp, int maxHp)
 {
-    // Безпечне ділення
     float healthRatio = static_cast<float>(currentHp) / std::max(1, maxHp);
 
-    // Розміри текстури
     int fullWidth = barTexture.getSize().x;
     int height = barTexture.getSize().y;
 
-    // Гарантія що хоч 1 піксель буде намальовано
+    
     int visibleWidth = std::max(1, static_cast<int>(fullWidth * healthRatio));
-    Vector2f charPos = { this->npcMesh.GetPosition().x,this->npcMesh.GetPosition().y };
-    // Встановлюємо текстуру (важливо: перед setTextureRect)
+    Vector2f charPos = { mesh->GetPosition().x,mesh->GetPosition().y };
+
     barSprite.setTexture(barTexture,true);
     barSprite.setTextureRect(sf::IntRect(charPos.x, charPos.y, visibleWidth, height));
 }
+
+void NPC_Controller::SetSpeed(float val)
+{
+    this->mesh->SetSpeed(val);
+};

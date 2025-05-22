@@ -105,7 +105,7 @@ float& CharacterMesh::DeathAnimation_Timer()
 {
     return this->deathAnimTik;
 }
-float CharacterMesh::DeathAnimationTimeLimit()
+float& CharacterMesh::DeathAnimationTimeLimit()
 {
-    return this->deathAnimatuionTime;
+    return this->deathAnimationTime;
 }

@@ -17,7 +17,9 @@ void Character::GainStamina(float eValue)
 
 void Character::SpendStamina(float eValue)
 {
+	cout << name << " spent " << eValue << " energy." << endl;
 	this->stamina -= eValue;
+	cout << "Current energy level = " << stamina << endl;
 }
 
 void Character::GainMana(float eValue)

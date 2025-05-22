@@ -47,7 +47,7 @@ protected:
     Vector2f pendingDirection = { 0.f, 0.f };
 
     float attackTimer = 0.f;
-    const float attackDelay = 1.f;
+    float attackDelay = 1.f;
 
     map<TextureCategory, TextureMeta> texturesData;
 
@@ -67,7 +67,7 @@ protected:
     bool isDead = false;
     float moveSpeed = 150.f;
 
-    float deathAnimatuionTime = 2.2f;
+    float deathAnimationTime = 3.5f;
     float deathAnimTik = 0.f;
 
     void LoadTextures(map<Direction, Texture>& target, string commonPath, string nameOfTexture) override;
@@ -113,6 +113,11 @@ public:
         animation.SetSheet(&idleTextures[currentDir], meta.frameWidth, meta.frameHeight, meta.numberOfColumns, meta.numberOfFrames);
     }
 
+    virtual void SetAttackDelay(float time)
+    {
+        this->attackDelay = time;
+    }
+
     virtual void SetSpeed(float val);
     virtual const float& GetSpeed();
 
@@ -152,7 +157,7 @@ public:
     virtual const float MaxChargeTime();
 
     virtual float& DeathAnimation_Timer();
-    virtual float DeathAnimationTimeLimit();
+    virtual float& DeathAnimationTimeLimit();
 
     virtual void SyncWith(CharacterMesh& other)
     {

@@ -17,6 +17,7 @@ enum UI_Parts
     PlayerManaMeter
 };
 
+
 static class JSONTextureLoader
 {
 private:
@@ -28,5 +29,5 @@ public:
     static vector<TextureMeta> LoadTextureMeta(const string& path);
     static map<UI_Parts, Texture> LoadPlayerUITextures(const string& path);
     static map<int, Texture> LoadStaticTextures(const string& path);
-    //static vector<Texture> LoadEnemiesUI(const string& path);
+    static map<string, Texture> LoadLevelTextures(const string& path);
 };

@@ -6,13 +6,13 @@ class Skeleton : public NPCEntity
 public:
 	Skeleton() = delete;
 	Skeleton(int id, 
+		string name,
 		float health, 
 		float stamina,
 		float mana,
-		float detectRadius,
-		int gainXp, 
 		CharacterAttributes attributes,
-		string name = "Skeleton", 
+		float detectRadius,
+		int gainXp,
 		bool isFriendly = false) :
 		NPCEntity(id, name, health, stamina,mana,detectRadius,
 			gainXp,attributes, isFriendly){}

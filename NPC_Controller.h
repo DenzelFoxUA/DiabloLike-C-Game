@@ -8,7 +8,7 @@
 #include <concepts>
 #include <iostream>
 #include <cmath>
-#include "IController.h"
+#include "BaseCharacterController.h"
 #include "Character.h"
 #include "CharacterMesh.h"
 #include "ForbiddenZonesConfig.h"
@@ -16,116 +16,45 @@ using namespace std;
 using namespace sf;
 
 
-class NPC_Controller: public IController
+class NPC_Controller: public BaseCharacterController<NPCEntity>
 {
 protected:
-
-    CharacterMesh& npcMesh;
-    NPCEntity& npcEntity;
-
-    float regainE_Timer = 2.f;
-    float regainE_Tik = 0.f;
-
-    float regainHP_Timer = 2.f;
-    float regainHP_Tik = 0.f;
 
     Clock attackTimer;
     Time attackCooldown;
 
-    bool isChasing,
-        isTressPass = false;
+    void ChasingEnemy(Vector2f point, float deltaTime, bool& isMoving) override;
 
-    virtual void ChasingEnemy(Vector2f point, float deltaTime, bool& isMoving) override;
-    
-
-    virtual bool IsTressPassing(const vector<FloatRect>& forbiddenZones);
+    void UpdateStateAndDirection(Vector2f target) override;
+    void UpdateStateAndDirection() override {};
+    virtual void IdleBehavior();
 
 public:
 
     NPC_Controller() = delete;
 
-    NPC_Controller(CharacterMesh& _mesh, NPCEntity& _npcObj, float cooldown) : npcMesh(_mesh), npcEntity(_npcObj)
+    NPC_Controller(CharacterMesh* _mesh, NPCEntity& _npcObj, float cooldown) 
+        : BaseCharacterController<NPCEntity>(_mesh,_npcObj)
     {
         isChasing = false;
         attackCooldown = sf::seconds(cooldown);
     }
 
     //entity methods
-    virtual Character& GetEntity() override;
-    virtual bool& IsDead() override;
-    virtual void Death()override;
-    void SpendEnergy(float value) override;
-    void GainEnergy(float value) override;
-    float GetEnergyLimit() override;
-    void SetEnergyLimit(float value) override;
-
-    float GetEnergy() override {
-        return this->npcEntity.GetStaminaPoints();
-    }
-
-    void RegenerateEnergy(float val, float deltaTime) override
-    {
-        regainE_Tik += deltaTime;
-
-        if (this->npcEntity.GetStaminaPoints() < this->npcEntity.GetStaminaLimit() 
-            && regainE_Timer <= regainE_Tik)
-        {
-            cout << "Gained " << val << " energy!" << endl;
-            this->GainEnergy(val);
-            regainE_Tik = 0.f;
-        }
-
-    }
-
-    void RegenerateHP(float val, float deltaTime) override
-    {
-        regainHP_Tik += deltaTime;
-
-        if (this->npcEntity.GetHealthPoints() < this->npcEntity.GetHPMaxLimit()
-            && regainHP_Timer <= regainHP_Tik)
-        {
-            cout << "Gained " << val << " health!" << endl;
-            this->npcEntity.Heal(val);
-            regainE_Tik = 0.f;
-        }
-
-    }
-
-    void SetEnergyRegainValue(float val) override
-    {
-        this->npcEntity.SetStaminaRegainValue(val);
-    }
-
-    void SetHPRegainValue(float val) override
-    {
-        this->npcEntity.SetHPRegainValue(val);
-    }
-
-    void HealBySource(float val) override
-    {
-        this->npcEntity.Heal(val);
-    }
+    virtual void Death(float deltaTime) override;
+    virtual void Draw(sf::RenderWindow& window) override {};
 
     //mesh methods
-    virtual void SetSpeed(float val) = 0;
-    virtual void Draw(sf::RenderWindow& window) = 0;
-    Vector2f GetCenter() override;
-    float& GetChargeTime() const override;
-    bool& IsChargingAttack() const override;
-    void FreezeOnMidFrame() override;
-    bool& IsAttacking() const override;
-    bool AnimationIsFinished() override;
-    bool& PendingNormalAttack() override;
-    bool& PendingChargedAttack() override;
-    void UpdateHealthBar(sf::Sprite& barSprite, const Texture& barTexture, 
+    virtual void MoveToPoint(Vector2f point, float deltaTime, bool& isMoving) override;
+    void SetSpeed(float val) override;
+    void UpdateHealthBar(sf::Sprite& barSprite, const Texture& barTexture,
         int currentHp, int maxHp);
-    virtual float GetDistanceToTarget(Vector2f point) override;
+    
 
-    Direction GetCurrentDirection() override { return this->npcMesh.CurrentDir(); }
-    Vector2f GetCurrentPosition() override { return this->npcMesh.GetPosition(); }
     //input and behavior
     virtual void HandleBehavior(Vector2f target, Character& enemy, float deltaTime) override;
     virtual void HandleInput(float deltaTime) = 0;
+    virtual void SwitchModes() override {};
 
     //events and update
     virtual void Update(float deltaTime, const sf::RenderWindow& window) override;

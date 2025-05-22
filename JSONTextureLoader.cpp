@@ -89,11 +89,37 @@ map<int, Texture> JSONTextureLoader::LoadStaticTextures(const string& path)
         int _key = stoi(key);
         string folderPath = val["folderPath"];
         string fileName = val["fileName"];
-        std::cout << "Trying to load: " << folderPath + fileName << std::endl;
+        
         if (!tex.loadFromFile(folderPath + fileName)) {
             std::cout << "Failed to load: " << folderPath + fileName << "\n";
         }
         result.emplace(_key, tex);
+    }
+
+    return result;
+}
+
+map<string, Texture> JSONTextureLoader::LoadLevelTextures(const string& path)
+{
+    map<string, Texture> result;
+
+    std::ifstream file(path);
+    if (!file.is_open()) {
+        throw std::runtime_error("Can't open meta file: " + path);
+    }
+
+    json j;
+    file >> j;
+
+    for (auto& [key, val] : j.items()) {
+        Texture tex;
+        string folderPath = val["folderPath"];
+        string fileName = val["fileName"];
+
+        if (!tex.loadFromFile(folderPath + fileName)) {
+            std::cout << "Failed to load: " << folderPath + fileName << "\n";
+        }
+        result.emplace(key, tex);
     }
 
     return result;

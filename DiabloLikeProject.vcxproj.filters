@@ -121,6 +121,9 @@
     <Filter Include="Source Files\Global">
       <UniqueIdentifier>{7b852d8d-713f-4a6f-a461-f2bcb27ae406}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\MapsLevels">
+      <UniqueIdentifier>{b31e48bd-c324-4547-9ab9-6ae56af8d488}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LadyArcherMesh.cpp">
@@ -192,13 +195,22 @@
     <ClCompile Include="PlayerCharacterController.cpp">
       <Filter>Source Files\Controllers\PlayerController</Filter>
     </ClCompile>
-    <ClCompile Include="LadyUnit.cpp">
-      <Filter>Source Files\Units\NPC</Filter>
-    </ClCompile>
     <ClCompile Include="LadySwordMesh.cpp">
       <Filter>Source Files\Meshes\Characters</Filter>
     </ClCompile>
     <ClCompile Include="Enemies.cpp">
+      <Filter>Source Files\Global</Filter>
+    </ClCompile>
+    <ClCompile Include="LadyUnit.cpp">
+      <Filter>Source Files\Units\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonUnit.cpp">
+      <Filter>Source Files\Units\NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectileModels.cpp">
       <Filter>Source Files\Global</Filter>
     </ClCompile>
   </ItemGroup>
@@ -312,6 +324,27 @@
       <Filter>Header Files\Meshes\Characters</Filter>
     </ClInclude>
     <ClInclude Include="Enemies.h">
+      <Filter>Header Files\Global</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseCharacterController.h">
+      <Filter>Header Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Global_Variables.h">
+      <Filter>Header Files\Global</Filter>
+    </ClInclude>
+    <ClInclude Include="Layer.h">
+      <Filter>Header Files\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectileModels.h">
+      <Filter>Header Files\Global</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.h">
+      <Filter>Header Files\MapsLevels</Filter>
+    </ClInclude>
+    <ClInclude Include="Forest.h">
+      <Filter>Header Files\MapsLevels</Filter>
+    </ClInclude>
+    <ClInclude Include="Attributes.h">
       <Filter>Header Files\Global</Filter>
     </ClInclude>
   </ItemGroup>

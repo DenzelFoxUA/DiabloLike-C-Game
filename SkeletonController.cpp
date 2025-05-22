@@ -9,32 +9,25 @@ void SkeletonController::HandleBehavior(Vector2f target, Character& enemy, float
 
 void SkeletonController::Update(float deltaTime, const sf::RenderWindow& window)
 {
-    this->npcMesh.Update(deltaTime, window, 
-        this->npcEntity.GetHealthPoints(), this->npcEntity.GetHPMaxLimit());
+    NPC_Controller::Update(deltaTime, window);
 }
 
 void SkeletonController::Draw(sf::RenderWindow& window)
 {
-    npcMesh.Draw(window);
+    mesh->Draw(window);
 }
 
 Character& SkeletonController::GetEntity()
 {
-    return this->npcEntity;
+    return this->entity;
 }
 
 void SkeletonController::SetSpeed(float val)
 {
-    this->npcMesh.SetSpeed(val);
+    mesh->SetSpeed(val);
 }
 
-void SkeletonController::HandleInput(float deltaTime)
-{
-    
-}
+void SkeletonController::HandleInput(float deltaTime){}
 
-void SkeletonController::HandleEvent(const sf::Event& event, const sf::RenderWindow& window)
-{
-    
-}
+void SkeletonController::HandleEvent(const sf::Event& event, const sf::RenderWindow& window){}
 

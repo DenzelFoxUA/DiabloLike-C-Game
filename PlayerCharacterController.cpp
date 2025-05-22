@@ -1,268 +1,208 @@
 ﻿#include "PlayerCharacterController.h"
 
-Character& PlayerController::GetEntity()
-{
-    return this->characterEntity;
-}
-
 void PlayerController::HandleInput(float deltaTime)
 {
     sf::Vector2f velocity{ 0.f, 0.f };
-    bool& isMoving = charActiveMesh->IsMoving();
+    bool& isMoving = mesh->IsMoving();
     isMoving = false;
 
-    if (this->characterEntity.GetHealthPoints() <= 0)
+    if (this->entity.GetHealthPoints() <= 0)
     {
-        auto& curState = charActiveMesh->CurrentState();
-
-        if (curState != CharacterState::Dead)
-        {
-            std::cout << characterEntity.GetName() << " is died!\n";
-
-            curState = CharacterState::Dead;
-            auto& curDir = charActiveMesh->CurrentDir();
-
-            Texture* newTexture = &charActiveMesh->DeathTextures()[curDir];
-
-            const auto& meta = charActiveMesh->TextureData(TextureCategory::Death);
-
-            charActiveMesh->Animation().SetSheet(
-                newTexture,
-                meta.frameWidth,
-                meta.frameHeight,
-                meta.numberOfColumns,
-                meta.numberOfFrames,
-                false);
-
-            charActiveMesh->PreviousState() = curState;
-            charActiveMesh->LastDir() = curDir;
-        }
-        charActiveMesh->Animation().Update(deltaTime);
+        Death(deltaTime);
     }
     else
     {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1))
-        {
-            this->characterEntity.SetModeTwoActive(false);
-        }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
-            this->characterEntity.SetModeTwoActive(true);
-
-        sf::FloatRect playerBounds = charActiveMesh->Sprite().getGlobalBounds();
-        sf::Vector2f proposedMove(0.f, 0.f);
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-            charActiveMesh->CurrentDir() = Direction::Up;
-            proposedMove.y -= charActiveMesh->GetSpeed() * deltaTime;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-            charActiveMesh->CurrentDir() = Direction::Down;
-            proposedMove.y += charActiveMesh->GetSpeed() * deltaTime;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-            charActiveMesh->CurrentDir() = Direction::Left;
-            proposedMove.x -= charActiveMesh->GetSpeed() * deltaTime;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-            charActiveMesh->CurrentDir() = Direction::Right;
-            proposedMove.x += charActiveMesh->GetSpeed() * deltaTime;
-        }
-
-        // нормалізація діагонального руху
-        if (proposedMove.x != 0 && proposedMove.y != 0)
-            proposedMove /= std::sqrt(2.f);
-
-        sf::Vector2f finalMove(0.f, 0.f);
-
-        // Перевірка по осі X
-        sf::FloatRect movedX = playerBounds;
-        movedX.left += proposedMove.x;
-        bool blockedX = false;
-        for (const auto& zone : ForbiddenZones::GetForbiddenZones()) {
-            if (movedX.intersects(zone)) {
-                blockedX = true;
-                break;
-            }
-        }
-        if (!blockedX) finalMove.x = proposedMove.x;
-
-        // Перевірка по осі Y
-        sf::FloatRect movedY = playerBounds;
-        movedY.top += proposedMove.y;
-        bool blockedY = false;
-        for (const auto& zone : ForbiddenZones::GetForbiddenZones()) {
-            if (movedY.intersects(zone)) {
-                blockedY = true;
-                break;
-            }
-        }
-        if (!blockedY) finalMove.y = proposedMove.y;
-
-        if (finalMove != sf::Vector2f(0.f, 0.f)) {
-            charActiveMesh->Sprite().move(finalMove);
-            isMoving = true;
-        }
-
-        if (!charActiveMesh->IsAttacking() && !charActiveMesh->IsDead()) {
-            charActiveMesh->CurrentState() = isMoving ? CharacterState::Run : CharacterState::Idle;
-        }
-
-        auto& curState = charActiveMesh->CurrentState();
-        auto& prevState = charActiveMesh->PreviousState();
-        auto& curDir = charActiveMesh->CurrentDir();
-        auto& lastDir = charActiveMesh->LastDir();
-
-        if (curState != prevState || curDir != lastDir)
-        {
-            sf::Texture* newTexture =
-                (curState == CharacterState::Run) ? &charActiveMesh->MoveTextures()[curDir] :
-                (curState == CharacterState::Attack) ? &charActiveMesh->AttackTextures()[curDir] :
-                &charActiveMesh->IdleTextures()[curDir];
-
-            int height = charActiveMesh->TextureData(TextureCategory::Idle).frameHeight;
-            int width = charActiveMesh->TextureData(TextureCategory::Idle).frameWidth;
-            int columns = charActiveMesh->TextureData(TextureCategory::Idle).numberOfColumns;
-            int frames = charActiveMesh->TextureData(TextureCategory::Idle).numberOfFrames;
-
-            charActiveMesh->Animation().SetSheet(newTexture, width, height, columns, frames, curState != CharacterState::Attack);
-
-            charActiveMesh->PreviousState() = curState;
-            charActiveMesh->LastDir() = curDir;
-        }
+        SwitchModes();
+        MovementHandler(deltaTime, isMoving);
+        UpdateStateAndDirection();
+        
     }
 }
 
-void PlayerController::MoveUp(Vector2f& velocity)
+void PlayerController::SwitchModes()
 {
-    velocity.y -= charActiveMesh->GetSpeed();
-}
-
-void PlayerController::MoveDown(Vector2f& velocity)
-{
-    velocity.y += charActiveMesh->GetSpeed();
-}
-
-void PlayerController::MoveLeft(Vector2f& velocity)
-{
-    velocity.x -= charActiveMesh->GetSpeed();
-}
-
-void PlayerController::MoveRight(Vector2f& velocity)
-{
-    velocity.x += charActiveMesh->GetSpeed();
-}
-
-bool PlayerController::IsTressPassing(vector<FloatRect> forbiddenZones)
-{
-    FloatRect playerZone = this->charActiveMesh->Sprite().getGlobalBounds();
-    for (auto zone : forbiddenZones)
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1))
     {
-        if (playerZone.intersects(zone))
-        {
-            cout << "Tresspassing zone:" << zone.height << "X" << zone.width << endl;
-            this->isTressPass = true;
-        }
-        else
-        {
-            this->isTressPass = false;
-        }
+        this->entity.SetModeTwoActive(false);
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
+        this->entity.SetModeTwoActive(true);
+}
+
+void PlayerController::UpdateStateAndDirection()
+{
+    bool& isMoving = mesh->IsMoving();
+    auto& curState = mesh->CurrentState();
+    auto& prevState = mesh->PreviousState();
+    auto& curDir = mesh->CurrentDir();
+    auto& lastDir = mesh->LastDir();
+
+    if (curState != prevState || curDir != lastDir)
+    {
+        sf::Texture* newTexture =
+            (curState == CharacterState::Run) ? &mesh->MoveTextures()[curDir] :
+            (curState == CharacterState::Attack) ? &mesh->AttackTextures()[curDir] :
+            &mesh->IdleTextures()[curDir];
+
+        int height = mesh->TextureData(TextureCategory::Idle).frameHeight;
+        int width = mesh->TextureData(TextureCategory::Idle).frameWidth;
+        int columns = mesh->TextureData(TextureCategory::Idle).numberOfColumns;
+        int frames = mesh->TextureData(TextureCategory::Idle).numberOfFrames;
+
+        mesh->Animation().SetSheet(newTexture, width, height, columns, frames, curState != CharacterState::Attack);
+
+        mesh->PreviousState() = curState;
+        mesh->LastDir() = curDir;
     }
 
-    return isTressPass;
+    if (!mesh->IsAttacking() && !mesh->IsDead()) {
+        mesh->CurrentState() = isMoving ? CharacterState::Run : CharacterState::Idle;
+    }
 }
 
 void PlayerController::Update(float deltaTime, const sf::RenderWindow& window)
 {
-    this->characterEntity.LevelUp();
-    this->RegenerateHP(this->characterEntity.GetHPRegainValue(),deltaTime);
-    this->RegenerateEnergy(this->characterEntity.GetStaminaRegainValue(), deltaTime);
-    RegenerateMana(this->characterEntity.GetManaRegainValue(), deltaTime);
+    this->entity.LevelUp();
+    this->RegenerateHP(deltaTime);
+    this->RegenerateEnergy(deltaTime);
+    this->RegenerateMana(deltaTime);
 
     if (!ForbiddenZones::GetForbiddenZones().empty())
         this->IsTressPassing(ForbiddenZones::GetForbiddenZones());
 
-    this->charActiveMesh->Update(deltaTime, window,
-        this->characterEntity.GetHealthPoints(), this->characterEntity.GetHPMaxLimit(),
-        this->characterEntity.GetStaminaPoints(), this->characterEntity.GetStaminaLimit(),
-        this->characterEntity.GetManaPoints(), this->characterEntity.GetManaLimit());
-}
-
-bool& PlayerController::IsDead()
-{
-    return this->characterEntity.IsDead();
+    this->mesh->Update(deltaTime, window,
+        this->entity.GetHealthPoints(), this->entity.GetHPMaxLimit(),
+        this->entity.GetStaminaPoints(), this->entity.GetStaminaLimit(),
+        this->entity.GetManaPoints(), this->entity.GetManaLimit());
 }
 
 void PlayerController::SubscribeOnEnemy(NPCEntity& enemy)
 {
-    //cout << "Subscribed in controller on " << enemy.GetName() << endl;
-    this->characterEntity.SubscribeOnEnemy(enemy);
+    this->entity.SubscribeOnEnemy(enemy);
 }
 
 void PlayerController::UnsubscribeFromEnemy(Character& enemy)
 {
-    this->characterEntity.UnsubscribeFromEnemy(enemy);
+    this->entity.UnsubscribeFromEnemy(enemy);
 }
 
-void PlayerController::Death()
+void PlayerController::Death(float deltaTime)
 {
-    this->characterEntity.Death();
+    auto& curState = mesh->CurrentState();
+    auto& curDir = mesh->CurrentDir();
+
+    if (curState == CharacterState::Dead)
+    {
+        mesh->Animation().Update(deltaTime);
+        return;
+    }
+
+    std::cout << entity.GetName() << " is died!\n";
+
+    auto& deathTextures = mesh->DeathTextures();
+    auto it = deathTextures.find(curDir);
+
+    if (it == deathTextures.end())
+    {
+        std::cerr << "[ERROR] No death texture for direction " << static_cast<int>(curDir) << "!\n";
+        return;
+    }
+
+    sf::Texture* newTexture = &it->second;
+
+    const auto& meta = mesh->TextureData(TextureCategory::Death);
+    if (meta.frameWidth == 0 || meta.frameHeight == 0 || meta.numberOfFrames == 0)
+    {
+        std::cerr << "[ERROR] Invalid TextureMeta for Death animation!\n";
+        return;
+    }
+
+    curState = CharacterState::Dead;
+
+    mesh->Animation().SetSheet(
+        newTexture,
+        meta.frameWidth,
+        meta.frameHeight,
+        meta.numberOfColumns,
+        meta.numberOfFrames,
+        false);
+
+    mesh->PreviousState() = curState;
+    mesh->LastDir() = curDir;
+    
+    mesh->Animation().Update(deltaTime);
+    this->entity.Death();
 }
 
-Vector2f PlayerController::GetCenter()
+void PlayerController::MoveToPoint(Vector2f point, float deltaTime, bool& isMoving)
 {
-    return this->charActiveMesh->GetCenter();
+    auto direction = mesh->MoveToPoint(point - mesh->GetPosition());
+    mesh->PendingDirection() = direction;
+
+    mesh->IsAttacking() = false;
+    isMoving = true;
+
 }
 
+void PlayerController::MovementHandler(float deltaTime, bool& isMoving)
+{
+    sf::FloatRect playerBounds = mesh->Sprite().getGlobalBounds();
+    sf::Vector2f proposedMove(0.f, 0.f);
 
-void PlayerController::SpendEnergy(float value)
-{
-    this->characterEntity.SpendStamina(value);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+        mesh->CurrentDir() = Direction::Up;
+        proposedMove.y -= mesh->GetSpeed() * deltaTime;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+        mesh->CurrentDir() = Direction::Down;
+        proposedMove.y += mesh->GetSpeed() * deltaTime;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+        mesh->CurrentDir() = Direction::Left;
+        proposedMove.x -= mesh->GetSpeed() * deltaTime;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+        mesh->CurrentDir() = Direction::Right;
+        proposedMove.x += mesh->GetSpeed() * deltaTime;
+    }
+
+    // нормалізація діагонального руху
+    if (proposedMove.x != 0 && proposedMove.y != 0)
+        proposedMove /= std::sqrt(2.f);
+
+    sf::Vector2f finalMove(0.f, 0.f);
+
+    // Перевірка по осі X
+    sf::FloatRect movedX = playerBounds;
+    movedX.left += proposedMove.x;
+    bool blockedX = false;
+    for (const auto& zone : ForbiddenZones::GetForbiddenZones()) {
+        if (movedX.intersects(zone)) {
+            blockedX = true;
+            break;
+        }
+    }
+    if (!blockedX) finalMove.x = proposedMove.x;
+
+    // Перевірка по осі Y
+    sf::FloatRect movedY = playerBounds;
+    movedY.top += proposedMove.y;
+    bool blockedY = false;
+    for (const auto& zone : ForbiddenZones::GetForbiddenZones()) {
+        if (movedY.intersects(zone)) {
+            blockedY = true;
+            break;
+        }
+    }
+    if (!blockedY) finalMove.y = proposedMove.y;
+
+    if (finalMove != sf::Vector2f(0.f, 0.f)) {
+        mesh->Sprite().move(finalMove);
+        isMoving = true;
+    }
 }
 
-void PlayerController::GainEnergy(float value)
+void PlayerController::SetActiveMesh(CharacterMesh* activeMesh)
 {
-    this->characterEntity.GainStamina(value);
-}
-
-float PlayerController::GetEnergyLimit()
-{
-    return this->characterEntity.GetStaminaLimit();
-}
-
-void PlayerController::SetEnergyLimit(float value)
-{
-    this->characterEntity.SetStaminaLimit(value);
-}
-
-float& PlayerController::GetChargeTime() const
-{
-    return this->charActiveMesh->ChargeTime();
-}
-
-bool& PlayerController::IsChargingAttack() const
-{
-    return this->charActiveMesh->IsChargingAttack();
-}
-void PlayerController::FreezeOnMidFrame()
-{
-    charActiveMesh->Animation().FreezeOnMidFrame();
-}
-bool& PlayerController::IsAttacking() const
-{
-    return this->charActiveMesh->IsAttacking();
-}
-
-bool PlayerController::AnimationIsFinished()
-{
-    return this->charActiveMesh->Animation().IsFinished();
-}
-
-bool& PlayerController::PendingNormalAttack()
-{
-    return this->charActiveMesh->PendingNormalAttack();
-}
-
-bool& PlayerController::PendingChargedAttack()
-{
-    return this->charActiveMesh->PendingChargedAttack();
+    mesh = activeMesh;
 }

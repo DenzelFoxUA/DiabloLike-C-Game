@@ -5,6 +5,7 @@
 #include <memory>
 #include "Projectile.h"
 #include "BaseUnit.h"
+#include "ProjectileObject.h"
 
 
 using namespace std;

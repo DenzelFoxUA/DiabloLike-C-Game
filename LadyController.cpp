@@ -2,39 +2,39 @@
 
 Vector2f LadyController::Shot()
 {
-    this->charActiveMesh->IsChargingAttack() = false;
-    return this->charActiveMesh->PendingDirection();
+    this->mesh->IsChargingAttack() = false;
+    return this->mesh->PendingDirection();
 }
 
 Vector2f LadyController::ShotCharged()
 {
-    this->charActiveMesh->IsChargingAttack() = true;
-    return this->charActiveMesh->PendingDirection();
+    this->mesh->IsChargingAttack() = true;
+    return this->mesh->PendingDirection();
 }
 
 void LadyController::HandleInput(float deltaTime)
 {
     PlayerController::HandleInput(deltaTime);
 
-    if (charActiveMesh->IsChargingAttack()) {
-        float& chargeTime = charActiveMesh->ChargeTime();
+    if (mesh->IsChargingAttack()) {
+        float& chargeTime = mesh->ChargeTime();
         chargeTime += deltaTime;
-        if (chargeTime > charActiveMesh->MaxChargeTime())
-            chargeTime = charActiveMesh->MaxChargeTime();
+        if (chargeTime > mesh->MaxChargeTime())
+            chargeTime = mesh->MaxChargeTime();
     }
 }
 
 void LadyController::HandleEvent(const sf::Event& event, const sf::RenderWindow& window)
 {
-    bool& isAttacking = charActiveMesh->IsAttacking();
-    bool& shotAlreadyCharged = charActiveMesh->IsCharged();
-    bool& chargingShot = charActiveMesh->IsChargingAttack();
-    float& chargeTime = charActiveMesh->ChargeTime();
-    float& attackTimer = charActiveMesh->AttackTimer();
-    bool& pendingNormalShot = charActiveMesh->PendingNormalAttack();
-    bool& pendingChargedShot = charActiveMesh->PendingChargedAttack();
-    float& pendingChargeTime = charActiveMesh->PendingChargeTime();
-    Vector2f& pendingDirection = charActiveMesh->PendingDirection();
+    bool& isAttacking = mesh->IsAttacking();
+    bool& shotAlreadyCharged = mesh->IsCharged();
+    bool& chargingShot = mesh->IsChargingAttack();
+    float& chargeTime = mesh->ChargeTime();
+    float& attackTimer = mesh->AttackTimer();
+    bool& pendingNormalShot = mesh->PendingNormalAttack();
+    bool& pendingChargedShot = mesh->PendingChargedAttack();
+    float& pendingChargeTime = mesh->PendingChargeTime();
+    Vector2f& pendingDirection = mesh->PendingDirection();
 
     if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
     {
@@ -45,13 +45,13 @@ void LadyController::HandleEvent(const sf::Event& event, const sf::RenderWindow&
             shotAlreadyCharged = false;
             attackTimer = 0.f;
 
-            charActiveMesh->CurrentState() = CharacterState::Attack;
-            auto& dir = charActiveMesh->CurrentDir();
+            mesh->CurrentState() = CharacterState::Attack;
+            auto& dir = mesh->CurrentDir();
 
-            const auto& meta = charActiveMesh->TextureData(TextureCategory::Attack);
+            const auto& meta = mesh->TextureData(TextureCategory::Attack);
 
-            charActiveMesh->Animation().SetSheet(
-                &charActiveMesh->AttackTextures()[dir],
+            mesh->Animation().SetSheet(
+                &mesh->AttackTextures()[dir],
                 meta.frameWidth,
                 meta.frameHeight,
                 meta.numberOfColumns,
@@ -67,7 +67,7 @@ void LadyController::HandleEvent(const sf::Event& event, const sf::RenderWindow&
             shotAlreadyCharged = false;
 
             sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-            sf::Vector2f direction = mousePos - charActiveMesh->GetCenter();
+            sf::Vector2f direction = mousePos - mesh->GetCenter();
 
             if (chargeTime < 2.0f) {
                 pendingNormalShot = true;
@@ -78,7 +78,7 @@ void LadyController::HandleEvent(const sf::Event& event, const sf::RenderWindow&
             }
 
             pendingDirection = direction;
-            charActiveMesh->Animation().Resume();
+            mesh->Animation().Resume();
         }
     }
 }
@@ -86,12 +86,11 @@ void LadyController::HandleEvent(const sf::Event& event, const sf::RenderWindow&
 void LadyController::Update(float deltaTime, const sf::RenderWindow& window)
 {
     PlayerController::Update(deltaTime,window);
-    //characterMesh.Update(deltaTime, window);
 }
 
 void LadyController::Draw(sf::RenderWindow& window)
 {
-    charActiveMesh->Draw(window);
+    mesh->Draw(window);
 }
 
 void LadyController::HandleBehavior(sf::Vector2f target, Character& enemy, float deltaTime)
@@ -100,5 +99,5 @@ void LadyController::HandleBehavior(sf::Vector2f target, Character& enemy, float
 
 Character& LadyController::GetEntity()
 {
-    return this->characterEntity;
+    return this->entity;
 }

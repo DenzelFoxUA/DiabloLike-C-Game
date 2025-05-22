@@ -21,3 +21,8 @@ namespace ArrowsPaths
 	const string ARROW_TEXTURES_FIRE_FILE = "fire_arrow.png";
 }
 
+namespace TerrainTextures
+{
+	const string GRASS_DARK_GREEN = "textures/World/Grass/tileable-1-grey.png";
+}
+

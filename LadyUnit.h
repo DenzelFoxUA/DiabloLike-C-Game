@@ -37,7 +37,7 @@ public:
 	}
 
 	void HandleInput(float deltaTime) override;
-	void HandleEvent(const sf::Event& event, const sf::RenderWindow& window) override;
+	void HandleMouseEvent(const sf::Event& event, const sf::RenderWindow& window, float dt) override;
 
 	void Shot(Texture& texture) override;
 
@@ -102,32 +102,7 @@ public:
 
 	//empty unused methods
 	void HandleBehavior(IBaseUnit* target, float deltaTime) override {}
-	void Update(float deltaTime, const sf::RenderWindow& window) override {
-
-		auto arrowTex = ProjectileModels::GetSimpleArrowTex();
-		auto powerArrTex = ProjectileModels::GetPowerArrowTex();
-
-		auto currDirection = this->_controller->GetCurrentDirection();
-		auto currentPosition = this->_controller->GetCurrentPosition();
-
-		if (!this->_character.IsModeTwoActive())
-		{
-			this->_controller->SetActiveMesh(&_meshRanged);
-			this->_meshRanged.SetPosition(currentPosition);
-			this->_meshRanged.CurrentDir() = currDirection;
-			this->_controller->Update(deltaTime, window);
-			RangedMethod(deltaTime, window, *arrowTex, *powerArrTex);
-		}
-		else
-		{
-			this->_controller->SetActiveMesh(&_meshMelee);
-			this->_meshMelee.SetPosition(currentPosition);
-			this->_meshMelee.CurrentDir() = currDirection;
-			this->_controller->SetActiveMesh(&_meshMelee);
-			this->_controller->Update(deltaTime, window);
-			MeleeMethod(deltaTime, window);
-		}
-	};
+	void Update(float deltaTime, const sf::RenderWindow& window) override;
 
 	template <typename,typename>
 	friend class UnitBuilder;

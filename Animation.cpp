@@ -26,7 +26,7 @@ void Animation::SetSheet(sf::Texture* tex, int frameW, int frameH, int cols, int
 
 void Animation::Update(float deltaTime) {
 
-    if (isFinished || !texture || paused) return;
+    if (isFinished || !texture || isPaused) return;
 
     frameTimer += deltaTime;
     if (frameTimer >= frameDuration)
@@ -47,6 +47,7 @@ void Animation::Update(float deltaTime) {
         int frameX = (currentFrame % columns) * frameWidth;
         int frameY = (currentFrame / columns) * frameHeight;
         sprite.setTextureRect(sf::IntRect(frameX, frameY, frameWidth, frameHeight));
+
     }
 }
 
@@ -68,16 +69,20 @@ void Animation::SetFrameDuration(float newValue)
 
 void Animation::FreezeOnMidFrame()
 {
-    paused = true;
+    isPaused = true;
 
-    int lastFrameIndex = totalFrames / 2;
-    int x = (lastFrameIndex % columns) * frameWidth;
-    int y = (lastFrameIndex / columns) * frameHeight;
+    int midFrame = totalFrames / 2;
+    currentFrame = midFrame;
+
+    int x = (midFrame % columns) * frameWidth;
+    int y = (midFrame / columns) * frameHeight;
 
     sprite.setTextureRect(IntRect(x, y, frameWidth, frameHeight));
+
+    std::cout << "Freeze mid-frame, frame=" << currentFrame << std::endl;
 }
 
 void Animation::Resume()
 {
-    paused = false;
+    isPaused = false;
 }

@@ -1,6 +1,7 @@
 
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 using namespace std;
 using namespace sf;
@@ -20,7 +21,7 @@ private:
 
     bool isFinished = false,
         mustBeLooped = true,
-        paused = false;
+        isPaused = false;
 
 public:
 
@@ -31,6 +32,9 @@ public:
     void Update(float deltaTime);
     void Reset();
     bool IsFinished() const;
+    bool IsPaused() const {
+        return isPaused;
+    }
     void SetFrameDuration(float newValue);
     void FreezeOnMidFrame();
     void Resume();

@@ -141,6 +141,7 @@
     <ClCompile Include="CharacterMesh.cpp" />
     <ClCompile Include="Enemies.cpp" />
     <ClCompile Include="ForbiddenZonesConfig.cpp" />
+    <ClCompile Include="Functions.cpp" />
     <ClCompile Include="JSONTextureLoader.cpp" />
     <ClCompile Include="LadyController.cpp" />
     <ClCompile Include="LadyArcherMesh.cpp" />
@@ -168,6 +169,7 @@
   <ItemGroup>
     <ClInclude Include="Attributes.h" />
     <ClInclude Include="Forest.h" />
+    <ClInclude Include="Functions.h" />
     <ClInclude Include="Global_Variables.h" />
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Arrow.h" />
@@ -184,7 +186,6 @@
     <ClInclude Include="JsonTextureLoader.h" />
     <ClInclude Include="LadyUnit.h" />
     <ClInclude Include="LadySwordMesh.h" />
-    <ClInclude Include="Layer.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="PathsConfig.h" />
     <ClInclude Include="LadyArcher.h" />

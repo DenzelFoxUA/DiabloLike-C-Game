@@ -36,13 +36,9 @@ protected:
     Texture healthBarTex;
 
     bool chargingAttack = false;
-    float chargeTime = 0.f;
-    const float maxChargeTime = 2.f;
-    bool attackAlreadyCharged = false;
 
     bool pendingNormalAttack = false;
     bool pendingChargedAttack = false;
-    float pendingChargeTime = 0.f;
 
     Vector2f pendingDirection = { 0.f, 0.f };
 
@@ -98,9 +94,6 @@ public:
 
     }
 
-    //    InitFromTextures(spawnP);
-    //}
-
     void InitFromTextures(SpawnPoint spawnP)
     {
         if (texturesData.find(TextureCategory::Idle) == texturesData.end()) {
@@ -141,20 +134,16 @@ public:
         float stamina = 0, float staminaMax = 0, float mana = 0, float manaMax = 0) override;
     void Draw(sf::RenderWindow& window) override;
 
-    virtual bool& IsCharged();
     virtual bool& IsMoving();
     virtual bool& IsDead();
     virtual bool& IsChargingAttack();
     virtual bool& PendingNormalAttack();
     virtual bool& PendingChargedAttack();
 
-    virtual float& ChargeTime();
     virtual float& AttackTimer();
 
     virtual Vector2f& PendingDirection();
-    virtual float& PendingChargeTime();
-    virtual const float AttackDelay();
-    virtual const float MaxChargeTime();
+    virtual float& AttackDelay();
 
     virtual float& DeathAnimation_Timer();
     virtual float& DeathAnimationTimeLimit();

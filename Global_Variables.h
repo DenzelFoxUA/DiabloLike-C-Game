@@ -13,9 +13,9 @@ namespace StaminaRequirements
 namespace Damage
 {
 	const float MELEE_ATTACK = 10.f,
-		MELEE_CHARGED = 40.f,
-		BOW_ARROW = 20.f,
-		BOW_CHARGED = 60.f;
+		MELEE_CHARGED = 20.f,
+		BOW_ARROW = 10.f,
+		BOW_CHARGED = 20.f;
 }
 
 

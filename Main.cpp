@@ -2,22 +2,11 @@
 #include <SFML/Graphics.hpp>
 #include "BaseMesh.h"
 #include "CharacterMesh.h"
-#include "LadyArcherMesh.h"
-#include "LadyArcher.h"
-#include "LadyController.h"
-#include "Skeleton.h"
-#include "SkeletonMesh.h"
-#include "SkeletonController.h"
 #include <iostream>
 #include "PathsConfig.h"
 #include "LadyUnit.h"
 #include "UnitBuilder.h"
 #include "SkeletonUnit.h"
-#include "NPC_Controller.h"
-#include "SmallHouse.h"
-#include "ForbiddenZonesConfig.h"
-#include "Tree.h"
-#include "Layer.h"
 #include "ProjectileModels.h"
 #include "Forest.h"
 #include "Attributes.h"
@@ -49,18 +38,19 @@ int main()
             LoadTextureMeta(JSON_TEXTURES_PATH + LADYSWORD_JSON_TEXTURES_FILE))
         .SetSpawnPoint(SpawnPoint{ 1000,900 })
         .SetProjectile(ProjectileType::ArrowSimple)
-        .SetEntity(LadyArcher(0, nameMainChar, 800.f, 200.f, 200.f, PlayerStartAttributes::LADY))
+        .SetEntity(LadyArcher(0, nameMainChar, 2500.f, 500.f, 500.f, PlayerStartAttributes::LADY))
         .SetCooldown(1.f)
         .SetContainer(&projContainer)
         .SetDeathAnimationTime(2.5f)
         .SetHPRegenerationRate(0.f)
-        .SetStaminaRegenerationRate(10.f)
+        .SetStaminaRegenerationRate(40.f)
         .SetManaRegenerationRate(0.f)
-        .SetSpeed(380.f)
+        .SetSpeed(400.f)
+        .SetAnimDuration(0.05f)
         .Build();
     playerUnit->SetSpeed(120.f);
     
-    //
+    //levels
     string forestLevelTextures = "JSONData/textures/Levels/LevelForest.json";
     ForestLevel<LadyUnit> forest = ForestLevel<LadyUnit>(forestLevelTextures, window, 
         &*playerUnit,&projContainer);

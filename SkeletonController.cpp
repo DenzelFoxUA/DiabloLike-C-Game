@@ -29,5 +29,5 @@ void SkeletonController::SetSpeed(float val)
 
 void SkeletonController::HandleInput(float deltaTime){}
 
-void SkeletonController::HandleEvent(const sf::Event& event, const sf::RenderWindow& window){}
+void SkeletonController::HandleMouseEvent(const sf::Event& event, const sf::RenderWindow& window, float dt){}
 

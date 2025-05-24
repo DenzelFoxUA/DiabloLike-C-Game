@@ -13,7 +13,7 @@ void LadyArcherMesh::Update(float deltaTime, const sf::RenderWindow& window, flo
     if (isAttacking) {
         attackTimer += deltaTime;
 
-        if (attackTimer >= attackDelay) {
+        if (attackTimer >= attackDelay && animation.IsFinished()) {
             isAttacking = false;
             currentState = CharacterState::Idle;
 

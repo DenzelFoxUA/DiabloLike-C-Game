@@ -96,7 +96,7 @@ public:
     virtual void HealBySource(float value) = 0;
     virtual void HandleBehavior(IBaseUnit* target, float deltaTime) = 0;
     virtual void HandleInput(float deltaTime) override {};
-    virtual void HandleEvent(const sf::Event& event, const sf::RenderWindow& window) override {};
+    virtual void HandleMouseEvent(const sf::Event& event, const sf::RenderWindow& window, float dt) override {};
 
     virtual ~BaseUnit() override = default;
 

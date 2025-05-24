@@ -24,14 +24,7 @@ void CharacterMesh::LoadTextures(map<Direction, Texture>& target, string folderP
 void CharacterMesh::Update(float deltaTime, const sf::RenderWindow& window, float hp, float hpMax,
     float stamina, float staminaMax, float mana, float manaMax)
 {
-    animation.Update(deltaTime);
-    if (chargingAttack) {
-        chargeTime += deltaTime;
-
-        if (chargeTime >= 5.0f) {
-            this->animation.FreezeOnMidFrame();
-        }
-    }
+     animation.Update(deltaTime);
 }
 
 void CharacterMesh::Draw(sf::RenderWindow& window) {
@@ -74,13 +67,9 @@ Animation& CharacterMesh::Animation() { return this->animation; }
 
 TextureMeta& CharacterMesh::TextureData(TextureCategory category) { return texturesData[category]; }
 
-bool& CharacterMesh::IsCharged() { return this->attackAlreadyCharged; }
-
 bool& CharacterMesh::IsMoving() { return this->isMoving; }
 
 bool& CharacterMesh::IsChargingAttack() { return this->chargingAttack; }
-
-float& CharacterMesh::ChargeTime() { return this->chargeTime; }
 
 float& CharacterMesh::AttackTimer() { return this->attackTimer; }
 
@@ -90,11 +79,7 @@ bool& CharacterMesh::PendingChargedAttack() { return this->pendingChargedAttack;
 
 Vector2f& CharacterMesh::PendingDirection() { return this->pendingDirection; }
 
-float& CharacterMesh::PendingChargeTime() { return this->pendingChargeTime; }
-
-const float CharacterMesh::AttackDelay() { return this->attackDelay; }
-
-const float CharacterMesh::MaxChargeTime() { return this->maxChargeTime; }
+float &CharacterMesh::AttackDelay() { return this->attackDelay; }
 
 bool& CharacterMesh::IsDead()
 {

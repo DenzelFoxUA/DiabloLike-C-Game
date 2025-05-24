@@ -40,6 +40,7 @@ public:
     void MoveToPoint(Vector2f point, float deltaTime, bool& isMoving) override;
     virtual void MovementHandler(float deltaTime, bool& isMoving);
     void SetActiveMesh(CharacterMesh* activeMesh);
+    void HandleMouseEvent(const sf::Event& event, const sf::RenderWindow& window, float deltaTime) override{}
 
     //event/update
     virtual void Update(float deltaTime, const RenderWindow& window) override;

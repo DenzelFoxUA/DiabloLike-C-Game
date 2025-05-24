@@ -20,8 +20,7 @@ class NPC_Controller: public BaseCharacterController<NPCEntity>
 {
 protected:
 
-    Clock attackTimer;
-    Time attackCooldown;
+
 
     void ChasingEnemy(Vector2f point, float deltaTime, bool& isMoving) override;
 
@@ -58,7 +57,7 @@ public:
 
     //events and update
     virtual void Update(float deltaTime, const sf::RenderWindow& window) override;
-    virtual void HandleEvent(const sf::Event& event, const sf::RenderWindow& window) = 0;
+    virtual void HandleMouseEvent(const sf::Event& event, const sf::RenderWindow& window,float dt) = 0;
 
     ~NPC_Controller()
     {

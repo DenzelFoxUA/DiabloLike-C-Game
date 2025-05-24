@@ -9,6 +9,9 @@ protected:
 	CharacterMesh* mesh;
 	EntiT& entity;
 
+    Clock attackTimer;
+    Time attackCooldown;
+
     bool isChasing,
         isTressPass = false;
 
@@ -50,12 +53,13 @@ public:
     BaseCharacterController(CharacterMesh* _mesh, EntiT& _npcObj)
         : mesh(_mesh), entity(_npcObj)
     {
-
+        isChasing = false;
     }
 
     //mesh methods
     virtual void SetSpeed(float val) = 0;
     virtual void Draw(sf::RenderWindow& window) = 0;
+    virtual void MoveToPoint(Vector2f point, float deltaTime, bool& isMoving) = 0;
 
     Vector2f GetCenter() override
     {
@@ -65,16 +69,6 @@ public:
     Vector2f GetPosition() override
     {
         return this->mesh->GetPosition();
-    }
-
-    float& GetChargeTime() const override
-    {
-        return this->mesh->ChargeTime();
-    }
-
-    bool& IsChargingAttack() const override
-    {
-        return this->mesh->IsChargingAttack();
     }
 
     void FreezeOnMidFrame() override
@@ -107,10 +101,16 @@ public:
         return std::sqrt((b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y));
     }
 
-    virtual void MoveToPoint(Vector2f point, float deltaTime, bool& isMoving)  = 0;
 
-    virtual Direction GetCurrentDirection() override { return this->mesh->CurrentDir(); }
-    virtual Vector2f GetCurrentPosition() override { return this->mesh->GetPosition(); }
+
+    virtual Direction GetCurrentDirection() override 
+    { 
+        return this->mesh->CurrentDir();
+    }
+    virtual Vector2f GetCurrentPosition() override 
+    { 
+        return this->mesh->GetPosition(); 
+    }
 
     bool& IsMoving() override
     {
@@ -154,12 +154,13 @@ public:
 
     void SpendEnergy(float value) override
     {
-        this->entity.SpendStamina(value);
+        if(value >= 0)
+            this->entity.SpendStamina(value);
     }
     void GainEnergy(float value) override
     {
         if(value > 0)
-        this->entity.GainStamina(value);
+            this->entity.GainStamina(value);
     }
     float GetEnergyLimit() override
     {
@@ -290,9 +291,18 @@ public:
     }
 
     //update
-    virtual void Update(float deltaTime, const sf::RenderWindow& window) = 0;
+    virtual void Update(float deltaTime, const sf::RenderWindow& window)
+    {
+        if (PendingChargedAttack())
+        {
+            this->mesh->SetAttackDelay(2.f);
+        }
+            
+        if (PendingNormalAttack())
+            this->mesh->SetAttackDelay(1.f);
+    }
     //event
-    virtual void HandleEvent(const Event& event, const RenderWindow& window) = 0;
+    virtual void HandleMouseEvent(const Event& event, const RenderWindow& window, float deltaTime) = 0;
     
     //input and behavior
     virtual void HandleInput(float deltaTime) = 0;

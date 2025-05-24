@@ -5,9 +5,9 @@ void LadyUnit::HandleInput(float deltaTime)
 	this->_controller->HandleInput(deltaTime);
 }
 
-void LadyUnit::HandleEvent(const sf::Event& event, const sf::RenderWindow& window)
+void LadyUnit::HandleMouseEvent(const sf::Event& event, const sf::RenderWindow& window, float dt)
 {
-	this->_controller->HandleEvent(event, window);
+	this->_controller->HandleMouseEvent(event, window, dt);
 }
 
 void LadyUnit::Shot(Texture& texture)
@@ -22,8 +22,10 @@ void LadyUnit::Shot(Texture& texture)
 		bool isCharged = false;
 		Vector2f center = this->_controller->GetCenter();
 
+		float bowDamage = 150;
+
 		float speed = this->_controller->CaltulateShootSpeed(isCharged);
-		float damage = this->_controller->CalculateShootDamage(isCharged, this->GetTypeOfProjectile());
+		float damage = this->_controller->CalculateShootDamage(isCharged, this->GetTypeOfProjectile()) + bowDamage;
 		float hitRadius = this->_controller->CalculateHitRadius(isCharged, this->GetTypeOfProjectile());
 
 		std::unique_ptr<IProjectileObject> projectilePtr =
@@ -52,8 +54,9 @@ void LadyUnit::ShotCharged(Texture& texture)
 		bool isCharged = true;
 		Vector2f center = this->_meshRanged.GetCenter();
 
+		float bowDamage = 150;
 		float speed = this->_controller->CaltulateShootSpeed(isCharged);
-		float damage = this->_controller->CalculateShootDamage(isCharged, this->GetTypeOfProjectile());
+		float damage = this->_controller->CalculateShootDamage(isCharged, this->GetTypeOfProjectile()) + bowDamage;
 		float hitRadius = this->_controller->CalculateHitRadius(isCharged, this->GetTypeOfProjectile());
 
 		std::unique_ptr<IProjectileObject> projectilePtr =
@@ -63,6 +66,7 @@ void LadyUnit::ShotCharged(Texture& texture)
 			);
 
 		this->allGameProjectiles->AddProjectile(std::move(projectilePtr));
+		
 	}
 	else
 	{
@@ -95,7 +99,8 @@ void LadyUnit::MeleeAttack(Direction facing, const std::vector<IBaseUnit*>& enem
 			float dot = dirToEnemy.x * facingVec.x + dirToEnemy.y * facingVec.y;
 			std::cout << "Dot product = " << dot << "\n";
 
-			float nominalDmg = this->_controller->CaltculateMeleeDamage(false);
+			float onehandedSwordDamage = 100;
+			float nominalDmg = this->_controller->CaltculateMeleeDamage(false) + onehandedSwordDamage;
 
 			if (dot > dotThreshold) {
 
@@ -110,45 +115,36 @@ void LadyUnit::MeleeAttack(Direction facing, const std::vector<IBaseUnit*>& enem
 	}
 }
 
+void LadyUnit::Update(float deltaTime, const sf::RenderWindow& window) {
 
-//void LadyUnit::Update(float deltaTime, const sf::RenderWindow& window,
-//	Texture& projTexture, Texture& projChargedTexture)
-//{
-//	auto currDirection = this->_controller->GetCurrentDirection();
-//	auto currentPosition = this->_controller->GetCurrentPosition();
-//
-//	if (!this->_character.IsModeTwoActive())
-//	{
-//		this->_controller->SetActiveMesh(&_meshRanged);
-//		this->_meshRanged.SetPosition(currentPosition);
-//		this->_meshRanged.CurrentDir() = currDirection;
-//		this->_controller->Update(deltaTime, window);
-//		RangedMethod(deltaTime, window, projTexture, projChargedTexture);
-//	}
-//	else
-//	{
-//		this->_controller->SetActiveMesh(&_meshMelee);
-//		this->_meshMelee.SetPosition(currentPosition);
-//		this->_meshMelee.CurrentDir() = currDirection;
-//		this->_controller->SetActiveMesh(&_meshMelee);
-//		this->_controller->Update(deltaTime, window);
-//		MeleeMethod(deltaTime, window);
-//	}
-//}
+	auto arrowTex = ProjectileModels::GetSimpleArrowTex();
+	auto powerArrTex = ProjectileModels::GetPowerArrowTex();
+
+	auto currDirection = this->_controller->GetCurrentDirection();
+	auto currentPosition = this->_controller->GetCurrentPosition();
+
+	if (!this->_character.IsModeTwoActive())
+	{
+		this->_controller->SetActiveMesh(&_meshRanged);
+		this->_meshRanged.SetPosition(currentPosition);
+		this->_meshRanged.CurrentDir() = currDirection;
+		this->_controller->Update(deltaTime, window);
+		RangedMethod(deltaTime, window, *arrowTex, *powerArrTex);
+	}
+	else
+	{
+		this->_controller->SetActiveMesh(&_meshMelee);
+		this->_meshMelee.SetPosition(currentPosition);
+		this->_meshMelee.CurrentDir() = currDirection;
+		this->_controller->SetActiveMesh(&_meshMelee);
+		this->_controller->Update(deltaTime, window);
+		MeleeMethod(deltaTime, window);
+	}
+};
 
 void LadyUnit::RangedMethod(float deltaTime, const sf::RenderWindow& window, 
 	Texture& projTexture, Texture& projChargedTexture)
 {
-	float& chargeTime = this->_controller->GetChargeTime();
-	bool& chargingShot = this->_controller->IsChargingAttack();
-
-	if (chargingShot) {
-
-		chargeTime += deltaTime;
-		if (chargeTime >= 2.0f) {
-			this->_controller->FreezeOnMidFrame();
-		}
-	}
 
 	if (this->_controller->IsAttacking() && this->_controller->AnimationIsFinished()) {
 		if (this->_controller->PendingNormalAttack()) {
@@ -158,14 +154,16 @@ void LadyUnit::RangedMethod(float deltaTime, const sf::RenderWindow& window,
 
 		}
 		else if (this->_controller->PendingChargedAttack()) {
+			
 			ShotCharged(projChargedTexture);
 			this->_controller->PendingChargedAttack() = false;
 			cout << "CHARGED CHARGED!!!----------------------------->" << endl;
+			
 		}
-
 		this->_meshRanged.IsAttacking() = false;
 		this->_meshRanged.CurrentState() = CharacterState::Idle;
-		this->_meshRanged.Animation().Resume();
+		
+	
 	}
 }
 
@@ -203,7 +201,7 @@ Vector2f LadyUnit::GetPosition()
 }
 Vector2f LadyUnit::GetCenter()
 {
-	return this->_meshRanged.GetCenter();
+	return this->_controller->GetCenter();
 }
 
 void LadyUnit::MoveToPoint(Vector2f point, float deltaTime)
@@ -213,7 +211,7 @@ void LadyUnit::MoveToPoint(Vector2f point, float deltaTime)
 
 void LadyUnit::SetAnimationDuration(float newVal)
 {
-	this->_meshRanged.SetAnimationDuration(newVal);
+	this->_controller->SetAnimationDuration(newVal);
 }
 
 void LadyUnit::SetSpeed(float val)

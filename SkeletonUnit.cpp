@@ -76,7 +76,9 @@ void SkeletonUnit::MeleeAttack(Direction facing, const std::vector<IBaseUnit*>& 
 		sf::Vector2f facingVec = DirectionToVector(facing);
 
 		float dotThreshold = 0.3f;
-		float nominalDamage = _controller->CaltculateMeleeDamage(false);
+
+		float rustSwordDamage = 50;
+		float nominalDamage = _controller->CaltculateMeleeDamage(false) + rustSwordDamage;
 
 		cout << Range::MELEE_ATTACK << " - RADIUS" << endl;
 

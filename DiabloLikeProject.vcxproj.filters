@@ -124,6 +124,9 @@
     <Filter Include="Header Files\MapsLevels">
       <UniqueIdentifier>{b31e48bd-c324-4547-9ab9-6ae56af8d488}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Controllers\Player">
+      <UniqueIdentifier>{aa9125e7-e7aa-4e61-ba12-ae5860360cd7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LadyArcherMesh.cpp">
@@ -213,6 +216,9 @@
     <ClCompile Include="ProjectileModels.cpp">
       <Filter>Source Files\Global</Filter>
     </ClCompile>
+    <ClCompile Include="Functions.cpp">
+      <Filter>Utiltity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LadyArcherMesh.h">
@@ -237,9 +243,6 @@
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
     <ClInclude Include="PlayerCharacterController.h">
-      <Filter>Header Files\Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="LadyController.h">
       <Filter>Header Files\Controllers</Filter>
     </ClInclude>
     <ClInclude Include="Meshes\Weapons\ArrowMesh.h">
@@ -332,9 +335,6 @@
     <ClInclude Include="Global_Variables.h">
       <Filter>Header Files\Global</Filter>
     </ClInclude>
-    <ClInclude Include="Layer.h">
-      <Filter>Header Files\Meshes</Filter>
-    </ClInclude>
     <ClInclude Include="ProjectileModels.h">
       <Filter>Header Files\Global</Filter>
     </ClInclude>
@@ -345,6 +345,12 @@
       <Filter>Header Files\MapsLevels</Filter>
     </ClInclude>
     <ClInclude Include="Attributes.h">
+      <Filter>Header Files\Global</Filter>
+    </ClInclude>
+    <ClInclude Include="LadyController.h">
+      <Filter>Header Files\Controllers\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Functions.h">
       <Filter>Header Files\Global</Filter>
     </ClInclude>
   </ItemGroup>

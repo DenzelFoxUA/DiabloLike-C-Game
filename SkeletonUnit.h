@@ -80,7 +80,7 @@ public:
 	void UnsubscribeFromEnemy(Character& enemy) override {}
 	void GainXP(int expPoints) override {}
 	void HandleInput(float deltaTime) override {};
-	void HandleEvent(const sf::Event& event, const sf::RenderWindow& window) override {};
+	void HandleMouseEvent(const sf::Event& event, const sf::RenderWindow& window,float dt) override {};
 
 	template <typename, typename>
 	friend class UnitBuilder;

@@ -2,21 +2,6 @@
 #include <string>
 #include <iostream>
 #include <SFML/Graphics.hpp>
-//#include "PathsConfig.h"
-//#include "IBaseUnit.h"
-//#include "JsonTextureLoader.h"
-//#include "StaticMesh.h"
-//#include "BaseMesh.h"
-//#include "ForbiddenZonesConfig.h"
-//#include "ProjectileManager.h"
-//#include "Arrow.h"
-//#include "SmallHouse.h"
-//#include "Tree.h"
-//#include "SkeletonUnit.h"
-//#include "UnitBuilder.h"
-//#include "Enemies.h"
-//#include "LadyUnit.h"
-//#include "ProjectileModels.h"
 #include "Level.h"
 
 using namespace std;
@@ -38,8 +23,6 @@ protected:
             }
         }
     }
-
-
 
 public:
     ForestLevel(string levelTexturesPath, RenderWindow& window,
@@ -77,23 +60,17 @@ public:
             ForbiddenZones::GetForbiddenZones().push_back(object.GetMapBounds());
         }
         //--------------------------------------------------------------------------------------
-        //CharacterAttributes skeletonsAttribute = {
-        //    5, //str
-        //    4, //agil
-        //    1, //intell
-        //    1, //willpower
-        //    2 // luck
-        //};
 
-        float x = 100.f, y = 100.f;
-
-        for (int i = 1; i <= 3; i++)
+        for (int i = 1; i <= 10; i++)
         {
+            Vector2f pos = this->GetRandomSpawnPosition(ForbiddenZones::GetForbiddenZones(),
+                this->window.getSize().x, this->window.getSize().y);
+
             UnitBuilder<SkeletonUnit, Skeleton> skeletonBuilder;
             auto skeleton = skeletonBuilder
                 .SetTexturesPrimary(JSONTextureLoader::
                     LoadTextureMeta(JSON_TEXTURES_PATH + SKELETON_BASIC_JSON_TEXTURES_FILE))
-                .SetSpawnPoint(SpawnPoint{ x, y })
+                .SetSpawnPoint(SpawnPoint{ pos.x, pos.y })
                 .SetProjectile(ProjectileType::None)
                 .SetEntity(Skeleton(i,"Skeleton", 600.f, 200.f, 0.f, BasicEnemiesAttributes::SKELETON, 900.f, 100))
                 .SetCooldown(3.f)
@@ -103,17 +80,12 @@ public:
                 .SetHPRegenerationRate(0.f)
                 .SetManaRegenerationRate(0.f)
                 .SetStaminaRegenerationRate(20.f)
+                .SetAnimDuration(0.4f)
                 .Build();
+
             this->enemies.emplace_back(move(skeleton));
 
             skeletonBuilder.Reset();
-
-
-            if (i % 2 == 0)
-                x += x;
-            else
-                y += y;
-
         }
         //--------------------------------------------------------------------------------------
         //adding skeletons to player global enemy list
@@ -126,6 +98,8 @@ public:
         Enemies::AddPlayerEnemy(this->mainCharacter->GetEntity().GetId(), this->mainCharacter);
         //--------------------------------------------------------------------------------------
 
+        int enemiesIterator = 0;
+
         //rendering start
         sf::Clock clock;
 
@@ -133,8 +107,9 @@ public:
         {
             Enemies::Update();
             float dt = clock.restart().asSeconds();
+
             std::vector<IBaseUnit*> enemyPointers;
-            for (auto& enemy : this->enemies)
+            for (auto& enemy : this->spawnedEnemies)
                 enemyPointers.push_back(enemy.get());
 
             sf::Event event;
@@ -143,7 +118,7 @@ public:
                 if (event.type == sf::Event::Closed)
                     this->window.close();
 
-                this->mainCharacter->HandleEvent(event, this->window);
+                this->mainCharacter->HandleMouseEvent(event, this->window, dt);
             }
 
             this->mainCharacter->HandleInput(dt);
@@ -154,7 +129,7 @@ public:
                 this->mainCharacter->SubscribeOnEnemy(enemy->GetEntity());
             }
 
-            for (auto& enemy : this->enemies)
+            for (auto& enemy : this->spawnedEnemies)
             {
                 if (enemy->IsDead()) continue;
 
@@ -163,7 +138,7 @@ public:
             }
 
             this->projContainer->Update(dt, enemyPointers);
-
+             
             this->window.clear();
 
             float offsetX = -1 * tileHeight;
@@ -173,7 +148,21 @@ public:
 
             house3.DrawBottom(this->window);
 
-            for (auto& enemy : this->enemies)
+
+
+
+            if (enemiesIterator == 0 ||
+                (enemiesIterator < this->enemies.size() && this->spawnTik >= this->spawnTime))
+            {
+                this->SpawnEnemy(enemiesIterator);
+                this->spawnTik = 0.f;
+
+                enemiesIterator++;
+            }
+            
+            this->spawnTik += dt;
+
+            for (auto& enemy : this->spawnedEnemies)
             {
                 enemy->Draw(this->window);
             }
@@ -189,9 +178,9 @@ public:
                 mesh.DrawBottom(this->window);
             }
 
-
             this->window.display();
         }
     }
+    
 
 };

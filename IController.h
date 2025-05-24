@@ -51,8 +51,6 @@ public:
     virtual bool AnimationIsFinished() = 0;
     virtual bool& PendingNormalAttack() = 0;
     virtual bool& PendingChargedAttack() = 0;
-    virtual float& GetChargeTime() const = 0;
-    virtual bool& IsChargingAttack() const = 0;
     virtual float GetDistanceToTarget(Vector2f point) = 0;
     virtual Direction GetCurrentDirection() = 0;
     virtual Vector2f GetCurrentPosition() = 0;
@@ -66,7 +64,8 @@ public:
     virtual void HandleBehavior(Vector2f target, Character& enemy, float deltaTime) = 0;
 
     //events and Update
-    virtual void HandleEvent(const sf::Event& event, const sf::RenderWindow& window) = 0;
+    virtual void HandleMouseEvent(const sf::Event& event, 
+        const sf::RenderWindow& window, float deltaTime) = 0;
     virtual void Update(float deltaTime, const sf::RenderWindow& window) = 0;
 
     //combat calculators

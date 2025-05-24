@@ -21,7 +21,7 @@ public:
 
 	//update/events
 	void Update(float deltaTime, const sf::RenderWindow& window) override;
-	void HandleEvent(const sf::Event& event, const sf::RenderWindow& window) override; //not using
+	void HandleMouseEvent(const sf::Event& event, const sf::RenderWindow& window, float dt) override; //not using
 
 	//behavior input
 	void HandleBehavior(Vector2f target, Character& enemy, float deltaTime) override;

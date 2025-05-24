@@ -236,7 +236,7 @@ public:
             _cooldown, 
             _container);
 
-        //result->SetAnimationDuration(this->animationDuration);
+        result->SetAnimationDuration(this->animationDuration);
         result->SetSpeed(this->speed);
         result->SetDeathAnimationTime(this->deathAnimTime);
         //result->SetAttackDelay(this->attackTime);

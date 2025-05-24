@@ -123,7 +123,6 @@ void NPC_Controller::IdleBehavior()
 
 void NPC_Controller::UpdateStateAndDirection(Vector2f target)
 {
-
     auto curPosition = mesh->GetPosition();
     auto& curDir = mesh->CurrentDir();
 

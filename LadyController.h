@@ -20,7 +20,7 @@ public:
         : PlayerController(_meshCurrent, _entity){}
 
     virtual Character& GetEntity() override;
-    void HandleEvent(const sf::Event& event, const sf::RenderWindow& window) override;
+    void HandleMouseEvent(const sf::Event& event, const sf::RenderWindow& window, float deltaTime) override;
     void HandleInput(float deltaTime) override;
     Vector2f Shot();
     Vector2f ShotCharged();

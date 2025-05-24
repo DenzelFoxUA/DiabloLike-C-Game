@@ -55,7 +55,7 @@ public:
     virtual ProjectileType GetTypeOfProjectile() = 0;
 
     virtual void HandleInput(float deltaTime) = 0;
-    virtual void HandleEvent(const sf::Event& event, const sf::RenderWindow& window) = 0;
+    virtual void HandleMouseEvent(const sf::Event& event, const sf::RenderWindow& window, float dt) = 0;
     virtual void HandleBehavior(IBaseUnit* target, float deltaTime) = 0;
     virtual void Update(float deltaTime, const sf::RenderWindow& window) = 0;
 

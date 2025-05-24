@@ -8,6 +8,17 @@ void PlayerCharacter::LevelUp()
 		cout << name << " Level UP++" << "Current LVL: " << level << endl;
 		levelingStep *= 2;
 		experience = 0;
+
+		this->attributes.agility + 1;
+		this->attributes.strength + 1;
+		this->attributes.luck + 1;
+		this->attributes.inteligence + 1;
+		this->healthMax += 500;
+		this->health = healthMax;
+		this->staminaMax += 100;
+		this->stamina = staminaMax;
+		this->manaMax += 100;
+		this->mana = manaMax;
 	}
 }
 

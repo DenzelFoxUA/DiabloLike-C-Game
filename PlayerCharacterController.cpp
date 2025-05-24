@@ -70,6 +70,11 @@ void PlayerController::Update(float deltaTime, const sf::RenderWindow& window)
     if (!ForbiddenZones::GetForbiddenZones().empty())
         this->IsTressPassing(ForbiddenZones::GetForbiddenZones());
 
+    if (PendingChargedAttack() == true && !AnimationIsFinished())
+        this->SetAnimationDuration(0.08f);
+    else
+        this->SetAnimationDuration(0.05f);
+
     this->mesh->Update(deltaTime, window,
         this->entity.GetHealthPoints(), this->entity.GetHPMaxLimit(),
         this->entity.GetStaminaPoints(), this->entity.GetStaminaLimit(),
@@ -136,12 +141,13 @@ void PlayerController::Death(float deltaTime)
 
 void PlayerController::MoveToPoint(Vector2f point, float deltaTime, bool& isMoving)
 {
+    if (point == mesh->GetPosition()) return;
+
     auto direction = mesh->MoveToPoint(point - mesh->GetPosition());
     mesh->PendingDirection() = direction;
 
     mesh->IsAttacking() = false;
     isMoving = true;
-
 }
 
 void PlayerController::MovementHandler(float deltaTime, bool& isMoving)
@@ -166,13 +172,11 @@ void PlayerController::MovementHandler(float deltaTime, bool& isMoving)
         proposedMove.x += mesh->GetSpeed() * deltaTime;
     }
 
-    // нормалізація діагонального руху
     if (proposedMove.x != 0 && proposedMove.y != 0)
         proposedMove /= std::sqrt(2.f);
 
     sf::Vector2f finalMove(0.f, 0.f);
 
-    // Перевірка по осі X
     sf::FloatRect movedX = playerBounds;
     movedX.left += proposedMove.x;
     bool blockedX = false;
@@ -184,7 +188,6 @@ void PlayerController::MovementHandler(float deltaTime, bool& isMoving)
     }
     if (!blockedX) finalMove.x = proposedMove.x;
 
-    // Перевірка по осі Y
     sf::FloatRect movedY = playerBounds;
     movedY.top += proposedMove.y;
     bool blockedY = false;

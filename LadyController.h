@@ -24,6 +24,7 @@ public:
     void HandleInput(float deltaTime) override;
     Vector2f Shot();
     Vector2f ShotCharged();
+   // void ChangeDirectionOnTarget(Vector2f mousePos) override;
     
     void Update(float deltaTime, const sf::RenderWindow& window) override;
     void Draw(sf::RenderWindow& window) override; //

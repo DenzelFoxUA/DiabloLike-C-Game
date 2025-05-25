@@ -33,7 +33,16 @@ struct TextureMeta
     int numberOfColumns;
 };
 
-enum class Direction { Right = 90, Up = 0, Left = 270, Down  = 180};
+enum class Direction {
+    Right = 90,
+    Up = 0,
+    UpRight = 45,
+    RightDown = 135,
+    Left = 270,
+    Down = 180,
+    LeftDown = 225,
+    UpLeft = 315
+};
 
 inline sf::Vector2f DirectionToVector(Direction dir) {
     switch (dir) {
@@ -41,6 +50,10 @@ inline sf::Vector2f DirectionToVector(Direction dir) {
     case Direction::Down: return { 0.f, 1.f };
     case Direction::Left: return { -1.f, 0.f };
     case Direction::Right: return { 1.f, 0.f };
+    case Direction::UpLeft: return { -1.f, -1.f };
+    case Direction::UpRight: return { 1.f, -1.f };
+    case Direction::RightDown: return { 1.f, 1.f };
+    case Direction::LeftDown: return { -1.f, 1.f };
     }
     return { 0.f, 0.f };
 }
@@ -67,4 +80,8 @@ public:
         float stamina = 0, float staminaMax = 0, float mana = 0, float manaMax = 0);
     virtual Vector2f MoveToPoint(Vector2f point);
     virtual void SetAnimationDuration(float newVal);
+    virtual FloatRect GetBounds()
+    {
+        return this->sprite.getGlobalBounds();
+    }
 };

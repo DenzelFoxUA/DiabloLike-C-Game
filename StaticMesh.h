@@ -47,8 +47,13 @@ public:
     virtual FloatRect GetMapBounds() const = 0;
 
     virtual void Update(float deltaTime, const RenderWindow& window) = 0;
-    virtual void DrawTop(RenderWindow& window);
+    virtual void DrawTop(RenderWindow& window,Shader&shader);
     virtual void DrawBottom(RenderWindow& window);
+
+    const sf::Sprite& GetTopSprite() const {
+        return top;
+    }
+
 
     virtual Vector2f GetPosition() const;
 

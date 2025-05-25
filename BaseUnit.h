@@ -59,10 +59,10 @@ public:
 
     virtual void Update(float deltaTime, const sf::RenderWindow& window) = 0;
 
-    virtual void Shot(Texture& projTexture) = 0;
-    virtual void ShotCharged(Texture& projTexture) = 0;
+    virtual void Shot(Texture& projTexture, Vector2f targetPos) = 0;
+    virtual void ShotCharged(Texture& projTexture, Vector2f targetPos) = 0;
 
-    virtual void MeleeAttack(Direction facing, const std::vector<IBaseUnit*>& enemies) = 0;
+    virtual void MeleeAttack(Direction facing, const std::vector<IBaseUnit*>& enemies, bool isCharged) = 0;
 
     //virtual void Death() = 0;
 

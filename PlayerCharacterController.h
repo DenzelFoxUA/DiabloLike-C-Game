@@ -41,7 +41,7 @@ public:
     virtual void MovementHandler(float deltaTime, bool& isMoving);
     void SetActiveMesh(CharacterMesh* activeMesh);
     void HandleMouseEvent(const sf::Event& event, const sf::RenderWindow& window, float deltaTime) override{}
-
+    /*void ChangeDirectionOnTarget(Vector2f target) override {}*/
     //event/update
     virtual void Update(float deltaTime, const RenderWindow& window) override;
     virtual void Death(float deltaTime)override;

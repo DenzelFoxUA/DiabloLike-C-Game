@@ -101,7 +101,33 @@ public:
         return std::sqrt((b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y));
     }
 
+    void ChangeDirectionOnTarget(Vector2f target) override
+    {
+        sf::Vector2f playerPos = mesh->GetCenter();
+        sf::Vector2f delta = target - playerPos;
 
+        float angle = std::atan2(delta.x, -delta.y) * 180.f / 3.14159265f;
+        if (angle < 0.f) angle += 360.f;
+
+        if (angle >= 337.5 || angle < 22.5)
+            mesh->CurrentDir() = Direction::Up;
+        else if (angle >= 22.5 && angle < 67.5)
+            mesh->CurrentDir() = Direction::UpRight;
+        else if (angle >= 67.5 && angle < 112.5)
+            mesh->CurrentDir() = Direction::Right;
+        else if (angle >= 112.5 && angle < 157.5)
+            mesh->CurrentDir() = Direction::RightDown;
+        else if (angle >= 157.5 && angle < 202.5)
+            mesh->CurrentDir() = Direction::Down;
+        else if (angle >= 202.5 && angle < 247.5)
+            mesh->CurrentDir() = Direction::LeftDown;
+        else if (angle >= 247.5 && angle < 292.5)
+            mesh->CurrentDir() = Direction::Left;
+        else if (angle >= 292.5 && angle < 337.5)
+            mesh->CurrentDir() = Direction::UpLeft;
+
+        mesh->LastDir() = mesh->CurrentDir();
+    }
 
     virtual Direction GetCurrentDirection() override 
     { 
@@ -145,6 +171,25 @@ public:
         else
             this->mesh->SetAttackDelay(time);
             
+    }
+
+    FloatRect GetMeshBounds() override
+    {
+        return this->mesh->GetBounds();
+    }
+
+    Direction GetDirectionFromVector(sf::Vector2f dir) {
+        if (dir.x == 0.f && dir.y < 0.f) return Direction::Up;
+        if (dir.x == 0.f && dir.y > 0.f) return Direction::Down;
+        if (dir.x < 0.f && dir.y == 0.f) return Direction::Left;
+        if (dir.x > 0.f && dir.y == 0.f) return Direction::Right;
+
+        if (dir.x > 0.f && dir.y < 0.f) return Direction::UpRight;
+        if (dir.x > 0.f && dir.y > 0.f) return Direction::RightDown;
+        if (dir.x < 0.f && dir.y < 0.f) return Direction::UpLeft;
+        if (dir.x < 0.f && dir.y > 0.f) return Direction::LeftDown;
+
+        return this->mesh->LastDir();
     }
 
     //entity methods
@@ -259,14 +304,14 @@ public:
     //combat calcs
     float CaltulateShootSpeed(bool isCharged) override
     {
-        float multiplyer = isCharged ? 2 : 1;
+        float multiplyer = isCharged ? 2.f : 1.f;
 
         return this->entity.GetAttributes().strength * ProjectileSpeed::ARROW_SIMPLE * multiplyer;
     }
 
     float CalculateShootDamage(bool isCharged, ProjectileType type) override
     {
-        float multiplyer = isCharged ? 2 : 1;
+        float multiplyer = isCharged ? 2.f : 1.f;
 
         float basicDamage = type == ProjectileType::ArrowSimple ? Damage::BOW_ARROW :
             ProjectileType::ArrowMagic ? Damage::BOW_CHARGED : 0;
@@ -276,7 +321,7 @@ public:
 
     float CalculateHitRadius(bool isCharged, ProjectileType type) override
     {
-        float multiplyer = isCharged ? 2 : 1;
+        float multiplyer = isCharged ? 2.f : 1.f;
 
         float basicRadius = type == ProjectileType::ArrowSimple ? ProjectileHitRadius::ARROW_SIMPLE :
             ProjectileType::ArrowMagic ? ProjectileHitRadius::ARROW_CHARGED : 0;

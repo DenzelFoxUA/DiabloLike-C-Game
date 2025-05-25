@@ -21,8 +21,6 @@ enum class CharacterState
     Dead
 };
 
-
-
 class CharacterMesh : public BaseMesh
 {
 protected:
@@ -66,7 +64,8 @@ protected:
     float deathAnimationTime = 3.5f;
     float deathAnimTik = 0.f;
 
-    void LoadTextures(map<Direction, Texture>& target, string commonPath, string nameOfTexture) override;
+    void LoadTextures(map<Direction, Texture>& target, 
+        string commonPath, string nameOfTexture) override;
 
 public:
     CharacterMesh() = default;

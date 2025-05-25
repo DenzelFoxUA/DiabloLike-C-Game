@@ -9,6 +9,10 @@ void CharacterMesh::LoadTextures(map<Direction, Texture>& target, string folderP
         {Direction::Up,    folderPath + fileName + "_" + to_string((int)Direction::Up) + ".png"},
         {Direction::Left,  folderPath + fileName + "_" + to_string((int)Direction::Left) + ".png"},
         {Direction::Down,  folderPath + fileName + "_" + to_string((int)Direction::Down) + ".png"},
+        {Direction::UpRight, folderPath + fileName + "_" + to_string((int)Direction::UpRight) + ".png"},
+        {Direction::RightDown,    folderPath + fileName + "_" + to_string((int)Direction::RightDown) + ".png"},
+        {Direction::LeftDown,  folderPath + fileName + "_" + to_string((int)Direction::LeftDown) + ".png"},
+        {Direction::UpLeft,  folderPath + fileName + "_" + to_string((int)Direction::UpLeft) + ".png"},
     };
 
     for (const auto& [dir, path] : paths) {

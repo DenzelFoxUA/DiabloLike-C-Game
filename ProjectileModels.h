@@ -7,7 +7,7 @@
 using namespace ArrowsPaths;
 using namespace sf;
 
-static class ProjectileModels
+class ProjectileModels
 {
 protected:
     static Texture arrowTexture;

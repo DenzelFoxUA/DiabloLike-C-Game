@@ -43,17 +43,19 @@ int main()
         .SetContainer(&projContainer)
         .SetDeathAnimationTime(2.5f)
         .SetHPRegenerationRate(0.f)
-        .SetStaminaRegenerationRate(40.f)
+        .SetStaminaRegenerationRate(15.f)
         .SetManaRegenerationRate(0.f)
         .SetSpeed(400.f)
         .SetAnimDuration(0.05f)
         .Build();
+
     playerUnit->SetSpeed(120.f);
     
     //levels
     string forestLevelTextures = "JSONData/textures/Levels/LevelForest.json";
     ForestLevel<LadyUnit> forest = ForestLevel<LadyUnit>(forestLevelTextures, window, 
-        &*playerUnit,&projContainer);
+        &*playerUnit,&projContainer, 15.f, 128.f,256.f);
+
 
     forest.Render(windowHeight,windowWidth);
 

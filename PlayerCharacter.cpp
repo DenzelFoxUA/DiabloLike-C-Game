@@ -9,10 +9,10 @@ void PlayerCharacter::LevelUp()
 		levelingStep *= 2;
 		experience = 0;
 
-		this->attributes.agility + 1;
-		this->attributes.strength + 1;
-		this->attributes.luck + 1;
-		this->attributes.inteligence + 1;
+		this->attributes.agility++;
+		this->attributes.strength++;
+		this->attributes.luck++;
+		this->attributes.inteligence++;
 		this->healthMax += 500;
 		this->health = healthMax;
 		this->staminaMax += 100;

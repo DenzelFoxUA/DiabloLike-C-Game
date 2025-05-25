@@ -58,6 +58,7 @@ public:
     virtual void SetDeathAnimationTime(float val) = 0;
     virtual void SetAnimationDuration(float newVal) = 0;
     virtual Vector2f GetPosition() = 0;
+    virtual FloatRect GetMeshBounds() = 0;
 
     //input and behavior
     virtual void HandleInput(float deltaTime) = 0;
@@ -67,6 +68,7 @@ public:
     virtual void HandleMouseEvent(const sf::Event& event, 
         const sf::RenderWindow& window, float deltaTime) = 0;
     virtual void Update(float deltaTime, const sf::RenderWindow& window) = 0;
+    virtual void ChangeDirectionOnTarget(Vector2f mousePos) = 0;
 
     //combat calculators
     virtual float CaltulateShootSpeed(bool isCharged) = 0;

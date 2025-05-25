@@ -29,13 +29,15 @@ class Level
 {
 protected:
 
+    const float tileHeight;
+    const float tileWidth;
+
     float spawnTik = 0.f;
     float spawnTime = 10.f;
 
     const string levelName = "Abstract";
 
     vector<unique_ptr<IBaseUnit>> enemies;
-
     vector<unique_ptr<IBaseUnit>> spawnedEnemies;
 
     Sprite ground;
@@ -51,7 +53,8 @@ protected:
        this->spawnedEnemies.emplace_back(move(this->enemies[index]));
     }
 
-    Vector2f GetRandomSpawnPosition(const vector<FloatRect>& forbiddenZones, float windowWidth, float windowHeight)
+    Vector2f GetRandomSpawnPosition(const vector<FloatRect>& forbiddenZones,
+        float windowWidth, float windowHeight)
     {
         Vector2f pos;
         bool valid = false;
@@ -78,13 +81,15 @@ protected:
 public:
     Level() = delete;
     Level(RenderWindow& window,
-        UnitT* mainCharacter, ProjectilesContainer* projContainer) : 
+        UnitT* mainCharacter, ProjectilesContainer* projContainer, 
+        float spawnTime, float tileH, float tileW) : 
         window(window),
         mainCharacter(mainCharacter), 
-        projContainer(projContainer)
-	{
-        
-	}
+        projContainer(projContainer), 
+        spawnTime(spawnTime),
+        tileHeight(tileH),
+        tileWidth(tileW)
+    {}
 
     virtual void Render(int windowHeight, int windowWidth) = 0;
 

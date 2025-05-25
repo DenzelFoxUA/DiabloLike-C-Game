@@ -18,7 +18,7 @@ enum UI_Parts
 };
 
 
-static class JSONTextureLoader
+class JSONTextureLoader
 {
 private:
 

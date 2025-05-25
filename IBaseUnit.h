@@ -2,6 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include "Projectile.h"
 #include "BaseMesh.h"
+#include <cmath>
+
 using namespace std;
 using namespace sf;
 
@@ -9,16 +11,13 @@ class IController;
 class Character;
 class CharacterMesh;
 
-
 class IBaseUnit {
 
 protected:
-   
-
+    //
 public:
 
     //mesh
-    //virtual CharacterMesh& GetMesh() = 0;
     virtual Vector2f GetPosition() = 0;
     virtual Vector2f GetCenter() = 0;
     virtual void MoveToPoint(sf::Vector2f point, float deltaTime) = 0;
@@ -49,9 +48,9 @@ public:
     virtual IController& GetController() = 0;
 
     //controller combat
-    virtual void Shot(Texture& texture) = 0;
-    virtual void ShotCharged(Texture& texture) = 0;
-    virtual void MeleeAttack(Direction facing, const std::vector<IBaseUnit*>& enemies) = 0;
+    virtual void Shot(Texture& texture, Vector2f mousePos) = 0;
+    virtual void ShotCharged(Texture& texture, Vector2f targetPos) = 0;
+    virtual void MeleeAttack(Direction facing, const std::vector<IBaseUnit*>& enemies, bool isCharged) = 0;
     virtual ProjectileType GetTypeOfProjectile() = 0;
 
     virtual void HandleInput(float deltaTime) = 0;

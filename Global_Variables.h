@@ -5,6 +5,7 @@ using namespace std;
 namespace StaminaRequirements
 {
 	const float MELEE_ATTACK = 50.f,
+		MELEE_ATTACK_CHARGED = 80.f,
 		ARROW_CHARGED_SHOT = 100.f,
 		ARROW_SIMPLE_SHOT = 50.f;
 

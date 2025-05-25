@@ -47,11 +47,23 @@ void SkeletonUnit::Update(float deltaTime, const sf::RenderWindow& window)
 
 void SkeletonUnit::HandleBehavior(IBaseUnit* target, float deltaTime)
 {
+	bool isCharged = false;
+
 	this->_controller->HandleBehavior(target->GetPosition(), target->GetEntity(), deltaTime);
-	if (this->_mesh.CurrentState() == CharacterState::Attack
-		&& this->_controller->GetEnergy() >= StaminaRequirements::MELEE_ATTACK)
+
+	if (this->_mesh.CurrentState() == CharacterState::Attack)
 	{
-		MeleeAttack(this->_mesh.CurrentDir(), { target });
+		if (this->_controller->GetEnergy() >= StaminaRequirements::MELEE_ATTACK_CHARGED)
+			isCharged = true;
+		else if (this->_controller->GetEnergy() >= StaminaRequirements::MELEE_ATTACK)
+			isCharged = false;
+		else
+		{
+			cout << _character.GetName() << " dont have much strength to make a move" << endl;
+			return;
+		}
+
+		MeleeAttack(this->_mesh.CurrentDir(), { target },isCharged);
 	}
 }
 
@@ -67,46 +79,47 @@ IController& SkeletonUnit::GetController()
 }
 
 //combat
-void SkeletonUnit::MeleeAttack(Direction facing, const std::vector<IBaseUnit*>& enemies)
+void SkeletonUnit::MeleeAttack(Direction facing, const std::vector<IBaseUnit*>& enemies, bool isCharged)
 {
-	if (this->_controller->GetEnergy() >= StaminaRequirements::MELEE_ATTACK)
+	if (isCharged == false)
 	{
 		this->_controller->SpendEnergy(StaminaRequirements::MELEE_ATTACK);
-		sf::Vector2f playerPos = this->_mesh.GetPosition();
-		sf::Vector2f facingVec = DirectionToVector(facing);
-
-		float dotThreshold = 0.3f;
-
-		float rustSwordDamage = 50;
-		float nominalDamage = _controller->CaltculateMeleeDamage(false) + rustSwordDamage;
-
-		cout << Range::MELEE_ATTACK << " - RADIUS" << endl;
-
-		for (IBaseUnit* enemy : enemies) {
-			sf::Vector2f toEnemy = enemy->GetPosition() - playerPos;
-
-			cout << "Distance to enemy = " << toEnemy.x << "/" << toEnemy.y << endl;
-			float distance = this->_controller->GetDistanceToTarget(enemy->GetPosition());
-			std::cout << "Distance to enemy: " << distance << "\n";
-
-			if (distance > Range::MELEE_ATTACK) continue;
-
-			sf::Vector2f dirToEnemy = toEnemy / distance;
-			float dot = dirToEnemy.x * facingVec.x + dirToEnemy.y * facingVec.y;
-			std::cout << "Dot product = " << dot << "\n";
-			if (dot > dotThreshold) {
-
-				enemy->GetHit(nominalDamage);
-			}
-
-			cout << enemy->GetName() << " taking " << nominalDamage << " damage!\n";
-			cout << enemy->GetName()
-				<< " has " << enemy->GetEntity().GetHealthPoints() << " HP.\n";
-		}
 	}
 	else
 	{
-		cout << _character.GetName() << " dont have much strength to make a move" << endl;
+		this->_controller->SpendEnergy(StaminaRequirements::MELEE_ATTACK_CHARGED);
+	}
+
+	sf::Vector2f playerPos = this->_mesh.GetPosition();
+	sf::Vector2f facingVec = DirectionToVector(facing);
+
+	float dotThreshold = 0.3f;
+
+	float rustSwordDamage = 50;
+	float nominalDamage = _controller->CaltculateMeleeDamage(isCharged) + rustSwordDamage;
+
+	cout << Range::MELEE_ATTACK << " - RADIUS" << endl;
+
+	for (IBaseUnit* enemy : enemies) {
+		sf::Vector2f toEnemy = enemy->GetPosition() - playerPos;
+
+		cout << "Distance to enemy = " << toEnemy.x << "/" << toEnemy.y << endl;
+		float distance = this->_controller->GetDistanceToTarget(enemy->GetPosition());
+		std::cout << "Distance to enemy: " << distance << "\n";
+
+		if (distance > Range::MELEE_ATTACK) continue;
+
+		sf::Vector2f dirToEnemy = toEnemy / distance;
+		float dot = dirToEnemy.x * facingVec.x + dirToEnemy.y * facingVec.y;
+		std::cout << "Dot product = " << dot << "\n";
+		if (dot > dotThreshold) {
+
+			enemy->GetHit(nominalDamage);
+		}
+
+		cout << enemy->GetName() << " taking " << nominalDamage << " damage!\n";
+		cout << enemy->GetName()
+			<< " has " << enemy->GetEntity().GetHealthPoints() << " HP.\n";
 	}
 }
 

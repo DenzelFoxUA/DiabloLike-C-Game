@@ -54,10 +54,12 @@ public:
     virtual void HandleBehavior(Vector2f target, Character& enemy, float deltaTime) override;
     virtual void HandleInput(float deltaTime) = 0;
     virtual void SwitchModes() override {};
+    
 
     //events and update
     virtual void Update(float deltaTime, const sf::RenderWindow& window) override;
     virtual void HandleMouseEvent(const sf::Event& event, const sf::RenderWindow& window,float dt) = 0;
+    void ChangeDirectionOnTarget(Vector2f target) override;
 
     ~NPC_Controller()
     {

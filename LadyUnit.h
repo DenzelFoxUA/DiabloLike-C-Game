@@ -39,11 +39,11 @@ public:
 	void HandleInput(float deltaTime) override;
 	void HandleMouseEvent(const sf::Event& event, const sf::RenderWindow& window, float dt) override;
 
-	void Shot(Texture& texture) override;
+	void Shot(Texture& texture, Vector2f targetPos) override;
 
-	void ShotCharged(Texture& texture) override;
+	void ShotCharged(Texture& texture, Vector2f targetPos) override;
 
-	void MeleeAttack(Direction facing, const std::vector<IBaseUnit*>& enemies) override;
+	void MeleeAttack(Direction facing, const std::vector<IBaseUnit*>& enemies, bool isCharged) override;
 	
 
 	/*void Update(float deltaTime, const sf::RenderWindow& window,

@@ -29,46 +29,29 @@ void LadyController::HandleMouseEvent(const sf::Event& event, const sf::RenderWi
 
     if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
     {
-        if (!isAttacking&& this->entity.GetStaminaPoints()>=StaminaRequirements::ARROW_SIMPLE_SHOT) {
+        if (!isAttacking && this->entity.GetStaminaPoints() >= StaminaRequirements::ARROW_SIMPLE_SHOT) {
             isAttacking = true;
             chargingShot = true;
             attackTimer = 0.f;
-
-            sf::Vector2f playerPos = mesh->GetCenter();
             sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-            sf::Vector2f delta = mousePos - playerPos;
 
+            ChangeDirectionOnTarget(mousePos);
             mesh->CurrentState() = CharacterState::Attack;
 
-            if (std::abs(delta.x) > std::abs(delta.y)) {
-                if (delta.x > 0)
-                    mesh->CurrentDir() = Direction::Right;
-                else
-                    mesh->CurrentDir() = Direction::Left;
-            }
-            else {
-                if (delta.y > 0)
-                    mesh->CurrentDir() = Direction::Down;
-                else
-                    mesh->CurrentDir() = Direction::Up;
-            }
-
-            auto& dir = mesh->CurrentDir();
             const auto& meta = mesh->TextureData(TextureCategory::Attack);
-
             mesh->Animation().SetSheet(
-                &mesh->AttackTextures()[dir],
+                &mesh->AttackTextures()[mesh->CurrentDir()],
                 meta.frameWidth,
                 meta.frameHeight,
                 meta.numberOfColumns,
                 meta.numberOfFrames,
                 false);
         }
-        else
-        {
-            cout << "Not enough stamina!" << endl;
+        else {
+            std::cout << "Not enough stamina!" << std::endl;
         }
     }
+
 
     if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right)
     {
@@ -80,29 +63,12 @@ void LadyController::HandleMouseEvent(const sf::Event& event, const sf::RenderWi
 
             sf::Vector2f playerPos = mesh->GetCenter();
             sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-            sf::Vector2f delta = mousePos - playerPos;
-
+            ChangeDirectionOnTarget(mousePos);
             mesh->CurrentState() = CharacterState::Attack;
 
-            if (std::abs(delta.x) > std::abs(delta.y)) {
-                if (delta.x > 0)
-                    mesh->CurrentDir() = Direction::Right;
-                else
-                    mesh->CurrentDir() = Direction::Left;
-            }
-            else {
-                if (delta.y > 0)
-                    mesh->CurrentDir() = Direction::Down;
-                else
-                    mesh->CurrentDir() = Direction::Up;
-            }
-
-            auto& dir = mesh->CurrentDir();
-
             const auto& meta = mesh->TextureData(TextureCategory::Attack);
-
             mesh->Animation().SetSheet(
-                &mesh->AttackTextures()[dir],
+                &mesh->AttackTextures()[mesh->CurrentDir()],
                 meta.frameWidth,
                 meta.frameHeight,
                 meta.numberOfColumns,

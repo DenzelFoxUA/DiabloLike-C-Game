@@ -154,26 +154,30 @@ void PlayerController::MovementHandler(float deltaTime, bool& isMoving)
 {
     sf::FloatRect playerBounds = mesh->Sprite().getGlobalBounds();
     sf::Vector2f proposedMove(0.f, 0.f);
+    sf::Vector2f direction{ 0.f, 0.f };
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-        mesh->CurrentDir() = Direction::Up;
+        direction.y -= 1.f;
         proposedMove.y -= mesh->GetSpeed() * deltaTime;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-        mesh->CurrentDir() = Direction::Down;
+        direction.y += 1.f;
         proposedMove.y += mesh->GetSpeed() * deltaTime;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-        mesh->CurrentDir() = Direction::Left;
+        direction.x -= 1.f;
         proposedMove.x -= mesh->GetSpeed() * deltaTime;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-        mesh->CurrentDir() = Direction::Right;
+        direction.x += 1.f;
         proposedMove.x += mesh->GetSpeed() * deltaTime;
     }
 
     if (proposedMove.x != 0 && proposedMove.y != 0)
         proposedMove /= std::sqrt(2.f);
+
+    Direction dir = GetDirectionFromVector(direction);
+    this->mesh->CurrentDir() = dir;
 
     sf::Vector2f finalMove(0.f, 0.f);
 
@@ -209,3 +213,5 @@ void PlayerController::SetActiveMesh(CharacterMesh* activeMesh)
 {
     mesh = activeMesh;
 }
+
+

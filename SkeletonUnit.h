@@ -50,7 +50,7 @@ public:
 	IController& GetController() override;
 
 	//combat
-	void MeleeAttack(Direction facing, const std::vector<IBaseUnit*>& enemies) override;
+	void MeleeAttack(Direction facing, const std::vector<IBaseUnit*>& enemies, bool isCharged) override;
 
 	//stats
 	void SpendEnergy(float value) override;
@@ -73,8 +73,8 @@ public:
 	}
 
 	//unused
-	void Shot(Texture& projTexture)override {}
-	void ShotCharged(Texture& projtexture) override {}
+	void Shot(Texture& projTexture, Vector2f targetPos)override {}
+	void ShotCharged(Texture& projtexture, Vector2f targetPos) override {}
 
 	void SubscribeOnEnemy(Character& enemy) override {}
 	void UnsubscribeFromEnemy(Character& enemy) override {}

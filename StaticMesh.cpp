@@ -16,8 +16,15 @@
 //}
 
 
-void StaticMesh::DrawTop(sf::RenderWindow& window) {
-    window.draw(top);
+void StaticMesh::DrawTop(sf::RenderWindow& window, Shader& shader) {
+
+    shader.setUniform("spritePos", top.getPosition());
+
+    sf::RenderStates states;
+    states.shader = &shader;
+    states.blendMode = sf::BlendAlpha;
+
+    window.draw(top, states);
 }
 
 void StaticMesh::DrawBottom(sf::RenderWindow& window) {

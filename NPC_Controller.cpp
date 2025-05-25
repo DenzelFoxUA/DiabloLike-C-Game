@@ -121,26 +121,58 @@ void NPC_Controller::IdleBehavior()
     mesh->PendingDirection() = { 0.f, 0.f };
 }
 
+void NPC_Controller::ChangeDirectionOnTarget(Vector2f target)
+{
+    float distance = GetDistanceToTarget(target);
+    auto curPosition = mesh->GetPosition();
+
+    if (distance < 100.f)
+    {
+        if (abs(target.x - curPosition.x) > abs(target.y - curPosition.y))
+        mesh->CurrentDir() = (target.x > curPosition.x) ? Direction::Right : Direction::Left;
+            else
+        mesh->CurrentDir() = (target.y > curPosition.y) ? Direction::Down : Direction::Up;
+    }
+    else
+    {
+        sf::Vector2f delta = target - mesh->GetCenter();
+
+        float angle = std::atan2(delta.x, -delta.y) * 180.f / 3.14159265f;
+        if (angle < 0.f) angle += 360.f;
+
+        if (angle >= 337.5f || angle < 22.5f)
+            mesh->CurrentDir() = Direction::Up;
+        else if (angle >= 22.5f && angle < 67.5f)
+            mesh->CurrentDir() = Direction::UpRight;
+        else if (angle >= 67.5f && angle < 112.5f)
+            mesh->CurrentDir() = Direction::Right;
+        else if (angle >= 112.5f && angle < 157.5f)
+            mesh->CurrentDir() = Direction::RightDown;
+        else if (angle >= 157.5f && angle < 202.5f)
+            mesh->CurrentDir() = Direction::Down;
+        else if (angle >= 202.5f && angle < 247.5f)
+            mesh->CurrentDir() = Direction::LeftDown;
+        else if (angle >= 247.5f && angle < 292.5f)
+            mesh->CurrentDir() = Direction::Left;
+        else if (angle >= 292.5f && angle < 337.5f)
+            mesh->CurrentDir() = Direction::UpLeft;
+    }
+}
+
 void NPC_Controller::UpdateStateAndDirection(Vector2f target)
 {
     auto curPosition = mesh->GetPosition();
-    auto& curDir = mesh->CurrentDir();
-
-    if (abs(target.x - curPosition.x) > abs(target.y - curPosition.y))
-        curDir = (target.x > curPosition.x) ? Direction::Right : Direction::Left;
-    else
-        curDir = (target.y > curPosition.y) ? Direction::Down : Direction::Up;
-
     auto& curState = mesh->CurrentState();
     auto& prevState = mesh->PreviousState();
-    auto& lastDir = mesh->LastDir();
 
-    if (curState != prevState || curDir != lastDir)
+    this->ChangeDirectionOnTarget(target);
+
+    if (curState != prevState || mesh->CurrentDir() != mesh->LastDir())
     {
         sf::Texture* newTexture =
-            (curState == CharacterState::Run) ? &mesh->MoveTextures()[curDir] :
-            (curState == CharacterState::Attack) ? &mesh->AttackTextures()[curDir] :
-            &mesh->IdleTextures()[curDir];
+            (curState == CharacterState::Run) ? &mesh->MoveTextures()[mesh->CurrentDir()] :
+            (curState == CharacterState::Attack) ? &mesh->AttackTextures()[mesh->CurrentDir()] :
+            &mesh->IdleTextures()[mesh->CurrentDir()];
 
         TextureCategory texCategory =
             (curState == CharacterState::Run) ? TextureCategory::Move :
@@ -159,7 +191,7 @@ void NPC_Controller::UpdateStateAndDirection(Vector2f target)
             shouldLoop);
 
         prevState = curState;
-        lastDir = curDir;
+        mesh->LastDir() = mesh->CurrentDir();
     }
 }
 

@@ -2,7 +2,7 @@
 #include "BaseUnit.h"
 
 
-static class Enemies
+class Enemies
 {
 
 public:

@@ -10,7 +10,7 @@ void LadyUnit::HandleMouseEvent(const sf::Event& event, const sf::RenderWindow& 
 	this->_controller->HandleMouseEvent(event, window, dt);
 }
 
-void LadyUnit::Shot(Texture& texture)
+void LadyUnit::Shot(Texture& texture, Vector2f mousePos)
 {
 	cout << "Current energy: " << this->_controller->GetEnergy();
 	if (_character.GetStaminaPoints() >= StaminaRequirements::ARROW_SIMPLE_SHOT)
@@ -20,17 +20,29 @@ void LadyUnit::Shot(Texture& texture)
 		Vector2f direction = this->_controller->Shot();
 
 		bool isCharged = false;
-		Vector2f center = this->_controller->GetCenter();
+		Vector2f centerPlayer = this->_controller->GetCenter();
+		Vector2f dir = centerPlayer - mousePos;
 
+		float characterCircleRadius = 60.f;
+
+		float radAngle = atan2(dir.y, dir.x);
+
+		float offsetX = cos(radAngle) * characterCircleRadius;
+		float offsetY = sin(radAngle) * characterCircleRadius;
+
+		centerPlayer.x -= offsetX;
+		centerPlayer.y -= offsetY;
 		float bowDamage = 150;
 
 		float speed = this->_controller->CaltulateShootSpeed(isCharged);
-		float damage = this->_controller->CalculateShootDamage(isCharged, this->GetTypeOfProjectile()) + bowDamage;
-		float hitRadius = this->_controller->CalculateHitRadius(isCharged, this->GetTypeOfProjectile());
+		float damage = this->_controller->CalculateShootDamage(isCharged, 
+			this->GetTypeOfProjectile()) + bowDamage;
+		float hitRadius = this->_controller->CalculateHitRadius(isCharged, 
+			this->GetTypeOfProjectile());
 
 		std::unique_ptr<IProjectileObject> projectilePtr =
 			std::make_unique<ProjectileObject<ArrowMesh, Arrow>>(
-				std::move(ArrowMesh(texture, center, direction, speed, ProjectileLifeTime::ARROW_SIMPLE)),
+				std::move(ArrowMesh(texture, centerPlayer, direction, speed, ProjectileLifeTime::ARROW_SIMPLE)),
 				std::move(Arrow(_projectileEquiped, damage, hitRadius, isCharged))
 			);
 		this->allGameProjectiles->AddProjectile(move(projectilePtr));
@@ -41,7 +53,7 @@ void LadyUnit::Shot(Texture& texture)
 	}
 }
 
-void LadyUnit::ShotCharged(Texture& texture)
+void LadyUnit::ShotCharged(Texture& texture, Vector2f mousePos)
 {
 	cout << "Current energy: " << this->_controller->GetEnergy();
 	if (this->_controller->GetEnergy() >= StaminaRequirements::ARROW_CHARGED_SHOT)
@@ -52,16 +64,28 @@ void LadyUnit::ShotCharged(Texture& texture)
 		Vector2f direction = this->_controller->Shot();
 
 		bool isCharged = true;
-		Vector2f center = this->_meshRanged.GetCenter();
+		Vector2f centerPlayer = this->_controller->GetCenter();
+		Vector2f dir = centerPlayer - mousePos;
+
+		float characterCircleRadius = 60.f;
+
+		float radAngle = atan2(dir.y, dir.x);
+
+		float offsetX = cos(radAngle) * characterCircleRadius;
+		float offsetY = sin(radAngle) * characterCircleRadius;
+
+		centerPlayer.x -= offsetX;
+		centerPlayer.y -= offsetY;
 
 		float bowDamage = 150;
+
 		float speed = this->_controller->CaltulateShootSpeed(isCharged);
 		float damage = this->_controller->CalculateShootDamage(isCharged, this->GetTypeOfProjectile()) + bowDamage;
 		float hitRadius = this->_controller->CalculateHitRadius(isCharged, this->GetTypeOfProjectile());
 
 		std::unique_ptr<IProjectileObject> projectilePtr =
 			std::make_unique<ProjectileObject<ArrowMesh, Arrow>>(
-				std::move(ArrowMesh(texture, center, direction, speed, ProjectileLifeTime::ARROW_CHARGED)),
+				std::move(ArrowMesh(texture, centerPlayer, direction, speed, ProjectileLifeTime::ARROW_CHARGED)),
 				std::move(Arrow(_projectileEquiped, damage, hitRadius, isCharged))
 			);
 
@@ -74,46 +98,53 @@ void LadyUnit::ShotCharged(Texture& texture)
 	}
 }
 
-void LadyUnit::MeleeAttack(Direction facing, const std::vector<IBaseUnit*>& enemies)
+void LadyUnit::MeleeAttack(Direction facing, const std::vector<IBaseUnit*>& enemies, bool isCharged)
 {
-	if (this->_controller->GetEnergy() >= StaminaRequirements::MELEE_ATTACK)
+	if (!isCharged && this->_controller->GetEnergy() >= StaminaRequirements::MELEE_ATTACK)
 	{
 		this->_controller->SpendEnergy(StaminaRequirements::MELEE_ATTACK);
-
-		sf::Vector2f playerPos = this->_meshMelee.GetPosition();
-		sf::Vector2f facingVec = DirectionToVector(facing);
-		float dotThreshold = 0.3f;
-
-		cout << Range::MELEE_ATTACK << " - RADIUS" << endl;
-
-		for (IBaseUnit* enemy : enemies) {
-			sf::Vector2f toEnemy = enemy->GetPosition() - playerPos;
-
-			cout << "Distance to enemy = " << toEnemy.x << "/" << toEnemy.y << endl;
-			float distance = this->_controller->GetDistanceToTarget(enemy->GetPosition());
-			std::cout << "Distance to enemy: " << distance << "\n";
-
-			if (distance > Range::MELEE_ATTACK) continue;
-
-			sf::Vector2f dirToEnemy = toEnemy / distance;
-			float dot = dirToEnemy.x * facingVec.x + dirToEnemy.y * facingVec.y;
-			std::cout << "Dot product = " << dot << "\n";
-
-			float onehandedSwordDamage = 100;
-			float nominalDmg = this->_controller->CaltculateMeleeDamage(false) + onehandedSwordDamage;
-
-			if (dot > dotThreshold) {
-
-				enemy->GetHit(nominalDmg);
-				std::cout << "Hit enemy in front!\n";
-			}
-		}
+	}
+	else if (isCharged && this->_controller->GetEnergy() >= StaminaRequirements::MELEE_ATTACK_CHARGED)
+	{
+		this->_controller->SpendEnergy(StaminaRequirements::MELEE_ATTACK_CHARGED);
 	}
 	else
 	{
 		cout << "Not enogh stamina!" << endl;
+		return;
+	}
+
+	sf::Vector2f playerPos = this->_meshMelee.GetPosition();
+	sf::Vector2f facingVec = DirectionToVector(facing);
+	float dotThreshold = 0.3f;
+
+	cout << Range::MELEE_ATTACK << " - RADIUS" << endl;
+
+	for (IBaseUnit* enemy : enemies) {
+		sf::Vector2f toEnemy = enemy->GetPosition() - playerPos;
+
+		cout << "Distance to enemy = " << toEnemy.x << "/" << toEnemy.y << endl;
+		float distance = this->_controller->GetDistanceToTarget(enemy->GetPosition());
+		std::cout << "Distance to enemy: " << distance << "\n";
+
+		if (distance > Range::MELEE_ATTACK) continue;
+
+		sf::Vector2f dirToEnemy = toEnemy / distance;
+		float dot = dirToEnemy.x * facingVec.x + dirToEnemy.y * facingVec.y;
+		std::cout << "Dot product = " << dot << "\n";
+
+		float onehandedSwordDamage = 100;
+		float nominalDmg = this->_controller->CaltculateMeleeDamage(isCharged) + onehandedSwordDamage;
+
+		if (dot > dotThreshold) {
+
+			enemy->GetHit(nominalDmg);
+			std::cout << "Hit enemy in front!\n";
+		}
 	}
 }
+
+
 
 void LadyUnit::Update(float deltaTime, const sf::RenderWindow& window) {
 
@@ -148,14 +179,14 @@ void LadyUnit::RangedMethod(float deltaTime, const sf::RenderWindow& window,
 
 	if (this->_controller->IsAttacking() && this->_controller->AnimationIsFinished()) {
 		if (this->_controller->PendingNormalAttack()) {
-			Shot(projTexture);
+			Shot(projTexture, window.mapPixelToCoords(Mouse::getPosition()));
 			this->_controller->PendingNormalAttack() = false;
 			cout << "Normal----------------------------->" << endl;
 
 		}
 		else if (this->_controller->PendingChargedAttack()) {
 			
-			ShotCharged(projChargedTexture);
+			ShotCharged(projChargedTexture, window.mapPixelToCoords(Mouse::getPosition()));
 			this->_controller->PendingChargedAttack() = false;
 			cout << "CHARGED CHARGED!!!----------------------------->" << endl;
 			
@@ -169,15 +200,23 @@ void LadyUnit::RangedMethod(float deltaTime, const sf::RenderWindow& window,
 
 void LadyUnit::MeleeMethod(float deltaTime, const sf::RenderWindow& window)
 {
+	vector<IBaseUnit*> enemies = Enemies::GetNPCEnemies();
+
 	if (this->_controller->IsAttacking() && this->_controller->AnimationIsFinished()) {
 		cout << "Pending Normal Attack " << this->_controller->PendingNormalAttack() << endl;
-		if (this->_controller->PendingNormalAttack()) {
-			vector<IBaseUnit*> enemies = Enemies::GetNPCEnemies();
-			MeleeAttack(this->_controller->GetCurrentDirection(), enemies);
+		if (this->_controller->PendingNormalAttack()) 
+		{
+			MeleeAttack(this->_controller->GetCurrentDirection(), enemies,false);
 			this->_controller->PendingNormalAttack() = false;
 			cout << "Normal----------------------------->" << endl;
-
 		}
+		else if (this->_controller->PendingChargedAttack())
+		{
+			MeleeAttack(this->_controller->GetCurrentDirection(), enemies, true);
+			this->_controller->PendingChargedAttack() = false;
+			cout << "CHARGED!!!----------------------------->" << endl;
+		}
+
 		this->_meshRanged.IsAttacking() = false;
 		this->_meshRanged.CurrentState() = CharacterState::Idle;
 		this->_meshRanged.Animation().Resume();

@@ -1,0 +1,26 @@
+{
+  "SmallHouse1": {
+    "folderPath": "textures/World/Buildings/Small/",
+    "fileName": "House1.png"
+  },
+  "SmallHouse2": {
+    "folderPath": "textures/World/Buildings/Small/",
+    "fileName": "House2.png"
+  },
+  "SmallHouse3": {
+    "folderPath": "textures/World/Buildings/Small/",
+    "fileName": "House3.png"
+  },
+  "Tree1": {
+    "folderPath": "textures/World/Trees/",
+    "fileName": "Tree1.png"
+  },
+  "Tree2": {
+    "folderPath": "textures/World/Trees/",
+    "fileName": "Tree2.png"
+  },
+  "DarkGrass": {
+    "folderPath": "textures/World/Grass/",
+    "fileName": "tileable_grey1.png"
+  }
+}

@@ -13,8 +13,8 @@ public:
 
 		this->_bounds.top = this->GetCenter(Bottom).y-30;
 		this->_bounds.left = this->GetCenter(Bottom).x;
-		this->_bounds.width = 1;
-		this->_bounds.height = 0.2;
+		this->_bounds.width = 1.f;
+		this->_bounds.height = 0.2f;
 	}
 
 	FloatRect GetMapBounds() const override

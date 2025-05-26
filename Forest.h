@@ -21,8 +21,8 @@ protected:
     void DrawGround(RenderWindow& window, Sprite* sprite, float tileWidth, float tileHeight,
         float offsetX = 0.f, float offsetY = 0.f) override
     {
-        for (int y = 0; y <= window.getSize().y + tileHeight * 2; y += tileHeight) {
-            for (int x = 0; x <= window.getSize().x + tileHeight * 2; x += tileWidth) {
+        for (int y = 0; y <= window.getSize().y + tileHeight * 2.f; y += tileHeight) {
+            for (int x = 0; x <= window.getSize().x + tileHeight * 2.f; x += tileWidth) {
                 sprite->setPosition(x + offsetX, y + offsetY);
                 window.draw(*sprite);
             }

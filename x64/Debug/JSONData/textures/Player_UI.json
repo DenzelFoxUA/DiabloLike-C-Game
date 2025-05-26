@@ -1,0 +1,24 @@
+{
+  "PlayerHealthBar": {
+    "UI_Parts": "PlayerHealthBar",
+    "folderPath": "textures/Characters/UIBars/",
+    "fileName": "Player_HP_Bar.png"
+  },
+	
+  "PlayerHealthMeter": {
+    "UI_Parts": "PlayerHealthMeter",
+    "folderPath": "textures/Characters/UIBars/",
+    "fileName": "Player_HP_Meter.png"
+  },
+
+  "PlayerStaminaMeter": {
+    "UI_Parts": "PlayerStaminaMeter",
+    "folderPath": "textures/Characters/UIBars/",
+    "fileName": "Player_Mana_meter.png"
+  },
+  "PlayerManaMeter": {
+    "UI_Parts": "PlayerManaMeter",
+    "folderPath": "textures/Characters/UIBars/",
+    "fileName": "Player_Stamina_meter.png"
+  }
+}

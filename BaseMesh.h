@@ -24,13 +24,13 @@ enum TextureCategory
 
 struct TextureMeta
 {
-    TextureCategory category;
-    string folderPath;
-    string fileName;
-    int frameWidth;
-    int frameHeight;
-    int numberOfFrames;
-    int numberOfColumns;
+    TextureCategory category = TextureCategory::Idle;
+    string folderPath = "";
+    string fileName = "";
+    int frameWidth = 0;
+    int frameHeight = 0;
+    int numberOfFrames = 0;
+    int numberOfColumns = 0;
 };
 
 enum class Direction {

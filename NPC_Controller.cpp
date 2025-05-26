@@ -106,7 +106,7 @@ void NPC_Controller::HandleBehavior(Vector2f target, Character& enemy, float del
         MoveToPoint(target, deltaTime, isMoving); 
     }
 
-    if (!mesh->IsDead());
+    if (!mesh->IsDead())
         UpdateStateAndDirection(target);
 
     mesh->Animation().Update(deltaTime);

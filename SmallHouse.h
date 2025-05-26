@@ -17,8 +17,8 @@ public:
 
 		this->_bounds.top = this->GetCenter(Bottom).y-60;
 		this->_bounds.left = this->GetPosition().x + 60;
-		this->_bounds.width = texture.getSize().x - 180;
-		this->_bounds.height = texture.getSize().y /13;
+		this->_bounds.width = texture.getSize().x - 180.f;
+		this->_bounds.height = texture.getSize().y /13.f;
 	} 
 
 	FloatRect GetMapBounds() const override

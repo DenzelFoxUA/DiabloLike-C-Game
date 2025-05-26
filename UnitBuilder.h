@@ -19,13 +19,13 @@ private:
     float _cooldown;
     ProjectilesContainer* _container = nullptr;
 
-    float speed;
-    float attackTime;
-    float deathAnimTime;
-    float healingRate;
-    float staminaRegenRate;
-    float manaRegenRate;
-    float animationDuration;
+    float speed = 0;
+    float attackTime = 0;;
+    float deathAnimTime = 0;;
+    float healingRate = 0;;
+    float staminaRegenRate = 0;;
+    float manaRegenRate = 0;;
+    float animationDuration = 0;;
 
     bool isPrimeTexturesSet = false;//
     bool isSecTexturesSet = false;//
